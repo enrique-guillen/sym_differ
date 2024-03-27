@@ -196,6 +196,9 @@ Style/SingleLineDoEndBlock:
   Enabled: true
 Style/StringChars:
   Enabled: true
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
 Style/SuperWithArgsParentheses:
   Enabled: true
 Style/SwapValues:
