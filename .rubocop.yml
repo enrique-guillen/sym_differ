@@ -343,3 +343,6 @@ Performance/StringInclude:
   Enabled: true
 Performance/Sum:
   Enabled: true
+
+RSpec/VerifiedDoubles:
+  Enabled: false
