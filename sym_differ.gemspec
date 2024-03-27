@@ -7,4 +7,5 @@ Gem::Specification.new do |spec|
   spec.summary = "Toolkit for deriving symbolic expressions"
   spec.files = ["lib/sym_differ.rb"]
   spec.authors = ["Enrique Guillen"]
+  spec.required_ruby_version = "~> 3.2.3"
 end
