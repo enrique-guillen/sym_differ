@@ -8,4 +8,6 @@ Gem::Specification.new do |spec|
   spec.files = ["lib/sym_differ.rb"]
   spec.authors = ["Enrique Guillen"]
   spec.required_ruby_version = "~> 3.2.3"
+
+  spec.metadata = { "rubygems_mfa_required" => "true" }
 end
