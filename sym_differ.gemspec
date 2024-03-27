@@ -3,7 +3,7 @@ Gem::Specification.new do |spec|
   spec.version     = '1.0.0'
   spec.licenses    = ['MIT']
   spec.summary     = "Toolkit for deriving symbolic expressions"
-  spec.files       = []
+  spec.files       = ["lib/sym_differ.rb"]
   spec.authors    =  ["Enrique Guillen"]
 
   spec.add_development_dependency "cucumber", "~> 9.2.0"
