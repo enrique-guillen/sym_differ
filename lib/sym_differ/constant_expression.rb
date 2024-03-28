@@ -7,6 +7,10 @@ module SymDiffer
       @value = value
     end
 
+    def accept(visitor)
+      visitor.visit_constant_expression(self)
+    end
+
     attr_reader :value
   end
 end
