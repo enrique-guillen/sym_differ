@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/differentiation/derive_constant_expression"
+require "sym_differ/differentiation/constant_expression_deriver"
 require "sym_differ/constant_expression"
 
-RSpec.describe SymDiffer::Differentiation::DeriveConstantExpression do
+RSpec.describe SymDiffer::Differentiation::ConstantExpressionDeriver do
   describe "#derive" do
     subject(:derive) { described_class.new.derive(expression) }
 
