@@ -13,6 +13,9 @@ Feature: Compute the symbolic derivative of a given expression.
 
   The list of rules is mostly centered around giving a general differentiation rule for each operation with arbitrary functions as parameters.
 
+  See also:
+  - The `simplify_expression` feature file to understand how the expressions are simplified.
+
   Rule: A simple expression can be derived.
 
     Scenario: The derivative of x, with respect to x, is requested.
