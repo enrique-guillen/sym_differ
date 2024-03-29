@@ -25,17 +25,17 @@ RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
       allow(differentiation_visitor)
         .to receive(:derive)
         .with(parsed_expression)
-        .and_return(derivative_expression)
+        .and_return(derivative_result)
 
       allow(expression_reducer)
         .to receive(:reduce)
-        .with(derivative_expression)
-        .and_return(reduced_derivative_expression)
+        .with(derivative_result)
+        .and_return(reduced_result)
 
       allow(expression_textifier)
         .to receive(:textify)
-        .with(reduced_derivative_expression)
-        .and_return(textified_reduced_derivative_expression)
+        .with(reduced_result)
+        .and_return(textified_result)
     end
 
     let(:expression_text_parser) { double(:expression_text_parser) }
@@ -45,12 +45,12 @@ RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
     let(:expression_textifier) { double(:expression_textifier) }
 
     let(:parsed_expression) { double(:parsed_expression) }
-    let(:derivative_expression) { double(:derivative_expression) }
-    let(:reduced_derivative_expression) { double(:reduced_derivative_expression) }
-    let(:textified_reduced_derivative_expression) { double(:textified_reduced_derivative_expression) }
+    let(:derivative_result) { double(:derivative_result) }
+    let(:reduced_result) { double(:reduced_result) }
+    let(:textified_result) { double(:textified_result) }
 
-    it "returns the reduced_derivative_expression" do
-      expect(get).to have_attributes(successful?: true, derivative_expression: textified_reduced_derivative_expression)
+    it "returns the textified result" do
+      expect(get).to have_attributes(successful?: true, derivative_expression: textified_result)
     end
   end
 end
