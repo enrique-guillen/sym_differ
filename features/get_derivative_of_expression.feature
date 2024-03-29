@@ -19,13 +19,39 @@ Feature: Get the symbolic derivative of a given expression.
   Rule: A simple expression can be derived.
 
     Scenario: The user asks for the derivative of x, with respect to x.
+      Given the user wants the derivative of x
+      And the user wants the derivative with respect to x
+
+      When the user requests the derivative
+
+      Then the operation is successful
+      And the computed derivative is 1
 
   Rule: The expression and parameter must be valid.
 
-    Scenario: The user asks for the derivative of "" + "", with respect to x.
+    Scenario: The user asks for the derivative of +, with respect to x.
+      Given the user wants the derivative of +
+      And the user wants the derivative with respect to x
 
-    Scenario: The user asks for the derivative of 1, with respect to "" (no variable specified).
+      When the user requests the derivative
+
+      Then the operation is unsuccessful
+
+    Scenario: The user asks for the derivative of 1, with respect to ~ (no variable specified).
+      Given the user wants the derivative of 1
+      And the user wants the derivative with respect to ~ (no variable specified)
+
+      When the user requests the derivative
+
+      Then the operation is unsuccessful
 
   Rule: The outputted expression is simplified.
 
     Scenario: The user asks for the derivative of x + x.
+      Given the user wants the derivative of x + x
+      And the user wants the derivative with respect to x
+
+      When the user requests the derivative
+
+      Then the operation is successful
+      And the computed derivative is 2x
