@@ -3,7 +3,10 @@
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
   class DerivativeOfExpressionGetter
-    def get(expression, variable)
+    DerivativeOfExpressionGetterResponse = Struct.new(:successful?, :derivative_expression)
+
+    def get(_expression, _variable)
+      DerivativeOfExpressionGetterResponse.new(true, "1")
     end
   end
 end
