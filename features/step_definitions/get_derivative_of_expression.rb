@@ -22,8 +22,8 @@ end
 When("the user requests the derivative") do
   @payload =
     SymDiffer::DerivativeOfExpressionGetter
-      .new
-      .get(@params[:expression], @params[:variable])
+    .new
+    .get(@params[:expression], @params[:variable])
 end
 
 Then("the operation is successful") do
@@ -35,5 +35,5 @@ Then("the operation is unsuccessful") do
 end
 
 Then("the computed derivative is {}") do |derivative_expression|
-  expect(@payload).to have_attributes(derivative_expression: derivative_expression)
+  expect(@payload).to have_attributes(derivative_expression:)
 end
