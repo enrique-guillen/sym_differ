@@ -30,6 +30,10 @@ Then("the operation is successful") do
   expect(@payload).to be_successful
 end
 
+Then("the operation is unsuccessful") do
+  expect(@payload).not_to be_successful
+end
+
 Then("the computed derivative is {}") do |derivative_expression|
   expect(@payload).to have_attributes(derivative_expression: derivative_expression)
 end
