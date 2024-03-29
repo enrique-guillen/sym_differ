@@ -2,6 +2,19 @@ require:
 - rubocop-rspec
 - rubocop-performance
 
+# Disable verified doubles as we want units and their corresponding tests to be fully self-contained, as opposed to
+# referencing a concrete implementation class outside of the unit and test.
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+# It's not uncommon for a unit test with a handful of stubbed dependencies to have at least 6 helpers in one example
+# group (one for the dependency and one for the response, minimum). By making each helper a simple double, and keeping
+# the amount of setup in a single example group to a minimum, it's possible to work with the max number of helpers
+# configured below. If your number of helpers exceed this value, consider refactoring the unit you're testing.
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+# Cops not enabled by default.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
 Gemspec/DevelopmentDependencies:
@@ -313,6 +326,3 @@ Performance/StringInclude:
   Enabled: true
 Performance/Sum:
   Enabled: true
-
-RSpec/VerifiedDoubles:
-  Enabled: false
