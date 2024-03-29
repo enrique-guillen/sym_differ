@@ -1,4 +1,4 @@
-@derive_function @simplify_expression
+@derive_function @reduce_expression
 Feature: Compute the symbolic derivative of a given expression.
 
   The derivative of a function `F` is a function `F'` that describes the rate of change of the value of the function `F` with respect to one of its parameters.
