@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require "sym_differ/invalid_variable_given_to_expression_parser_error"
+require "sym_differ/unparseable_expression_text_error"
+
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
   class DerivativeOfExpressionGetter
-    DerivativeOfExpressionGetterResponse = Struct.new(:successful?, :derivative_expression)
+    OperationResponse = Struct.new(:successful?, :derivative_expression, :message, :cause)
 
     def initialize(expression_text_parser, differentiation_visitor_builder, expression_reducer, expression_textifier)
       @expression_text_parser = expression_text_parser
@@ -13,16 +16,38 @@ module SymDiffer
     end
 
     def get(expression_text, variable)
-      DerivativeOfExpressionGetterResponse.new(
-        true,
-        parse_expression_text(expression_text)
-          .then { |expression| derive_expression(expression, variable) }
-          .then { |expression| reduce_expression(expression) }
-          .then { |expression| textify_expression(expression) }
-      )
+      build_compute_derivative_expression_operation_result(expression_text, variable)
+    rescue InvalidVariableGivenToExpressionParserError, UnparseableExpressionTextError => exception
+      build_failure_operation_response(exception)
     end
 
     private
+
+    def build_compute_derivative_expression_operation_result(expression_text, variable)
+      expression = validate_expression_and_compute_derivative_expression(expression_text, variable)
+      build_operation_response(true, expression)
+    end
+
+    def build_failure_operation_response(exception)
+      build_operation_response(false, nil, "See #cause for details.", exception)
+    end
+
+    def validate_expression_and_compute_derivative_expression(expression_text, variable)
+      validate_variable(variable)
+
+      parse_expression_text(expression_text)
+        .then { |expression| derive_expression(expression, variable) }
+        .then { |expression| reduce_expression(expression) }
+        .then { |expression| textify_expression(expression) }
+    end
+
+    def validate_variable(variable)
+      @expression_text_parser.validate_variable(variable)
+    end
+
+    def build_operation_response(was_successful, derivative_expression, message = nil, cause = nil)
+      OperationResponse.new(was_successful, derivative_expression, message, cause)
+    end
 
     def parse_expression_text(expression_text)
       @expression_text_parser.parse(expression_text)
