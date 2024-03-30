@@ -14,7 +14,7 @@ RSpec/VerifiedDoubles:
 RSpec/MultipleMemoizedHelpers:
   Max: 10
 
-# Cops not enabled by default.
+# Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
 Gemspec/DevelopmentDependencies:
