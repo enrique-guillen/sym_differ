@@ -5,7 +5,7 @@ module SymDiffer
   class UnparseableExpressionTextError < StandardError
     def initialize(message, invalid_expression_text)
       super(message)
-      @invalid_variable_name = invalid_expression_text
+      @invalid_expression_text = invalid_expression_text
     end
 
     attr_reader :invalid_expression_text
