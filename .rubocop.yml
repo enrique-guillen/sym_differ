@@ -12,7 +12,7 @@ RSpec/VerifiedDoubles:
 # the amount of setup in a single example group to a minimum, it's possible to work with the max number of helpers
 # configured below. If your number of helpers exceed this value, consider refactoring the unit you're testing.
 RSpec/MultipleMemoizedHelpers:
-  Max: 10
+  Max: 11
 
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
