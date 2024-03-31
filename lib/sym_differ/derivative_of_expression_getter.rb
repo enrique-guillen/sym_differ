@@ -17,8 +17,8 @@ module SymDiffer
 
     def get(expression_text, variable)
       build_compute_derivative_expression_operation_result(expression_text, variable)
-    rescue InvalidVariableGivenToExpressionParserError, UnparseableExpressionTextError => exception
-      build_failure_operation_response(exception)
+    rescue InvalidVariableGivenToExpressionParserError, UnparseableExpressionTextError => e
+      build_failure_operation_response(e)
     end
 
     private
