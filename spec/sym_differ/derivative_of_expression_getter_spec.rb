@@ -13,7 +13,7 @@ RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
         .get(expression_text, variable)
     end
 
-    before { allow(expression_text_parser) .to receive(:validate_variable) }
+    before { allow(expression_text_parser).to receive(:validate_variable) }
 
     let(:expression_text_parser) { double(:expression_text_parser) }
     let(:differentiation_visitor_builder) { double(:differentiation_visitor_builder) }
