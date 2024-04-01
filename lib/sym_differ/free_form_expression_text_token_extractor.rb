@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "sym_differ/unparseable_expression_text_error"
+require "sym_differ/free_form_expression_text_language/variable_token"
+require "sym_differ/free_form_expression_text_language/constant_token"
+require "sym_differ/free_form_expression_text_language/operator_token"
 
 module SymDiffer
   # Parses an expression written down as text, allowing the user to include as much whitespace as they'd like between
@@ -132,23 +135,15 @@ module SymDiffer
     end
 
     def build_operator_token(symbol)
-      OperationToken.new(symbol)
-    end
-
-    def build_negate_token
-      OperationToken.new("-")
-    end
-
-    def build_sum_token
-      OperationToken.new("+")
+      SymDiffer::FreeFormExpressionTextLanguage::OperatorToken.new(symbol)
     end
 
     def build_variable_token(name)
-      VariableToken.new(name)
+      SymDiffer::FreeFormExpressionTextLanguage::VariableToken.new(name)
     end
 
     def build_constant_token(value)
-      ConstantToken.new(value)
+      SymDiffer::FreeFormExpressionTextLanguage::ConstantToken.new(value)
     end
 
     def character_is_whitespace?(character)
