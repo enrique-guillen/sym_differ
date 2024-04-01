@@ -32,7 +32,7 @@ RSpec/ExampleLength:
 RSpec/ClassLength:
   Enabled: true
   Exclude:
-  - "lib/sym_differ/free_form_expression_text_token_extractor.rb"
+  - "lib/sym_differ/free_form_expression_text_language/token_extractor.rb"
 
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:

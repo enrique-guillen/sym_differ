@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_token_extractor"
+require "sym_differ/free_form_expression_text_language/token_extractor"
 require "sym_differ/unparseable_expression_text_error"
 require "sym_differ/free_form_expression_text_language/variable_token"
 require "sym_differ/free_form_expression_text_language/constant_token"
 require "sym_differ/free_form_expression_text_language/operator_token"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
+RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
   describe "#parse" do
     subject(:parse) { described_class.new.parse(expression_text) }
 
