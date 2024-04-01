@@ -35,23 +35,50 @@ module SymDiffer
     def remove_leading_whitespace_and_get_next_token_and_expression_text_pair(expression_text)
       expression_text = remove_leading_whitespace_from_text(expression_text)
 
-      if expression_text.empty?
-        build_nil_token_and_empty_string
-      elsif first_character_in_text_is_recognized_infix_operator?(expression_text)
-        build_operator_token_and_split_text_on_first_letter(expression_text)
-      elsif first_character_in_text_is_alphabetical_letter?(expression_text)
-        build_variable_token_with_rest_of_text(expression_text)
-      elsif first_character_in_text_is_numeric?(expression_text)
-        build_constant_token_and_split_text_on_first_non_numerical_character(expression_text)
-      else
+      try_to_extract_nil_token_from_expression_head(expression_text) ||
+        try_to_extract_operator_token_from_expression_head(expression_text) ||
+        try_to_extract_variable_token_from_expression_head(expression_text) ||
+        try_to_extract_constant_token_from_expression_head(expression_text) ||
         raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-      end
     end
 
     def remove_leading_whitespace_from_text(text)
       (text = tail_end_of_text(text)) while character_is_whitespace?(first_character_in_text(text))
 
       text
+    end
+
+    def try_to_extract_nil_token_from_expression_head(expression_text)
+      build_nil_token_and_empty_string if expression_text.empty?
+    end
+
+    def try_to_extract_operator_token_from_expression_head(expression_text)
+      return unless first_character_in_text_is_recognized_infix_operator?(expression_text)
+
+      build_operator_token_and_split_text_on_first_letter(expression_text)
+    end
+
+    def try_to_extract_variable_token_from_expression_head(expression_text)
+      return unless first_character_in_text_is_alphabetical_letter?(expression_text)
+
+      build_variable_token_with_rest_of_text(expression_text)
+    end
+
+    def try_to_extract_constant_token_from_expression_head(expression_text)
+      return unless first_character_in_text_is_numeric?(expression_text)
+
+      build_constant_token_and_split_text_on_first_non_numerical_character(expression_text)
+    end
+
+    def raise_unparseable_text_error_due_to_empty_text(text)
+      raise_unparseable_text_error("The expression can't be empty.", text)
+    end
+
+    def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
+      raise_unparseable_text_error(
+        "A token in the expression started with unrecognized token '#{first_character_in_text(expression_text)}'.",
+        expression_text
+      )
     end
 
     def build_nil_token_and_empty_string
@@ -94,17 +121,6 @@ module SymDiffer
       end
 
       [build_constant_token(buffer.join.to_i), text]
-    end
-
-    def raise_unparseable_text_error_due_to_empty_text(text)
-      raise_unparseable_text_error("The expression can't be empty.", text)
-    end
-
-    def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-      raise_unparseable_text_error(
-        "A token in the expression started with unrecognized token '#{first_character_in_text(expression_text)}'.",
-        expression_text
-      )
     end
 
     def tail_end_of_text(text)
