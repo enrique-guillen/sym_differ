@@ -49,6 +49,8 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
 
       it "returns <VariableToken:x>" do
         tokens = parse
+
+        expect(tokens).to have_attributes(size: 1)
         expect(tokens[0]).to be_a_kind_of(VariableToken).and have_attributes(name: "x")
       end
     end
@@ -58,6 +60,8 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
 
       it "returns <VariableToken:var>" do
         tokens = parse
+
+        expect(tokens).to have_attributes(size: 1)
         expect(tokens[0]).to be_a_kind_of(VariableToken).and have_attributes(name: "var")
       end
     end
@@ -68,6 +72,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
       it "returns <VariableToken:var>" do
         tokens = parse
 
+        expect(tokens).to have_attributes(size: 1)
         expect(tokens[0]).to be_a_kind_of(ConstantToken).and have_attributes(value: 11)
       end
     end
@@ -78,6 +83,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
       it "returns <NegateToken>,<ConstantToken:1>" do
         tokens = parse
 
+        expect(tokens).to have_attributes(size: 2)
         expect(tokens[0]).to be_a_kind_of(OperationToken).and have_attributes(symbol: "-")
         expect(tokens[1]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
       end
@@ -89,6 +95,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
       it "returns <ConstantToken:1>,<SumToken>,<ConstantToken:1>" do
         tokens = parse
 
+        expect(tokens).to have_attributes(size: 3)
         expect(tokens[0]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
         expect(tokens[1]).to be_a_kind_of(OperationToken).and have_attributes(symbol: "+")
         expect(tokens[2]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
@@ -101,6 +108,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
       it "returns <ConstantToken:1>,<SumToken>,<ConstantToken:1>" do
         tokens = parse
 
+        expect(tokens).to have_attributes(size: 3)
         expect(tokens[0]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
         expect(tokens[1]).to be_a_kind_of(OperationToken).and have_attributes(symbol: "+")
         expect(tokens[2]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
@@ -117,6 +125,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
       it "returns <ConstantToken:1>,<SumToken>,<ConstantToken:1>" do
         tokens = parse
 
+        expect(tokens).to have_attributes(size: 3)
         expect(tokens[0]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
         expect(tokens[1]).to be_a_kind_of(OperationToken).and have_attributes(symbol: "+")
         expect(tokens[2]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
@@ -146,6 +155,20 @@ RSpec.describe SymDiffer::FreeFormExpressionTextTokenExtractor do
               .and(having_attributes(message: "A token in the expression started with unrecognized token '\\'.",
                                      invalid_expression_text: "\\"))
           )
+      end
+    end
+
+
+    context "when the expression text to parse is 'var+1'" do
+      let(:expression_text) { "var+1" }
+
+      it "returns <VariableToken:var>,<SumToken>,<ConstantToken:1>" do
+        tokens = parse
+
+        expect(tokens).to have_attributes(size: 3)
+        expect(tokens[0]).to be_a_kind_of(VariableToken).and have_attributes(name: "var")
+        expect(tokens[1]).to be_a_kind_of(OperationToken).and have_attributes(symbol: "+")
+        expect(tokens[2]).to be_a_kind_of(ConstantToken).and have_attributes(value: 1)
       end
     end
   end

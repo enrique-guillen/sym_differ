@@ -37,10 +37,8 @@ module SymDiffer
 
       if expression_text.empty?
         build_nil_token_and_empty_string
-      elsif first_character_in_text_is_dash?(expression_text)
-        build_negate_token_and_split_text_on_first_letter(expression_text)
-      elsif first_character_in_text_is_plus?(expression_text)
-        build_sum_token_and_split_text_on_first_letter(expression_text)
+      elsif first_character_in_text_is_recognized_infix_operator?(expression_text)
+        build_operator_token_and_split_text_on_first_letter(expression_text)
       elsif first_character_in_text_is_alphabetical_letter?(expression_text)
         build_variable_token_with_rest_of_text(expression_text)
       elsif first_character_in_text_is_numeric?(expression_text)
@@ -60,28 +58,27 @@ module SymDiffer
       [nil, ""]
     end
 
-    def first_character_in_text_is_dash?(text)
-      first_character_in_text(text) == "-"
+    def first_character_in_text_is_recognized_infix_operator?(text)
+      character_is_recognized_infix_operator?(first_character_in_text(text))
     end
 
-    def build_negate_token_and_split_text_on_first_letter(text)
-      [build_negate_token, tail_end_of_text(text)]
-    end
-
-    def first_character_in_text_is_plus?(text)
-      first_character_in_text(text) == "+"
-    end
-
-    def build_sum_token_and_split_text_on_first_letter(text)
-      [build_sum_token, tail_end_of_text(text)]
+    def build_operator_token_and_split_text_on_first_letter(text)
+      [build_operator_token(first_character_in_text(text)), tail_end_of_text(text)]
     end
 
     def first_character_in_text_is_alphabetical_letter?(text)
       character_is_alphabetic?(first_character_in_text(text))
     end
 
-    def build_variable_token_with_rest_of_text(expression_text)
-      [build_variable_token(expression_text), ""]
+    def build_variable_token_with_rest_of_text(text)
+      buffer = []
+
+      while character_is_alphabetic?(first_character_in_text(text))
+        buffer.push(first_character_in_text(text))
+        text = tail_end_of_text(text)
+      end
+
+      [build_variable_token(buffer.join), text]
     end
 
     def first_character_in_text_is_numeric?(expression_text)
@@ -118,6 +115,10 @@ module SymDiffer
       text[0].to_s
     end
 
+    def build_operator_token(symbol)
+      OperationToken.new(symbol)
+    end
+
     def build_negate_token
       OperationToken.new("-")
     end
@@ -136,6 +137,10 @@ module SymDiffer
 
     def character_is_whitespace?(character)
       character.match?(/\s/)
+    end
+
+    def character_is_recognized_infix_operator?(character)
+      %w[+ -].include?(character)
     end
 
     def character_is_alphabetic?(character)
