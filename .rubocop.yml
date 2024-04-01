@@ -14,6 +14,19 @@ RSpec/VerifiedDoubles:
 RSpec/MultipleMemoizedHelpers:
   Max: 11
 
+# We interpret Arrange-Act-Assert a little bit differently. Empirically speaking there's no readibility nor
+# maintainability issues with tests that consist of a handful of arrange statements, followed by one act statement,
+# followed by a handful of assert statements. We don't enforce one style or the other, other than for observing that (1)
+# Arranging is mainly done in context hooks, (2) Acting is only done once for an `it` block, followed by (3) one or more
+# Assert statements. The max value here is meant to encourage the creation of units (e.g., classes) that don't require a
+# high combination of arrangements, acts, and assertions, which we identify as an actual problem.
+RSpec/MultipleExpectations:
+  Max: 6
+
+# Refer to the previous comment for an explanation of the value of this setting.
+RSpec/ExampleLength:
+  Max: 12
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
