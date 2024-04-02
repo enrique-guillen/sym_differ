@@ -29,10 +29,11 @@ RSpec/ExampleLength:
 
 # The work some classes, such as free_form_expression_text_token_extractor, are traditionally done as a single file, so
 # some of them are (tentatively temporarily) excluded from this check.
-RSpec/ClassLength:
+Metrics/ClassLength:
   Enabled: true
   Exclude:
   - "lib/sym_differ/free_form_expression_text_language/token_extractor.rb"
+  - "lib/sym_differ/free_form_expression_text_language/expression_tree_builder.rb"
 
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
