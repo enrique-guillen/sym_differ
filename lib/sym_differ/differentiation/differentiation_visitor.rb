@@ -1,13 +1,27 @@
 # frozen_string_literal: true
 
 require "sym_differ/differentiation/constant_expression_deriver"
+require "sym_differ/differentiation/variable_expression_deriver"
 
 module SymDiffer
   module Differentiation
     # Performs the appropriate differentiation operation on each element of the Expression hierarchy.
     class DifferentiationVisitor
-      def visit_constant_expression(constant_expression, variable)
-        ConstantExpressionDeriver.new.derive(constant_expression, variable)
+      def initialize(variable)
+        @variable = variable
+      end
+
+      def visit_constant_expression(expression)
+        ConstantExpressionDeriver.new.derive(expression, @variable)
+      end
+
+      def visit_variable_expression(expression)
+        VariableExpressionDeriver.new.derive(expression, @variable)
+      end
+
+      def visit_negate_expression(expression)
+        # @todo
+        ::SymDiffer::NegateExpression.new(SymDiffer::ConstantExpression.new(1))
       end
     end
   end
