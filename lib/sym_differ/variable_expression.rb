@@ -7,6 +7,10 @@ module SymDiffer
       @name = name
     end
 
+    def accept(visitor)
+      visitor.visit_variable_expression(self)
+    end
+
     attr_reader :name
   end
 end
