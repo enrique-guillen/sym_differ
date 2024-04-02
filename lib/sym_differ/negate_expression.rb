@@ -8,5 +8,9 @@ module SymDiffer
     end
 
     attr_reader :negated_expression
+
+    def accept(visitor)
+      visitor.visit_negate_expression(self)
+    end
   end
 end
