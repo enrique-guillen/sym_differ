@@ -54,4 +54,4 @@ Feature: Get the symbolic derivative of a given expression.
       When the user requests the derivative
 
       Then the operation is successful
-      And the computed derivative is 2x
+      And the computed derivative is 2
