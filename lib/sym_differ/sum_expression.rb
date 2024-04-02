@@ -8,6 +8,10 @@ module SymDiffer
       @expression_b = expression_b
     end
 
+    def accept(visitor)
+      visitor.visit_sum_expression(self)
+    end
+
     attr_reader :expression_a, :expression_b
   end
 end
