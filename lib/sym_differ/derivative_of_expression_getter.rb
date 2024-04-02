@@ -54,7 +54,7 @@ module SymDiffer
     end
 
     def derive_expression(expression, variable)
-      @differentiation_visitor_builder.build(variable).derive(expression)
+      expression.accept(@differentiation_visitor_builder.build(variable))
     end
 
     def reduce_expression(expression)
@@ -62,7 +62,7 @@ module SymDiffer
     end
 
     def textify_expression(expression)
-      @expression_textifier.textify(expression)
+      expression.accept(@expression_textifier)
     end
   end
 end
