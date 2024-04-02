@@ -12,6 +12,10 @@ module SymDiffer
           .new
           .build(TokenExtractor.new.parse(expression))
       end
+
+      def validate_variable(var)
+        raise if var.empty?
+      end
     end
   end
 end
