@@ -27,6 +27,12 @@ RSpec/MultipleExpectations:
 RSpec/ExampleLength:
   Max: 12
 
+# Accounting for the root RSpec.describe call, and the describe "#method_name" call, the default of 3 nested groups
+# only allows for one nested context; it should be possible to nest a little bit deeper than that depending on
+# circumstances.
+RSpec/NestedGroups:
+  Max: 5
+
 # The work some classes, such as free_form_expression_text_token_extractor, are traditionally done as a single file, so
 # some of them are (tentatively temporarily) excluded from this check.
 Metrics/ClassLength:
