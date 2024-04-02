@@ -6,8 +6,8 @@ module SymDiffer
   module Differentiation
     # Performs the appropriate differentiation operation on each element of the Expression hierarchy.
     class DifferentiationVisitor
-      def visit_constant_expression(constant_expression)
-        ConstantExpressionDeriver.new.derive(constant_expression)
+      def visit_constant_expression(constant_expression, variable)
+        ConstantExpressionDeriver.new.derive(constant_expression, variable)
       end
     end
   end

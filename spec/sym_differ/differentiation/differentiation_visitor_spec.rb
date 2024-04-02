@@ -8,10 +8,11 @@ require "sym_differ/constant_expression"
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
   describe "#visit_constant_expression" do
     subject(:visit_constant_expression) do
-      described_class.new.visit_constant_expression(expression)
+      described_class.new.visit_constant_expression(expression, variable)
     end
 
     let(:expression) { SymDiffer::ConstantExpression.new(0) }
+    let(:variable) { "x" }
 
     it "returns the result of deriving the constant expression" do
       expect(visit_constant_expression).to have_attributes(value: 0)
