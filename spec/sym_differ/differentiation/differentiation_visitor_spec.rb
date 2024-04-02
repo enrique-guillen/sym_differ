@@ -5,6 +5,8 @@ require "sym_differ/differentiation/differentiation_visitor"
 
 require "sym_differ/constant_expression"
 require "sym_differ/variable_expression"
+require "sym_differ/sum_expression"
+require "sym_differ/negate_expression"
 
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
   describe "#visit_constant_expression" do

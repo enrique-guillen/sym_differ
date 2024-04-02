@@ -2,6 +2,7 @@
 
 require "sym_differ/differentiation/constant_expression_deriver"
 require "sym_differ/differentiation/variable_expression_deriver"
+require "sym_differ/differentiation/sum_expression_deriver"
 
 module SymDiffer
   module Differentiation
