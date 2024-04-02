@@ -47,4 +47,22 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
     end
   end
+
+  describe "#visit_sum_expression" do
+    subject(:visit_sum_expression) do
+      described_class.new(variable).visit_sum_expression(expression)
+    end
+
+    let(:variable) { "x" }
+    let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+    let(:expression_a) { SymDiffer::VariableExpression.new("var") }
+    let(:expression_b) { SymDiffer::VariableExpression.new("x") }
+
+    it "returns the result of deriving the sum expression" do
+      expect(visit_sum_expression).to have_attributes(
+        expression_a: an_object_having_attributes(value: 0),
+        expression_b: an_object_having_attributes(value: 1)
+      )
+    end
+  end
 end

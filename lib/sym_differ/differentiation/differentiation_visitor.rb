@@ -19,9 +19,13 @@ module SymDiffer
         VariableExpressionDeriver.new.derive(expression, @variable)
       end
 
-      def visit_negate_expression(expression)
+      def visit_negate_expression(_expression)
         # @todo
-        ::SymDiffer::NegateExpression.new(SymDiffer::ConstantExpression.new(1))
+        NegateExpression.new(SymDiffer::ConstantExpression.new(1))
+      end
+
+      def visit_sum_expression(expression)
+        SumExpressionDeriver.new(self).derive(expression)
       end
     end
   end
