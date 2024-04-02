@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 require "sym_differ/derivative_of_expression_getter"
+require "sym_differ/free_form_expression_text_language/parser"
+require "sym_differ/differentiation/differentiation_visitor"
+require "sym_differ/expression_reducer"
+require "sym_differ/inline_printing/printing_visitor"
+
+# Temporal implementation of VisitorBuilder.
+class DifferentiationVisitorBuilder
+  def build(variable)
+    SymDiffer::Differentiation::DifferentiationVisitor.new(variable)
+  end
+end
 
 Before do
   @params = { expression: nil, variable: nil }
@@ -22,7 +33,10 @@ end
 When("the user requests the derivative") do
   @payload =
     SymDiffer::DerivativeOfExpressionGetter
-    .new
+    .new(SymDiffer::FreeFormExpressionTextLanguage::Parser.new,
+         DifferentiationVisitorBuilder.new,
+         SymDiffer::ExpressionReducer.new,
+         SymDiffer::InlinePrinting::PrintingVisitor.new)
     .get(@params[:expression], @params[:variable])
 end
 
