@@ -2,6 +2,7 @@
 
 require "sym_differ/free_form_expression_text_language/token_extractor"
 require "sym_differ/free_form_expression_text_language/expression_tree_builder"
+require "sym_differ/invalid_variable_given_to_expression_parser_error"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
@@ -14,7 +15,11 @@ module SymDiffer
       end
 
       def validate_variable(var)
-        raise if var.empty?
+        return if var.match?(/\A[a-zA-Z]+\z/)
+
+        raise InvalidVariableGivenToExpressionParserError.new(
+          "Invalid variable name #{var}; provide a variable name consisting of alphabetical characters only.", var
+        )
       end
     end
   end
