@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/unparseable_expression_text_error"
-
 require "sym_differ/free_form_expression_text_language/variable_token"
 require "sym_differ/free_form_expression_text_language/constant_token"
 require "sym_differ/free_form_expression_text_language/operator_token"
@@ -10,6 +8,8 @@ require "sym_differ/variable_expression"
 require "sym_differ/constant_expression"
 require "sym_differ/negate_expression"
 require "sym_differ/sum_expression"
+
+require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
@@ -162,7 +162,7 @@ module SymDiffer
       end
 
       def raise_unparseable_expression_text_error(token)
-        raise UnparseableExpressionTextError.new("Expected a constant or variable, found #{token}", "")
+        raise InvalidSyntaxError.new("Expected a constant or variable, found #{token}", "")
       end
     end
   end
