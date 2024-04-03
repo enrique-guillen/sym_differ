@@ -27,7 +27,8 @@ Given("the user wants the derivative of {}") do |expression|
 end
 
 Given("the user wants the derivative with respect to {}") do |variable|
-  @params[:variable] = variable
+  @params[:variable] =
+    variable == "~ (no variable specified)" ? "" : variable
 end
 
 When("the user requests the derivative") do

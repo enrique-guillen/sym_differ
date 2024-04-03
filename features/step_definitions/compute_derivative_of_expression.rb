@@ -14,7 +14,8 @@ Given("the expression to differentiate is {}") do |expression|
 end
 
 Given("the variable of the expression to differentiate with is {}") do |variable|
-  @params[:variable] = variable
+  @params[:variable] =
+    variable == "~ (no variable specified)" ? "" : variable
 end
 
 When("the expression is computed") do
