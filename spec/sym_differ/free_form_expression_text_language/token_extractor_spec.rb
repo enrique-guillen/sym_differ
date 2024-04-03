@@ -2,10 +2,13 @@
 
 require "spec_helper"
 require "sym_differ/free_form_expression_text_language/token_extractor"
-require "sym_differ/unparseable_expression_text_error"
+
 require "sym_differ/free_form_expression_text_language/variable_token"
 require "sym_differ/free_form_expression_text_language/constant_token"
 require "sym_differ/free_form_expression_text_language/operator_token"
+
+require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
+require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
 
 RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
   describe "#parse" do
@@ -21,7 +24,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       it "raises an error when given an empty string" do
         expect { parse }
           .to raise_error(
-            a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
               .and(having_attributes(message: "The expression can't be empty.", invalid_expression_text: ""))
           )
       end
@@ -121,7 +124,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       it "raises an error referencing the unexpected symbol" do
         expect { parse }
           .to raise_error(
-            a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
               .and(having_attributes(message: "A token in the expression started with unrecognized token '!'.",
                                      invalid_expression_text: "!"))
           )
@@ -134,7 +137,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       it "raises an error referencing the unexpected symbol" do
         expect { parse }
           .to raise_error(
-            a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
               .and(having_attributes(message: "A token in the expression started with unrecognized token '\\'.",
                                      invalid_expression_text: "\\"))
           )

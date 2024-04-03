@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-require "sym_differ/unparseable_expression_text_error"
 require "sym_differ/free_form_expression_text_language/variable_token"
 require "sym_differ/free_form_expression_text_language/constant_token"
 require "sym_differ/free_form_expression_text_language/operator_token"
+
+require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
+require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
@@ -75,11 +77,11 @@ module SymDiffer
       end
 
       def raise_unparseable_text_error_due_to_empty_text(text)
-        raise_unparseable_text_error("The expression can't be empty.", text)
+        raise EmptyExpressionTextError.new("The expression can't be empty.", text)
       end
 
       def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-        raise_unparseable_text_error(
+        raise UnrecognizedTokenError.new(
           "A token in the expression started with unrecognized token '#{first_character_in_text(expression_text)}'.",
           expression_text
         )
@@ -161,10 +163,6 @@ module SymDiffer
 
       def character_is_numeric?(character)
         character.match?(/[0-9]/)
-      end
-
-      def raise_unparseable_text_error(reason, text)
-        raise UnparseableExpressionTextError.new(reason, text)
       end
     end
   end
