@@ -1,9 +1,9 @@
 @derive_function @validate_expression
 Feature: Get the symbolic derivative of a given expression.
 
-  The derivative of a function `F` is a function `F'` that describes the rate of change of the value of the function `F` with respect to one of its parameters.
-
   The goal of this feature is to allow users to ask for the derivative of an expression they provide.
+
+  The derivative of a function `F` is a function `F'` that describes the rate of change of the value of the function `F` with respect to one of its parameters.
 
   The inputs consist of:
   - A string that ideally represents the function to derive, e.g. `2x + 1`, `sine(x)`, `xy`, etc.

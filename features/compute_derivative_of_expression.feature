@@ -1,10 +1,9 @@
 @derive_function @reduce_expression
 Feature: Compute the symbolic derivative of a given expression.
 
+  This feature file exposes the internal logic for differentiation. It concerns itself with the mapping between valid expressions and their corresponding derivatives.
+
   The derivative of a function `F` is a function `F'` that describes the rate of change of the value of the function `F` with respect to one of its parameters.
-
-  This feature file concerns itself with the mapping between valid expressions and their corresponding derivatives.
-
   The inputs consist of:
   - A string which contains the symbolic expression that defines the function to derive, e.g. `2x + 1`, `sine(x)`, `xy`, etc.
   - A string that specifies the character or name of the parameter of the function, e.g., `x`, `angle`, etc.
