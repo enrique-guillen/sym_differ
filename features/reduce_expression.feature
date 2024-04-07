@@ -9,20 +9,4 @@ Feature: Compute a reduction for the expression.
 
   Scenario: The reduction of 1 + 0 is requested
 
-  Scenario: The reduction of 3 + 2 - 2 is requested
-
-  Scenario: The reduction of x - 1 - 2 is requested
-
-  Scenario: The reduction of 0x is requested
-
-  Scenario: The reduction of 1x is requested
-
-  Scenario: The reduction of (1 + 0)x is requested.
-
-  Scenario: The reduction of (1 + x)1 is requested.
-
-  Scenario: The reduction of e^0 is requested.
-
-  Scenario: The reduction of e^1 is requested.
-
-  Scenario: The reduction of e^x is requested.
+  Scenario: The reduction of 1 + 1 is requested
