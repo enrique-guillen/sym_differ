@@ -10,7 +10,7 @@ module SymDiffer
 
     def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_textifier)
       @expression_text_parser = expression_text_parser
-      @differentiation_visitor_builder = differentiation_visitor
+      @differentiation_visitor = differentiation_visitor
       @expression_reducer = expression_reducer
       @expression_textifier = expression_textifier
     end
@@ -54,7 +54,7 @@ module SymDiffer
     end
 
     def derive_expression(expression)
-      expression.accept(@differentiation_visitor_builder)
+      expression.accept(@differentiation_visitor)
     end
 
     def reduce_expression(expression)
