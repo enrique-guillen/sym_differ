@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/derivative_of_expression_getter"
-require "sym_differ/free_form_expression_text_language/parser"
-require "sym_differ/differentiation/differentiation_visitor"
-require "sym_differ/expression_reducer"
-require "sym_differ/inline_printing/printing_visitor"
+require "sym_differ/get_derivative_of_expression_director"
 
 Before do
   @params = { expression: nil, variable: nil }
@@ -26,12 +22,9 @@ end
 
 When("the expression is computed") do
   @payload =
-    SymDiffer::DerivativeOfExpressionGetter
-    .new(SymDiffer::FreeFormExpressionTextLanguage::Parser.new,
-         DifferentiationVisitorBuilder.new,
-         SymDiffer::ExpressionReducer.new,
-         SymDiffer::InlinePrinting::PrintingVisitor.new)
-    .get(@params[:expression], @params[:variable])
+    SymDiffer::GetDerivativeOfExpressionDirector
+    .new
+    .calculate_derivative(@params[:expression], @params[:variable])
 end
 
 Then("the derivative expression is {}") do |derivative_expression|
