@@ -8,9 +8,9 @@ module SymDiffer
   class DerivativeOfExpressionGetter
     OperationResponse = Struct.new(:successful?, :derivative_expression, :message, :cause)
 
-    def initialize(expression_text_parser, differentiation_visitor_builder, expression_reducer, expression_textifier)
+    def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_textifier)
       @expression_text_parser = expression_text_parser
-      @differentiation_visitor_builder = differentiation_visitor_builder
+      @differentiation_visitor_builder = differentiation_visitor
       @expression_reducer = expression_reducer
       @expression_textifier = expression_textifier
     end
@@ -36,7 +36,7 @@ module SymDiffer
       validate_variable(variable)
 
       parse_expression_text(expression_text)
-        .then { |expression| derive_expression(expression, variable) }
+        .then { |expression| derive_expression(expression) }
         .then { |expression| reduce_expression(expression) }
         .then { |expression| textify_expression(expression) }
     end
@@ -53,8 +53,8 @@ module SymDiffer
       @expression_text_parser.parse(expression_text)
     end
 
-    def derive_expression(expression, variable)
-      expression.accept(@differentiation_visitor_builder.build(variable))
+    def derive_expression(expression)
+      expression.accept(@differentiation_visitor_builder)
     end
 
     def reduce_expression(expression)
