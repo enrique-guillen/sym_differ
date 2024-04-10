@@ -5,10 +5,10 @@ require "sym_differ/free_form_expression_text_language/empty_expression_text_err
 
 RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError do
   describe ".new" do
-    subject(:new) do
-      described_class.new("x~")
-    end
+    subject(:new) { described_class.new }
 
-    it { is_expected.to have_attributes(invalid_expression_text: "x~") }
+    it "does not raise an error" do
+      expect { new }.not_to raise_error
+    end
   end
 end
