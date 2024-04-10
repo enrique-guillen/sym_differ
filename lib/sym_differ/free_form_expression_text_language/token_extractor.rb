@@ -77,14 +77,11 @@ module SymDiffer
       end
 
       def raise_unparseable_text_error_due_to_empty_text(text)
-        raise EmptyExpressionTextError.new("The expression can't be empty.", text)
+        raise EmptyExpressionTextError.new(text)
       end
 
       def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-        raise UnrecognizedTokenError.new(
-          "A token in the expression started with unrecognized token '#{first_character_in_text(expression_text)}'.",
-          expression_text
-        )
+        raise UnrecognizedTokenError.new(expression_text)
       end
 
       def build_nil_token_and_empty_string

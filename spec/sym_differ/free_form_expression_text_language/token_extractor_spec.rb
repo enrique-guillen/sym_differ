@@ -25,7 +25,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
         expect { parse }
           .to raise_error(
             a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
-              .and(having_attributes(message: "The expression can't be empty.", invalid_expression_text: ""))
+              .and(having_attributes(invalid_expression_text: ""))
           )
       end
     end
@@ -125,8 +125,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
         expect { parse }
           .to raise_error(
             a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
-              .and(having_attributes(message: "A token in the expression started with unrecognized token '!'.",
-                                     invalid_expression_text: "!"))
+              .and(having_attributes(invalid_expression_text: "!"))
           )
       end
     end
@@ -138,8 +137,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
         expect { parse }
           .to raise_error(
             a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
-              .and(having_attributes(message: "A token in the expression started with unrecognized token '\\'.",
-                                     invalid_expression_text: "\\"))
+              .and(having_attributes(invalid_expression_text: "\\"))
           )
       end
     end

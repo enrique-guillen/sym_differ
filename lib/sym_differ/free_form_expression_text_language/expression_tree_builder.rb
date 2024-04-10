@@ -44,7 +44,7 @@ module SymDiffer
       end
 
       def validate_final_mode(mode)
-        raise_unparseable_expression_text_error(nil) unless mode == :allow_operator_or_end
+        raise_unparseable_expression_text_error unless mode == :allow_operator_or_end
       end
 
       def try_evaluating_as_initial_mode(mode, token)
@@ -90,7 +90,7 @@ module SymDiffer
         return build_constant_expression_from_token(token) if token.is_a?(ConstantToken)
         return :negation_token if token.is_a?(OperatorToken) && token.symbol == "-"
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def next_mode_for_post_sub_expression(token)
@@ -98,19 +98,19 @@ module SymDiffer
           return :expecting_sub_expression_for_incomplete_sum_expression
         end
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def build_expression_for_post_sub_expression_mode(token, expression)
         return expression if token.is_a?(OperatorToken) && token.symbol == "+"
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def next_mode_for_post_completing_negation_expression(token)
         return :allow_operator_or_end if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def build_expression_for_post_completing_negation_expression(token)
@@ -122,7 +122,7 @@ module SymDiffer
       def next_mode_for_post_completing_sum_expression(token)
         return :allow_operator_or_end if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def build_expression_for_post_completing_sum_expression(token, expression)
@@ -134,7 +134,7 @@ module SymDiffer
           return build_sum_expression(expression, build_constant_expression_from_token(token))
         end
 
-        raise_unparseable_expression_text_error(token)
+        raise_unparseable_expression_text_error
       end
 
       def build_variable_expression_from_token(token)
@@ -161,8 +161,8 @@ module SymDiffer
         SumExpression.new(expression_a, expression_b)
       end
 
-      def raise_unparseable_expression_text_error(token)
-        raise InvalidSyntaxError.new("Expected a constant or variable, found #{token}", "")
+      def raise_unparseable_expression_text_error
+        raise InvalidSyntaxError.new("")
       end
     end
   end
