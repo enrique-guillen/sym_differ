@@ -21,7 +21,7 @@ module SymDiffer
       private
 
       def raise_error_if_expression_text_is_empty(expression_text)
-        raise_unparseable_text_error_due_to_empty_text(expression_text) if expression_text.empty?
+        raise_unparseable_text_error_due_to_empty_text if expression_text.empty?
       end
 
       def extract_tokens(expression_text)
@@ -76,8 +76,8 @@ module SymDiffer
         build_constant_token_and_split_text_on_first_non_numerical_character(expression_text)
       end
 
-      def raise_unparseable_text_error_due_to_empty_text(text)
-        raise EmptyExpressionTextError.new(text)
+      def raise_unparseable_text_error_due_to_empty_text
+        raise EmptyExpressionTextError
       end
 
       def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)

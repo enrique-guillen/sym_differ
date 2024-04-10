@@ -23,10 +23,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
 
       it "raises an error when given an empty string" do
         expect { parse }
-          .to raise_error(
-            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
-              .and(having_attributes(invalid_expression_text: ""))
-          )
+          .to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError))
       end
     end
 
