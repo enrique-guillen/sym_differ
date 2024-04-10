@@ -46,8 +46,10 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [operator_token_class.new("+")] }
 
       it "raises an error mentioning the syntax error" do
-        expect { build }
-          .to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        expect { build }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        )
       end
     end
 
@@ -86,7 +88,10 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [constant_token_class.new(1), operator_token_class.new("+")] }
 
       it "raises an error mentioning the invalid expression end" do
-        expect { build }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        expect { build }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        )
       end
     end
 
@@ -94,7 +99,10 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [constant_token_class.new(1), operator_token_class.new("+"), operator_token_class.new("+")] }
 
       it "raises an error mentioning the invalid expression end" do
-        expect { build }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        expect { build }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        )
       end
     end
 
@@ -102,7 +110,10 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [operator_token_class.new("-"), operator_token_class.new("+")] }
 
       it "raises an error mentioning the invalid expression end" do
-        expect { build }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        expect { build }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        )
       end
     end
 
@@ -110,7 +121,10 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [variable_token_class.new("x"), constant_token_class.new("1")] }
 
       it "raises an error mentioning the invalid expression end" do
-        expect { build }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        expect { build }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+        )
       end
     end
   end

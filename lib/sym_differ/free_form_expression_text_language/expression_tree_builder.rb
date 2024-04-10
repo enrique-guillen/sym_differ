@@ -17,6 +17,14 @@ module SymDiffer
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
       def build(tokens)
+        build_expression_from_tokens(tokens)
+      rescue InvalidSyntaxError
+        raise SymDiffer::UnparseableExpressionTextError
+      end
+
+      private
+
+      def build_expression_from_tokens(tokens)
         mode = :start_parsing
         expression = nil
 
@@ -29,8 +37,6 @@ module SymDiffer
 
         expression
       end
-
-      private
 
       def no_elements_in_list?(list)
         list.empty?
