@@ -48,7 +48,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       it "raises an error mentioning the syntax error" do
         expect { build }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
         )
       end
     end
@@ -90,7 +90,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       it "raises an error mentioning the invalid expression end" do
         expect { build }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
         )
       end
     end
@@ -101,7 +101,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       it "raises an error mentioning the invalid expression end" do
         expect { build }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
         )
       end
     end
@@ -112,7 +112,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       it "raises an error mentioning the invalid expression end" do
         expect { build }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
         )
       end
     end
@@ -123,7 +123,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       it "raises an error mentioning the invalid expression end" do
         expect { build }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
         )
       end
     end
