@@ -26,7 +26,8 @@ When("the user requests the derivative") do
     SymDiffer::GetDerivativeOfExpressionDirector
     .new
     .calculate_derivative(@params[:expression], @params[:variable])
-rescue SymDiffer::InvalidVariableGivenToExpressionParserError, SymDiffer::UnparseableExpressionTextError => e
+rescue SymDiffer::InvalidVariableGivenToExpressionParserError,
+       SymDiffer::UnparseableExpressionTextError => e
   @result[:raised_exception] = e
 end
 
