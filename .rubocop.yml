@@ -41,6 +41,11 @@ Metrics/ClassLength:
   - "lib/sym_differ/free_form_expression_text_language/token_extractor.rb"
   - "lib/sym_differ/free_form_expression_text_language/expression_tree_builder.rb"
 
+# The compact style of the `raise` call discourages exception messages (but still allow them), and encourages
+# descriptive exception names.
+Style/RaiseArgs:
+  EnforcedStyle: compact
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
