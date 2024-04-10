@@ -14,15 +14,12 @@ module SymDiffer
     class TokenExtractor
       def parse(expression_text)
         raise_error_if_expression_text_is_empty(expression_text)
-
         extract_tokens(expression_text)
+      rescue EmptyExpressionTextError, UnrecognizedTokenError
+        raise_unparseable_expression_error
       end
 
       private
-
-      def raise_error_if_expression_text_is_empty(expression_text)
-        raise_unparseable_text_error_due_to_empty_text if expression_text.empty?
-      end
 
       def extract_tokens(expression_text)
         tokens = []
@@ -76,12 +73,16 @@ module SymDiffer
         build_constant_token_and_split_text_on_first_non_numerical_character(expression_text)
       end
 
-      def raise_unparseable_text_error_due_to_empty_text
-        raise EmptyExpressionTextError
+      def raise_error_if_expression_text_is_empty(expression_text)
+        raise EmptyExpressionTextError if expression_text.empty?
       end
 
       def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
         raise UnrecognizedTokenError.new(expression_text)
+      end
+
+      def raise_unparseable_expression_error
+        raise UnparseableExpressionTextError
       end
 
       def build_nil_token_and_empty_string

@@ -22,8 +22,12 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       let(:expression_text) { "" }
 
       it "raises an error when given an empty string" do
-        expect { parse }
-          .to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError))
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and having_attributes(
+              cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
+            )
+        )
       end
     end
 
@@ -119,11 +123,15 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       let(:expression_text) { "3!" }
 
       it "raises an error referencing the unexpected symbol" do
-        expect { parse }
-          .to raise_error(
-            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
-              .and(having_attributes(invalid_expression_text: "!"))
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
+            having_attributes(
+              cause: a_kind_of(
+                SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError
+              ).and(having_attributes(invalid_expression_text: "!"))
+            )
           )
+        )
       end
     end
 
@@ -131,11 +139,15 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       let(:expression_text) { "\\" }
 
       it "raises an error referencing the unexpected symbol" do
-        expect { parse }
-          .to raise_error(
-            a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
-              .and(having_attributes(invalid_expression_text: "\\"))
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
+            having_attributes(
+              cause: a_kind_of(
+                SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError
+              ).and(having_attributes(invalid_expression_text: "\\"))
+            )
           )
+        )
       end
     end
 
