@@ -3,8 +3,8 @@
 module SymDiffer
   # The expression parser cannot parse an expression because the provided variable is considered invalid.
   class InvalidVariableGivenToExpressionParserError < StandardError
-    def initialize(message, invalid_variable_name)
-      super(message)
+    def initialize(invalid_variable_name)
+      super()
       @invalid_variable_name = invalid_variable_name
     end
 

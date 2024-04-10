@@ -14,12 +14,10 @@ module SymDiffer
           .build(TokenExtractor.new.parse(expression))
       end
 
-      def validate_variable(var)
-        return if var.match?(/\A[a-zA-Z]+\z/)
+      def validate_variable(variable)
+        return if variable.match?(/\A[a-zA-Z]+\z/)
 
-        raise InvalidVariableGivenToExpressionParserError.new(
-          "Invalid variable name #{var}; provide a variable name consisting of alphabetical characters only.", var
-        )
+        raise InvalidVariableGivenToExpressionParserError.new(variable)
       end
     end
   end
