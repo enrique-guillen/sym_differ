@@ -7,6 +7,6 @@ RSpec.describe SymDiffer::GetDerivativeOfExpressionDirector do
   describe "#calculate_derivative" do
     subject(:calculate_derivative) { described_class.new.calculate_derivative("x + x", "x") }
 
-    it { is_expected.to have_attributes(successful?: true, derivative_expression: "2") }
+    it { is_expected.to have_attributes(derivative_expression: "2") }
   end
 end

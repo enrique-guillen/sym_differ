@@ -6,7 +6,7 @@ require "sym_differ/unparseable_expression_text_error"
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
   class DerivativeOfExpressionGetter
-    OperationResponse = Struct.new(:successful?, :derivative_expression, :message, :cause)
+    OperationResponse = Struct.new(:derivative_expression)
 
     def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_textifier)
       @expression_text_parser = expression_text_parser
@@ -17,19 +17,13 @@ module SymDiffer
 
     def get(expression_text, variable)
       build_compute_derivative_expression_operation_result(expression_text, variable)
-    rescue InvalidVariableGivenToExpressionParserError, UnparseableExpressionTextError => e
-      build_failure_operation_response(e)
     end
 
     private
 
     def build_compute_derivative_expression_operation_result(expression_text, variable)
       expression = validate_expression_and_compute_derivative_expression(expression_text, variable)
-      build_operation_response(true, expression)
-    end
-
-    def build_failure_operation_response(exception)
-      build_operation_response(false, nil, "See #cause for details.", exception)
+      build_operation_response(expression)
     end
 
     def validate_expression_and_compute_derivative_expression(expression_text, variable)
@@ -45,8 +39,8 @@ module SymDiffer
       @expression_text_parser.validate_variable(variable)
     end
 
-    def build_operation_response(was_successful, derivative_expression, message = nil, cause = nil)
-      OperationResponse.new(was_successful, derivative_expression, message, cause)
+    def build_operation_response(derivative_expression)
+      OperationResponse.new(derivative_expression)
     end
 
     def parse_expression_text(expression_text)
