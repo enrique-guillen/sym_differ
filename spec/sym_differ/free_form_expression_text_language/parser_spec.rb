@@ -7,16 +7,58 @@ require "sym_differ/invalid_variable_given_to_expression_parser_error"
 RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::Parser do
   describe "#parse" do
     subject(:parse) do
-      described_class.new.parse("x + x")
+      described_class.new.parse(expression_text)
     end
 
-    it "has the expected structure" do
-      expression = parse
+    context "when the expression is x + x" do
+      let(:expression_text) { "x + x" }
 
-      expect(expression).to have_attributes(
-        expression_a: an_object_having_attributes(name: "x"),
-        expression_b: an_object_having_attributes(name: "x")
-      )
+      it "has the expected structure" do
+        expression = parse
+
+        expect(expression).to have_attributes(
+          expression_a: an_object_having_attributes(name: "x"),
+          expression_b: an_object_having_attributes(name: "x")
+        )
+      end
+    end
+
+    context "when the expression text to parse is '3!'" do
+      let(:expression_text) { "3!" }
+
+      it "raises an error referencing the unexpected symbol" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
+            having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
+              .and(having_attributes(invalid_expression_text: "!")))
+          )
+        )
+      end
+    end
+
+    context "when the expression text to parse is ''" do
+      let(:expression_text) { "" }
+
+      it "raises an error referencing the unexpected symbol" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
+            having_attributes(
+              cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
+            )
+          )
+        )
+      end
+    end
+
+    context "when the expression text to parse is '+'" do
+      let(:expression_text) { "+" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
+        )
+      end
     end
   end
 
