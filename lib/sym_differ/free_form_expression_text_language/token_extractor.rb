@@ -15,8 +15,6 @@ module SymDiffer
       def parse(expression_text)
         raise_error_if_expression_text_is_empty(expression_text)
         extract_tokens(expression_text)
-      rescue EmptyExpressionTextError, UnrecognizedTokenError
-        raise_unparseable_expression_error
       end
 
       private
@@ -79,10 +77,6 @@ module SymDiffer
 
       def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
         raise UnrecognizedTokenError.new(expression_text)
-      end
-
-      def raise_unparseable_expression_error
-        raise UnparseableExpressionTextError
       end
 
       def build_nil_token_and_empty_string

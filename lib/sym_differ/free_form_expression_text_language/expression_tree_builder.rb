@@ -18,8 +18,6 @@ module SymDiffer
     class ExpressionTreeBuilder
       def build(tokens)
         build_expression_from_tokens(tokens)
-      rescue InvalidSyntaxError
-        raise SymDiffer::UnparseableExpressionTextError
       end
 
       private

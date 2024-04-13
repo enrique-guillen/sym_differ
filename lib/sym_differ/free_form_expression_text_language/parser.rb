@@ -12,11 +12,23 @@ module SymDiffer
         ExpressionTreeBuilder
           .new
           .build(TokenExtractor.new.parse(expression))
+      rescue EmptyExpressionTextError, UnrecognizedTokenError, InvalidSyntaxError
+        raise_unparseable_expression_error
       end
 
       def validate_variable(variable)
         return if variable.match?(/\A[a-zA-Z]+\z/)
 
+        raise_invalid_variable_error(variable)
+      end
+
+      private
+
+      def raise_unparseable_expression_error
+        raise UnparseableExpressionTextError
+      end
+
+      def raise_invalid_variable_error(variable)
         raise InvalidVariableGivenToExpressionParserError.new(variable)
       end
     end
