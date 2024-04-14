@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "sym_differ/sum_expression"
 require "sym_differ/differentiation/sum_expression_deriver"
 
 RSpec.describe SymDiffer::Differentiation::SumExpressionDeriver do
