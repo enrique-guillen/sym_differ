@@ -4,11 +4,6 @@ require "sym_differ/free_form_expression_text_language/variable_token"
 require "sym_differ/free_form_expression_text_language/constant_token"
 require "sym_differ/free_form_expression_text_language/operator_token"
 
-require "sym_differ/variable_expression"
-require "sym_differ/constant_expression"
-require "sym_differ/negate_expression"
-require "sym_differ/sum_expression"
-
 require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
 
 module SymDiffer
@@ -23,59 +18,70 @@ module SymDiffer
       private
 
       def build_expression_from_tokens(tokens)
-        mode = :start_parsing
-        expression = nil
+        @next_expected_token_type = :valid_token_from_expression_start
 
         until no_elements_in_list?(tokens)
-          mode, expression = analyze_current_token_in_list(mode, tokens[0], expression)
+          analyze_current_token_in_list(take_list_head(tokens))
           tokens = take_list_tail(tokens)
         end
 
-        validate_final_mode(mode)
+        validate_final_mode
 
-        expression
+        @buffered_expression
       end
 
       def no_elements_in_list?(list)
         list.empty?
       end
 
-      def analyze_current_token_in_list(mode, token, previous_expression)
-        try_evaluating_as_initial_mode(mode, token) ||
-          try_evaluating_as_operator_or_end(mode, token, previous_expression) ||
-          try_evaluating_as_sub_expression_for_incomplete_negation_expression(mode, token) ||
-          try_evaluating_as_sub_expression_for_incomplete_sum_expression(mode, token, previous_expression)
+      def analyze_current_token_in_list(token)
+        try_evaluating_as_initial_mode(token) ||
+          try_evaluating_as_follow_up_to_leaf_token(token) ||
+          try_evaluating_as_follow_up_to_negation_token(token) ||
+          try_evaluating_as_follow_up_to_binary_operation_token(token)
       end
 
-      def validate_final_mode(mode)
-        raise_unparseable_expression_text_error unless mode == :allow_operator_or_end
+      def validate_final_mode
+        raise_unparseable_expression_text_error unless @next_expected_token_type == :follow_up_to_leaf_token
       end
 
-      def try_evaluating_as_initial_mode(mode, token)
-        return unless mode == :start_parsing
+      def try_evaluating_as_initial_mode(token)
+        return unless @next_expected_token_type == :valid_token_from_expression_start
 
-        [next_mode_for_initial_token(token), build_expression_for_initial_token(token)]
+        @buffered_binary_operation_token = token
+        @buffered_expression = build_expression_for_initial_token(token)
+        @next_expected_token_type = next_mode_for_initial_token(token)
       end
 
-      def try_evaluating_as_operator_or_end(mode, token, previous_expression)
-        return unless mode == :allow_operator_or_end
+      def try_evaluating_as_follow_up_to_leaf_token(token)
+        return unless @next_expected_token_type == :follow_up_to_leaf_token
 
-        [next_mode_for_post_sub_expression(token),
-         build_expression_for_post_sub_expression_mode(token, previous_expression)]
+        raise_invalid_syntax_error_unless_expression_is_operator(token)
+
+        @buffered_binary_operation_token = token
+        @next_expected_token_type = :follow_up_to_binary_operation_token
       end
 
-      def try_evaluating_as_sub_expression_for_incomplete_negation_expression(mode, token)
-        return unless mode == :expecting_sub_expression_for_incomplete_negation_expression
+      def try_evaluating_as_follow_up_to_negation_token(token)
+        return unless @next_expected_token_type == :follow_up_to_negation_token
 
-        [next_mode_for_post_completing_negation_expression(token),
-         build_expression_for_post_completing_negation_expression(token)]
+        raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
+
+        @buffered_expression = build_expression_for_post_completing_binary_expression(token)
+        @next_expected_token_type = :follow_up_to_leaf_token
       end
 
-      def try_evaluating_as_sub_expression_for_incomplete_sum_expression(mode, token, previous_expression)
-        return unless mode == :expecting_sub_expression_for_incomplete_sum_expression
+      def try_evaluating_as_follow_up_to_binary_operation_token(token)
+        return unless @next_expected_token_type == :follow_up_to_binary_operation_token
 
-        [next_mode_for_post_completing_sum_expression(token),
-         build_expression_for_post_completing_sum_expression(token, previous_expression)]
+        raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
+
+        @buffered_expression = build_expression_for_post_completing_binary_expression(token)
+        @next_expected_token_type = :follow_up_to_leaf_token
+      end
+
+      def take_list_head(list)
+        list[0]
       end
 
       def take_list_tail(list)
@@ -83,86 +89,31 @@ module SymDiffer
       end
 
       def next_mode_for_initial_token(token)
-        return :allow_operator_or_end if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
+        return :follow_up_to_leaf_token if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
         return unless token.is_a?(OperatorToken) && token.symbol == "-"
 
-        :expecting_sub_expression_for_incomplete_negation_expression
+        :follow_up_to_negation_token
       end
 
       def build_expression_for_initial_token(token)
-        return build_variable_expression_from_token(token) if token.is_a?(VariableToken)
-        return build_constant_expression_from_token(token) if token.is_a?(ConstantToken)
-        return :negation_token if token.is_a?(OperatorToken) && token.symbol == "-"
+        return token.transform_into_expression if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
+        return if token.is_a?(OperatorToken) && token.symbol == "-"
 
         raise_unparseable_expression_text_error
       end
 
-      def next_mode_for_post_sub_expression(token)
-        if token.is_a?(OperatorToken) && token.symbol == "+"
-          return :expecting_sub_expression_for_incomplete_sum_expression
-        end
-
-        raise_unparseable_expression_text_error
+      def raise_invalid_syntax_error_unless_expression_is_operator(token)
+        raise_unparseable_expression_text_error unless token.is_a?(OperatorToken)
       end
 
-      def build_expression_for_post_sub_expression_mode(token, expression)
-        return expression if token.is_a?(OperatorToken) && token.symbol == "+"
-
-        raise_unparseable_expression_text_error
+      def raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
+        raise_unparseable_expression_text_error unless token.is_a?(VariableToken) || token.is_a?(ConstantToken)
       end
 
-      def next_mode_for_post_completing_negation_expression(token)
-        return :allow_operator_or_end if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
-
-        raise_unparseable_expression_text_error
-      end
-
-      def build_expression_for_post_completing_negation_expression(token)
-        return build_negation_expression(build_variable_expression_from_token(token)) if token.is_a?(VariableToken)
-
-        build_negation_expression(build_constant_expression_from_token(token)) if token.is_a?(ConstantToken)
-      end
-
-      def next_mode_for_post_completing_sum_expression(token)
-        return :allow_operator_or_end if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
-
-        raise_unparseable_expression_text_error
-      end
-
-      def build_expression_for_post_completing_sum_expression(token, expression)
-        if token.is_a?(VariableToken)
-          return build_sum_expression(expression, build_variable_expression_from_token(token))
-        end
-
-        if token.is_a?(ConstantToken)
-          return build_sum_expression(expression, build_constant_expression_from_token(token))
-        end
-
-        raise_unparseable_expression_text_error
-      end
-
-      def build_variable_expression_from_token(token)
-        build_variable_expression(token.name)
-      end
-
-      def build_constant_expression_from_token(token)
-        build_constant_expression(token.value)
-      end
-
-      def build_variable_expression(name)
-        VariableExpression.new(name)
-      end
-
-      def build_constant_expression(value)
-        ConstantExpression.new(value)
-      end
-
-      def build_negation_expression(negated_expression)
-        NegateExpression.new(negated_expression)
-      end
-
-      def build_sum_expression(expression_a, expression_b)
-        SumExpression.new(expression_a, expression_b)
+      def build_expression_for_post_completing_binary_expression(token)
+        @buffered_binary_operation_token.transform_into_expression(
+          @buffered_expression, token.transform_into_expression
+        )
       end
 
       def raise_unparseable_expression_text_error

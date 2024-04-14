@@ -11,6 +11,7 @@ require "sym_differ/variable_expression"
 require "sym_differ/constant_expression"
 require "sym_differ/negate_expression"
 require "sym_differ/sum_expression"
+require "sym_differ/subtract_expression"
 
 require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
 
@@ -106,10 +107,37 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is <VariableToken:x><ConstantToken:1>" do
-      let(:tokens) { [variable_token_class.new("x"), constant_token_class.new("1")] }
+      let(:tokens) { [variable_token_class.new("x"), constant_token_class.new(1)] }
 
       it "raises an error mentioning the invalid expression end" do
         expect { build }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError))
+      end
+    end
+
+    context "when the tokens list is <VariableToken:x><SubtractionToken><ConstantToken:1>" do
+      let(:tokens) { [variable_token_class.new("x"), operator_token_class.new("-"), constant_token_class.new(1)] }
+
+      let(:negation_token) { double(:negation_token) }
+
+      before do
+        allow(negation_token)
+          .to receive(:next_expected_token_category)
+          .and_return(:follow_up_to_negation_token)
+      end
+
+      it "returns a subtraction expression" do
+        expression = build
+
+        expect(expression)
+          .to be_a_kind_of(SymDiffer::SubtractExpression)
+          .and having_attributes(
+            minuend: (
+              a_kind_of(SymDiffer::VariableExpression).and having_attributes(name: "x")
+            ),
+            subtrahend: (
+              a_kind_of(SymDiffer::ConstantExpression).and having_attributes(value: 1)
+            )
+          )
       end
     end
   end

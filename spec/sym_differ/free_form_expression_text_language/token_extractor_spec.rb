@@ -136,7 +136,6 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
       end
     end
 
-
     context "when the expression text to parse is 'var+1'" do
       let(:expression_text) { "var+1" }
 
