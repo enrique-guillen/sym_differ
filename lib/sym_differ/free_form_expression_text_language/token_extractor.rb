@@ -44,7 +44,9 @@ module SymDiffer
       end
 
       def remove_leading_whitespace_from_text(text)
-        (text = tail_end_of_text(text)) while character_is_whitespace?(first_character_in_text(text))
+        while character_is_whitespace?(first_character_in_text(text))
+          (text = tail_end_of_text(text))
+        end
 
         text
       end
