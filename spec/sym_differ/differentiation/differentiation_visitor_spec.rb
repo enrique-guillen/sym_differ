@@ -6,6 +6,7 @@ require "sym_differ/differentiation/differentiation_visitor"
 require "sym_differ/constant_expression"
 require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
+require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
 
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
@@ -64,6 +65,25 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       expect(visit_sum_expression).to have_attributes(
         expression_a: an_object_having_attributes(value: 0),
         expression_b: an_object_having_attributes(value: 1)
+      )
+    end
+  end
+
+  describe "#visit_subtract_expression" do
+    subject(:visit_subtract_expression) do
+      described_class.new(variable).visit_subtract_expression(expression)
+    end
+
+    let(:expression) { SymDiffer::SubtractExpression.new(minuend, subtrahend) }
+    let(:variable) { "x" }
+
+    let(:minuend) { SymDiffer::VariableExpression.new("x") }
+    let(:subtrahend) { SymDiffer::ConstantExpression.new(1) }
+
+    it do
+      expect(visit_subtract_expression).to have_attributes(
+        minuend: an_object_having_attributes(value: 1),
+        subtrahend: an_object_having_attributes(value: 0)
       )
     end
   end

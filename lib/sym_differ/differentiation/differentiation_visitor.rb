@@ -3,6 +3,7 @@
 require "sym_differ/differentiation/constant_expression_deriver"
 require "sym_differ/differentiation/variable_expression_deriver"
 require "sym_differ/differentiation/sum_expression_deriver"
+require "sym_differ/differentiation/subtract_expression_deriver"
 
 module SymDiffer
   module Differentiation
@@ -13,11 +14,11 @@ module SymDiffer
       end
 
       def visit_constant_expression(expression)
-        ConstantExpressionDeriver.new.derive(expression, @variable)
+        constant_expression_deriver.derive(expression, @variable)
       end
 
       def visit_variable_expression(expression)
-        VariableExpressionDeriver.new.derive(expression, @variable)
+        variable_expression_deriver.derive(expression, @variable)
       end
 
       def visit_negate_expression(_expression)
@@ -26,7 +27,29 @@ module SymDiffer
       end
 
       def visit_sum_expression(expression)
-        SumExpressionDeriver.new(self).derive(expression)
+        sum_expression_deriver.derive(expression)
+      end
+
+      def visit_subtract_expression(expression)
+        subtract_expression_deriver.derive(expression)
+      end
+
+      private
+
+      def constant_expression_deriver
+        @constant_expression_deriver ||= ConstantExpressionDeriver.new
+      end
+
+      def variable_expression_deriver
+        @variable_expression_deriver ||= VariableExpressionDeriver.new
+      end
+
+      def sum_expression_deriver
+        @sum_expression_deriver ||= SumExpressionDeriver.new(self)
+      end
+
+      def subtract_expression_deriver
+        @subtract_expression_deriver ||= SubtractExpressionDeriver.new(self)
       end
     end
   end
