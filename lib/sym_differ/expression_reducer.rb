@@ -4,7 +4,7 @@ module SymDiffer
   # Reduces the terms in the provided expression.
   class ExpressionReducer
     def reduce(expression)
-      if expression.is_a?(SumExpression)
+      if sum_expression?(expression)
         reduce_sum_expression(expression)
       else
         expression
@@ -26,8 +26,8 @@ module SymDiffer
     end
 
     def extract_constant_value_and_subexpression(expression)
-      return [expression.value, nil] if expression.is_a?(ConstantExpression)
-      return [0, expression] if expression.is_a?(VariableExpression)
+      return [expression.value, nil] if constant_expression?(expression)
+      return [0, expression] if variable_expression?(expression)
 
       subvalue_a, subexp_a = extract_constant_value_and_subexpression(expression.expression_a)
       subvalue_b, subexp_b = extract_constant_value_and_subexpression(expression.expression_b)
@@ -38,6 +38,18 @@ module SymDiffer
       return [total_value, subexp_a] if subexp_b.nil?
 
       [total_value, build_sum_expression(subexp_a, subexp_b)]
+    end
+
+    def sum_expression?(expression)
+      expression.is_a?(SumExpression)
+    end
+
+    def constant_expression?(expression)
+      expression.is_a?(ConstantExpression)
+    end
+
+    def variable_expression?(expression)
+      expression.is_a?(VariableExpression)
     end
 
     def build_constant_expression(value)
