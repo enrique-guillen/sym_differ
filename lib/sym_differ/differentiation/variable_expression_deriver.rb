@@ -7,9 +7,23 @@ module SymDiffer
     # Computes the expresion that represents the derivative of an identity function.
     class VariableExpressionDeriver
       def derive(expression, variable)
-        return ConstantExpression.new(1) if expression.name == variable
+        return build_constant_one if expression.name == variable
 
-        ConstantExpression.new(0)
+        build_constant_zero
+      end
+
+      private
+
+      def build_constant_one
+        build_constant_expression(1)
+      end
+
+      def build_constant_zero
+        build_constant_expression(0)
+      end
+
+      def build_constant_expression(value)
+        ConstantExpression.new(value)
       end
     end
   end
