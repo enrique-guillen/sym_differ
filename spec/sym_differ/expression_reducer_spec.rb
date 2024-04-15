@@ -11,17 +11,14 @@ RSpec.describe SymDiffer::ExpressionReducer do
     subject(:reduce) { described_class.new.reduce(expression) }
 
     context "when the expression is <ConstantExpression:1>" do
-      let(:expression) { SymDiffer::ConstantExpression.new(1) }
+      let(:expression) { constant_expression(1) }
 
       it { is_expected.to have_attributes(value: 1) }
     end
 
     context "when the expression is <SumExpression:<ConstantExpression:1>,<ConstantExpression:1>>" do
       let(:expression) do
-        SymDiffer::SumExpression.new(
-          SymDiffer::ConstantExpression.new(1),
-          SymDiffer::ConstantExpression.new(1)
-        )
+        sum_expression(constant_expression(1), constant_expression(1))
       end
 
       it { is_expected.to have_attributes(value: 2) }
@@ -30,16 +27,15 @@ RSpec.describe SymDiffer::ExpressionReducer do
     context "when the expression is <SumExpression:" \
             "<SumExpression:<<ConstantExpression:1>,<ConstantExpression:1>>," \
             "<VariableExpression:x>>" do
-      let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
-
-      let(:expression_a) do
-        SymDiffer::SumExpression.new(
-          SymDiffer::ConstantExpression.new(1),
-          SymDiffer::ConstantExpression.new(1)
-        )
+      let(:expression) do
+        sum_expression(expression_a, expression_b)
       end
 
-      let(:expression_b) { SymDiffer::VariableExpression.new("x") }
+      let(:expression_a) do
+        sum_expression(constant_expression(1), constant_expression(1))
+      end
+
+      let(:expression_b) { variable_expression("x") }
 
       it "returns the expected reduction" do
         expect(reduce).to have_attributes(
@@ -52,17 +48,14 @@ RSpec.describe SymDiffer::ExpressionReducer do
     context "when the expression is <SumExpression:" \
             "<ConstantExpression:1>," \
             "<SumExpression:<VariableExpression:x>,<ConstantExpression:1>>>" do
-      let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+      let(:expression) { sum_expression(expression_a, expression_b) }
 
       let(:expression_a) do
-        SymDiffer::ConstantExpression.new(1)
+        constant_expression(1)
       end
 
       let(:expression_b) do
-        SymDiffer::SumExpression.new(
-          SymDiffer::VariableExpression.new("x"),
-          SymDiffer::ConstantExpression.new(1)
-        )
+        sum_expression(variable_expression("x"), constant_expression(1))
       end
 
       it "returns the expected reduction" do
@@ -77,19 +70,16 @@ RSpec.describe SymDiffer::ExpressionReducer do
             "<ConstantExpression:1>" \
             "<SumExpression:<ConstantExpression:1>,<SumExpression:<VariableExpression:x>,<ConstantExpression:2>>>," \
             ">" do
-      let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+      let(:expression) { sum_expression(expression_a, expression_b) }
 
       let(:expression_a) do
-        SymDiffer::ConstantExpression.new(1)
+        constant_expression(1)
       end
 
       let(:expression_b) do
-        SymDiffer::SumExpression.new(
-          SymDiffer::ConstantExpression.new(1),
-          SymDiffer::SumExpression.new(
-            SymDiffer::VariableExpression.new("x"),
-            SymDiffer::ConstantExpression.new(2)
-          )
+        sum_expression(
+          constant_expression(1),
+          sum_expression(variable_expression("x"), constant_expression(2))
         )
       end
 
@@ -104,14 +94,14 @@ RSpec.describe SymDiffer::ExpressionReducer do
     context "when the expression is <SumExpression:" \
             "<VariableExpression:x>, <ConstantExpression:0>" \
             ">" do
-      let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+      let(:expression) { sum_expression(expression_a, expression_b) }
 
       let(:expression_a) do
-        SymDiffer::VariableExpression.new("x")
+        variable_expression("x")
       end
 
       let(:expression_b) do
-        SymDiffer::ConstantExpression.new(0)
+        constant_expression(0)
       end
 
       it "returns the expected reduction" do
@@ -127,18 +117,18 @@ RSpec.describe SymDiffer::ExpressionReducer do
             "<VariableExpression:x>," \
             "<SumExpression:<VariableExpression:x>,<ConstantExpression:1>>>>," \
             ">" do
-      let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+      let(:expression) { sum_expression(expression_a, expression_b) }
 
       let(:expression_a) do
-        SymDiffer::ConstantExpression.new(1)
+        constant_expression(1)
       end
 
       let(:expression_b) do
-        SymDiffer::SumExpression.new(
-          SymDiffer::ConstantExpression.new(1),
-          SymDiffer::SumExpression.new(
-            SymDiffer::VariableExpression.new("x"),
-            SymDiffer::SumExpression.new(SymDiffer::VariableExpression.new("x"), SymDiffer::ConstantExpression.new(1))
+        sum_expression(
+          constant_expression(1),
+          sum_expression(
+            variable_expression("x"),
+            sum_expression(variable_expression("x"), constant_expression(1))
           )
         )
       end
@@ -153,5 +143,17 @@ RSpec.describe SymDiffer::ExpressionReducer do
         )
       end
     end
+  end
+
+  define_method(:constant_expression) do |value|
+    SymDiffer::ConstantExpression.new(value)
+  end
+
+  define_method(:variable_expression) do |name|
+    SymDiffer::VariableExpression.new(name)
+  end
+
+  define_method(:sum_expression) do |expression_a, expression_b|
+    SymDiffer::SumExpression.new(expression_a, expression_b)
   end
 end
