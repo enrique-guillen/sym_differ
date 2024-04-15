@@ -5,6 +5,7 @@ require "sym_differ/expression_reducer"
 require "sym_differ/constant_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/variable_expression"
+require "sym_differ/subtract_expression"
 
 RSpec.describe SymDiffer::ExpressionReducer do
   describe "#reduce" do
@@ -143,17 +144,138 @@ RSpec.describe SymDiffer::ExpressionReducer do
         )
       end
     end
-  end
 
-  define_method(:constant_expression) do |value|
-    SymDiffer::ConstantExpression.new(value)
-  end
+    context "when the expression is <Subtract:<0>,<0>>" do
+      let(:expression) { subtract_expression(constant_expression(0), constant_expression(0)) }
 
-  define_method(:variable_expression) do |name|
-    SymDiffer::VariableExpression.new(name)
-  end
+      it "returns the 0 constant" do
+        expect(reduce).to have_attributes(value: 0)
+      end
+    end
 
-  define_method(:sum_expression) do |expression_a, expression_b|
-    SymDiffer::SumExpression.new(expression_a, expression_b)
+    context "when the expression is <Subtract:<1>,<0>>" do
+      let(:expression) { subtract_expression(constant_expression(1), constant_expression(0)) }
+
+      it "returns the 1 constant" do
+        expect(reduce).to have_attributes(value: 1)
+      end
+    end
+
+    context "when the expression is <Subtract:<x>,<0>>" do
+      let(:expression) { subtract_expression(variable_expression("x"), constant_expression(0)) }
+
+      it "returns the x variable" do
+        expect(reduce).to have_attributes(name: "x")
+      end
+    end
+
+    context "when the expression is <Subtract:<0>,<1>>" do
+      let(:expression) { subtract_expression(constant_expression(0), constant_expression(1)) }
+
+      it "returns the expression tree representing -1" do
+        expect(reduce).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
+      end
+    end
+
+    context "when the expression is <Subtract:<0>,<x>>" do
+      let(:expression) { subtract_expression(constant_expression(0), variable_expression("x")) }
+
+      it "returns the negated x variable" do
+        expect(reduce).to have_attributes(negated_expression: an_object_having_attributes(name: "x"))
+      end
+    end
+
+    context "when the expression is <Subtract: <Sum:<x>, <x>>, <1>>" do
+      let(:expression) { subtract_expression(minuend, subtrahend) }
+
+      let(:minuend) { sum_expression(variable_expression("x"), variable_expression("x")) }
+      let(:subtrahend) { constant_expression(1) }
+
+      it "returns an expression representing x + x -1" do
+        expect(reduce).to have_attributes(
+          minuend: an_object_having_attributes(
+            expression_a: an_object_having_attributes(name: "x"),
+            expression_b: an_object_having_attributes(name: "x")
+          ),
+          subtrahend: an_object_having_attributes(value: 1)
+        )
+      end
+    end
+
+    context "when the expression is <Subtract: <Sum:<x, 1>>, <Subtract: <1, x>>>" do
+      let(:expression) { subtract_expression(minuend, subtrahend) }
+
+      let(:minuend) { sum_expression(variable_expression("x"), constant_expression(1)) }
+      let(:subtrahend) { subtract_expression(constant_expression(1), variable_expression("x")) }
+
+      it "returns an expression representing x + x" do
+        expect(reduce).to have_attributes(
+          expression_a: an_object_having_attributes(name: "x"),
+          expression_b: an_object_having_attributes(name: "x")
+        )
+      end
+    end
+
+    context "when the expression is <Subtract: <Subtract:<1, 0>>, <Subtract: <0, 1>>>" do
+      let(:expression) { subtract_expression(minuend, subtrahend) }
+
+      let(:minuend) { sum_expression(constant_expression(1), constant_expression(0)) }
+      let(:subtrahend) { subtract_expression(constant_expression(0), constant_expression(1)) }
+
+      it "returns an expression representing 2" do
+        expect(reduce).to have_attributes(value: 2)
+      end
+    end
+
+    context "when the expression is <Subtract: <Constant: 1>, <Var: x>>" do
+      let(:expression) { subtract_expression(constant_expression(1), variable_expression("x")) }
+
+      it "returns an expression representing 2" do
+        expect(reduce).to have_attributes(
+          minuend: an_object_having_attributes(value: 1),
+          subtrahend: an_object_having_attributes(name: "x")
+        )
+      end
+    end
+
+    context "when the expression is <Subtract: 0, <Subtract: 0, x>>" do
+      let(:expression) { subtract_expression(minuend, subtrahend) }
+
+      let(:minuend) { constant_expression(0) }
+      let(:subtrahend) { subtract_expression(constant_expression(0), variable_expression("x")) }
+
+      it "returns an expression x" do
+        expect(reduce).to have_attributes(name: "x")
+      end
+    end
+
+    context "when the expression is <Sum: 0, <Subtract: 0, x>>" do
+      let(:expression) { sum_expression(minuend, subtrahend) }
+
+      let(:minuend) { constant_expression(0) }
+      let(:subtrahend) { subtract_expression(constant_expression(0), variable_expression("x")) }
+
+      it "returns an expression x" do
+        expect(reduce).to have_attributes(negated_expression: an_object_having_attributes(name: "x"))
+      end
+    end
+
+    # x - x
+
+    define_method(:constant_expression) do |value|
+      SymDiffer::ConstantExpression.new(value)
+    end
+
+    define_method(:variable_expression) do |name|
+      SymDiffer::VariableExpression.new(name)
+    end
+
+    define_method(:sum_expression) do |expression_a, expression_b|
+      SymDiffer::SumExpression.new(expression_a, expression_b)
+    end
+
+    define_method(:subtract_expression) do |expression_a, expression_b|
+      SymDiffer::SubtractExpression.new(expression_a, expression_b)
+    end
   end
 end
