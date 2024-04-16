@@ -260,7 +260,32 @@ RSpec.describe SymDiffer::ExpressionReducer do
       end
     end
 
-    # x - x
+    context "when the expression is <Negate:0>" do
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { constant_expression(0) }
+
+      it "returns 0" do
+        expect(reduce).to have_attributes(value: 0)
+      end
+    end
+
+    context "when the expression is <Negate:x>" do
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { variable_expression("x") }
+
+      it "returns x" do
+        expect(reduce).to have_attributes(negated_expression: an_object_having_attributes(name: "x"))
+      end
+    end
+
+    context "when the expression is <Negate:1>" do
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { constant_expression(1) }
+
+      it "returns -1" do
+        expect(reduce).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
+      end
+    end
 
     define_method(:constant_expression) do |value|
       SymDiffer::ConstantExpression.new(value)
@@ -276,6 +301,10 @@ RSpec.describe SymDiffer::ExpressionReducer do
 
     define_method(:subtract_expression) do |expression_a, expression_b|
       SymDiffer::SubtractExpression.new(expression_a, expression_b)
+    end
+
+    define_method(:negate_expression) do |negated_expression|
+      SymDiffer::NegateExpression.new(negated_expression)
     end
   end
 end

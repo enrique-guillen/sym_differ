@@ -6,13 +6,11 @@ module SymDiffer
   # Reduces the terms in the provided expression.
   class ExpressionReducer
     def reduce(expression)
-      if sum_expression?(expression)
-        reduce_sum_expression(expression)
-      elsif subtract_expression?(expression)
-        reduce_subtract_expression(expression)
-      else
-        expression
-      end
+      return reduce_sum_expression(expression) if sum_expression?(expression)
+      return reduce_subtract_expression(expression) if subtract_expression?(expression)
+      return reduce_negate_expression(expression) if negate_expression?(expression)
+
+      expression
     end
 
     private
@@ -34,6 +32,13 @@ module SymDiffer
       build_positive_constant_plus_subexpression_as_sum_or_subtraction(total_value, subexp)
     end
 
+    def reduce_negate_expression(expression)
+      value, subexpression = extract_constant_value_and_subexpression(expression)
+      return build_integer_expression(value) if subexpression.nil?
+
+      expression
+    end
+
     def reverse_expression_if_subtract_type_and_subtrahend_negative(expression)
       return expression unless subtract_expression?(expression) && negate_expression?(expression.subtrahend)
 
@@ -51,11 +56,18 @@ module SymDiffer
     end
 
     def extract_constant_value_and_subexpression(expression)
+      return extract_constant_value_and_subexpression_of_negate(expression) if negate_expression?(expression)
       return extract_constant_value_and_subexpression_of_constant(expression) if constant_expression?(expression)
       return extract_constant_value_and_subexpression_of_variable(expression) if variable_expression?(expression)
       return extract_constant_value_and_subexpression_of_subtract(expression) if subtract_expression?(expression)
 
       extract_constant_value_and_subexpression_of_sum(expression)
+    end
+
+    def extract_constant_value_and_subexpression_of_negate(expression)
+      value, subexpression = extract_constant_value_and_subexpression(expression.negated_expression)
+
+      [-value, subexpression]
     end
 
     def extract_constant_value_and_subexpression_of_constant(expression)
