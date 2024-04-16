@@ -22,3 +22,13 @@ Feature: Compute a reduction for the expression.
     Given the expression to reduce is 1 + 1
     When the expression is reduced
     Then the result is 2
+
+  Scenario: The reduction of 3 + 2 - 2 is requested
+    Given the expression to reduce is 3 + 2 - 2
+    When the expression is reduced
+    Then the result is 3
+
+  Scenario: The reduction of x - 1 - 2 is requested
+    Given the expression to reduce is x - 1 - 2
+    When the expression is reduced
+    Then the result is x - 3
