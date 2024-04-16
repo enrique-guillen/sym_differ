@@ -63,6 +63,14 @@ Feature: Compute the symbolic derivative of a given expression.
 
       Then the derivative expression is -1
 
+    Scenario: The derivative of -2, with respect to x, is requested.
+      Given the expression to differentiate is -2
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 0
+
   Rule: The derivative of f(x) = a(x) - b(x) is f'(x) = a'(x) - b'(x).
     Scenario: The derivative of x - x - x, with respect to x, is requested.
       Given the expression to differentiate is x - x - x
