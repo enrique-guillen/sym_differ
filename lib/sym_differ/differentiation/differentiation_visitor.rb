@@ -4,6 +4,7 @@ require "sym_differ/differentiation/constant_expression_deriver"
 require "sym_differ/differentiation/variable_expression_deriver"
 require "sym_differ/differentiation/sum_expression_deriver"
 require "sym_differ/differentiation/subtract_expression_deriver"
+require "sym_differ/differentiation/negate_expression_deriver"
 
 module SymDiffer
   module Differentiation
@@ -21,9 +22,8 @@ module SymDiffer
         variable_expression_deriver.derive(expression, @variable)
       end
 
-      def visit_negate_expression(_expression)
-        # @todo
-        NegateExpression.new(SymDiffer::ConstantExpression.new(1))
+      def visit_negate_expression(expression)
+        negate_expression_deriver.derive(expression)
       end
 
       def visit_sum_expression(expression)
@@ -42,6 +42,10 @@ module SymDiffer
 
       def variable_expression_deriver
         @variable_expression_deriver ||= VariableExpressionDeriver.new
+      end
+
+      def negate_expression_deriver
+        @negate_expression_deriver ||= NegateExpressionDeriver.new(self)
       end
 
       def sum_expression_deriver

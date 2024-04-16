@@ -43,11 +43,23 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
 
     let(:variable) { "x" }
-    let(:expression) { SymDiffer::NegateExpression.new(negated_expression) }
-    let(:negated_expression) { SymDiffer::VariableExpression.new("x") }
 
-    it "returns the result of deriving the negate expression" do
-      expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
+    context "when the expression to derive is -x" do
+      let(:expression) { SymDiffer::NegateExpression.new(negated_expression) }
+      let(:negated_expression) { SymDiffer::VariableExpression.new("x") }
+
+      it "returns the result of deriving the negate expression" do
+        expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
+      end
+    end
+
+    context "when the expression to derive is -2" do
+      let(:expression) { SymDiffer::NegateExpression.new(negated_expression) }
+      let(:negated_expression) { SymDiffer::ConstantExpression.new(2) }
+
+      it "returns the result of deriving the negate expression" do
+        expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 0))
+      end
     end
   end
 
