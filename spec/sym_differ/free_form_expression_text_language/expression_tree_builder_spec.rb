@@ -140,5 +140,23 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
           )
       end
     end
+
+    context "when the tokens list is <OperatorToken:-><OperatorToken:-><ConstantToken:1>" do
+      let(:tokens) { [operator_token_class.new("-"), operator_token_class.new("-"), constant_token_class.new(1)] }
+
+      it "returns a Negate Expression of a Negate Expression of 1" do
+        expression = build
+
+        expect(expression)
+          .to be_a_kind_of(SymDiffer::NegateExpression)
+          .and having_attributes(
+            negated_expression: (
+              a_kind_of(SymDiffer::NegateExpression).and having_attributes(
+                negated_expression: a_kind_of(SymDiffer::ConstantExpression).and(having_attributes(value: 1))
+              )
+            )
+          )
+      end
+    end
   end
 end

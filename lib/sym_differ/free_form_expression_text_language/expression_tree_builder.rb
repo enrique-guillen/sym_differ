@@ -18,6 +18,7 @@ module SymDiffer
       private
 
       def build_expression_from_tokens(tokens)
+        @buffered_negations = 0
         @next_expected_token_type = :valid_token_from_expression_start
 
         until no_elements_in_list?(tokens)
@@ -27,7 +28,7 @@ module SymDiffer
 
         validate_final_mode
 
-        @buffered_expression
+        retrieve_buffered_expression
       end
 
       def no_elements_in_list?(list)
@@ -49,14 +50,14 @@ module SymDiffer
         return unless @next_expected_token_type == :valid_token_from_expression_start
 
         @buffered_binary_operation_token = token
-        @buffered_expression = build_expression_for_initial_token(token)
+        store_to_buffered_expression(build_expression_for_initial_token(token))
         @next_expected_token_type = next_mode_for_initial_token(token)
       end
 
       def try_evaluating_as_follow_up_to_leaf_token(token)
         return unless @next_expected_token_type == :follow_up_to_leaf_token
 
-        raise_invalid_syntax_error_unless_expression_is_operator(token)
+        raise_unparseable_expression_text_error unless operator_token?(token)
 
         @buffered_binary_operation_token = token
         @next_expected_token_type = :follow_up_to_binary_operation_token
@@ -64,19 +65,26 @@ module SymDiffer
 
       def try_evaluating_as_follow_up_to_negation_token(token)
         return unless @next_expected_token_type == :follow_up_to_negation_token
+        return buffer_negation_expression if negation_token?(token)
 
-        raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
+        raise_unparseable_expression_text_error unless leaf_token?(token)
 
-        @buffered_expression = build_expression_for_post_completing_binary_expression(token)
+        store_to_buffered_expression(build_expression_for_post_completing_binary_expression(token))
+
+        retrieve_buffered_negations
+          .times { store_to_buffered_expression(build_negate_expression(retrieve_buffered_expression)) }
+
+        reset_buffered_negations
+
         @next_expected_token_type = :follow_up_to_leaf_token
       end
 
       def try_evaluating_as_follow_up_to_binary_operation_token(token)
         return unless @next_expected_token_type == :follow_up_to_binary_operation_token
 
-        raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
+        raise_unparseable_expression_text_error unless leaf_token?(token)
 
-        @buffered_expression = build_expression_for_post_completing_binary_expression(token)
+        store_to_buffered_expression(build_expression_for_post_completing_binary_expression(token))
         @next_expected_token_type = :follow_up_to_leaf_token
       end
 
@@ -89,25 +97,21 @@ module SymDiffer
       end
 
       def next_mode_for_initial_token(token)
-        return :follow_up_to_leaf_token if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
-        return unless token.is_a?(OperatorToken) && token.symbol == "-"
-
-        :follow_up_to_negation_token
+        if leaf_token?(token)
+          :follow_up_to_leaf_token
+        elsif negation_token?(token)
+          :follow_up_to_negation_token
+        end
       end
 
       def build_expression_for_initial_token(token)
-        return token.transform_into_expression if token.is_a?(VariableToken) || token.is_a?(ConstantToken)
-        return if token.is_a?(OperatorToken) && token.symbol == "-"
+        if leaf_token?(token)
+          return token.transform_into_expression
+        elsif negation_token?(token)
+          return
+        end
 
         raise_unparseable_expression_text_error
-      end
-
-      def raise_invalid_syntax_error_unless_expression_is_operator(token)
-        raise_unparseable_expression_text_error unless token.is_a?(OperatorToken)
-      end
-
-      def raise_invalid_syntax_error_unless_expression_is_leaf_token(token)
-        raise_unparseable_expression_text_error unless token.is_a?(VariableToken) || token.is_a?(ConstantToken)
       end
 
       def build_expression_for_post_completing_binary_expression(token)
@@ -116,8 +120,52 @@ module SymDiffer
         )
       end
 
+      def build_negate_expression(negated_expression)
+        NegateExpression.new(negated_expression)
+      end
+
+      def negation_token?(token)
+        operator_token?(token) && token.symbol == "-"
+      end
+
+      def leaf_token?(token)
+        token.is_a?(ConstantToken) || token.is_a?(VariableToken)
+      end
+
+      def constant_token?(token)
+        token.is_a?(ConstantToken)
+      end
+
+      def variable_token?(token)
+        token.is_a?(VariableToken)
+      end
+
+      def operator_token?(token)
+        token.is_a?(OperatorToken)
+      end
+
       def raise_unparseable_expression_text_error
         raise InvalidSyntaxError.new("")
+      end
+
+      def buffer_negation_expression
+        @buffered_negations += 1
+      end
+
+      def retrieve_buffered_negations
+        @buffered_negations
+      end
+
+      def reset_buffered_negations
+        @buffered_negations = 0
+      end
+
+      def retrieve_buffered_expression
+        @buffered_expression
+      end
+
+      def store_to_buffered_expression(expression)
+        @buffered_expression = expression
       end
     end
   end
