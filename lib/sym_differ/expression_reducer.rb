@@ -36,7 +36,7 @@ module SymDiffer
       value, subexpression = extract_constant_value_and_subexpression(expression)
       return build_integer_expression(value) if subexpression.nil?
 
-      expression
+      subexpression
     end
 
     def reverse_expression_if_subtract_type_and_subtrahend_negative(expression)
@@ -66,8 +66,10 @@ module SymDiffer
 
     def extract_constant_value_and_subexpression_of_negate(expression)
       value, subexpression = extract_constant_value_and_subexpression(expression.negated_expression)
+      return [-value, nil] if subexpression.nil?
+      return [-value, subexpression.negated_expression] if negate_expression?(subexpression)
 
-      [-value, subexpression]
+      [-value, build_negate_expression(subexpression)]
     end
 
     def extract_constant_value_and_subexpression_of_constant(expression)
