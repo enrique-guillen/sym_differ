@@ -5,7 +5,7 @@ require "sym_differ/variable_expression"
 module SymDiffer
   module FreeFormExpressionTextLanguage
     # Builds a VariableExpression out of the provided arguments.
-    class BuildVariableExpression
+    class BuildVariableExpressionCommand
       def execute(arguments)
         name = arguments.first
         build_variable_expression(name)
