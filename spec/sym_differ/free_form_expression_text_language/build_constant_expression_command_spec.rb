@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/build_constant_expression"
+require "sym_differ/free_form_expression_text_language/build_constant_expression_command"
 require "sym_differ/constant_expression"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::BuildConstantExpression do
+RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::BuildConstantExpressionCommand do
   describe "#execute" do
     subject(:execute) { described_class.new.execute([value]) }
 

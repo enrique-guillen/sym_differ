@@ -4,7 +4,8 @@ require "sym_differ/constant_expression"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
-    class BuildConstantExpression
+    # Builds a VariableExpression out of the provided arguments.
+    class BuildConstantExpressionCommand
       def execute(arguments)
         value = arguments.first
         build_constant_expression(value)
