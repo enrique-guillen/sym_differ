@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/variable_token"
-require "sym_differ/free_form_expression_text_language/constant_token"
-require "sym_differ/free_form_expression_text_language/operator_token"
-
-require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
+require "sym_differ/free_form_expression_text_language/constant_token_checker"
+require "sym_differ/free_form_expression_text_language/variable_token_checker"
+require "sym_differ/free_form_expression_text_language/subtraction_token_checker"
+require "sym_differ/free_form_expression_text_language/sum_token_checker"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
@@ -12,160 +11,184 @@ module SymDiffer
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
       def build(tokens)
-        build_expression_from_tokens(tokens)
+        raise_invalid_syntax_error if tokens.empty?
+        convert_tokens_into_expression(tokens)
       end
 
       private
 
-      def build_expression_from_tokens(tokens)
-        @buffered_negations = 0
-        @next_expected_token_type = :valid_token_from_expression_start
+      def convert_tokens_into_expression(tokens)
+        currently_expected_token_type = :prefix_token_checkers
+        command_and_expression_stack = []
 
-        until no_elements_in_list?(tokens)
-          analyze_current_token_in_list(take_list_head(tokens))
-          tokens = take_list_tail(tokens)
+        tokens.each do |token|
+          command_and_expression_stack, currently_expected_token_type =
+            update_command_and_expression_stack_based_on_token(
+              token, command_and_expression_stack, currently_expected_token_type
+            )
         end
 
-        validate_final_mode
-
-        retrieve_buffered_expression
+        raise_invalid_syntax_error if multiple_commands_or_expressions_left_in_stack?(command_and_expression_stack)
+        stack_item_value(last_item_in_stack(command_and_expression_stack))
       end
 
-      def no_elements_in_list?(list)
-        list.empty?
-      end
+      def update_command_and_expression_stack_based_on_token(token,
+                                                             command_and_expression_stack,
+                                                             currently_expected_token_type)
+        stack_item_for_token = check_stack_item_corresponding_to_token(token, currently_expected_token_type)
 
-      def analyze_current_token_in_list(token)
-        try_evaluating_as_initial_mode(token) ||
-          try_evaluating_as_follow_up_to_leaf_token(token) ||
-          try_evaluating_as_follow_up_to_negation_token(token) ||
-          try_evaluating_as_follow_up_to_binary_operation_token(token)
-      end
+        raise_invalid_syntax_error unless stack_item_for_token[:handled]
 
-      def validate_final_mode
-        raise_unparseable_expression_text_error unless @next_expected_token_type == :follow_up_to_leaf_token
-      end
+        command_and_expression_stack =
+          push_item_into_stack(stack_item_for_token[:stack_item], command_and_expression_stack)
 
-      def try_evaluating_as_initial_mode(token)
-        return unless @next_expected_token_type == :valid_token_from_expression_start
-
-        @buffered_binary_operation_token = token
-        store_to_buffered_expression(build_expression_for_initial_token(token))
-        @next_expected_token_type = next_mode_for_initial_token(token)
-      end
-
-      def try_evaluating_as_follow_up_to_leaf_token(token)
-        return unless @next_expected_token_type == :follow_up_to_leaf_token
-
-        raise_unparseable_expression_text_error unless operator_token?(token)
-
-        @buffered_binary_operation_token = token
-        @next_expected_token_type = :follow_up_to_binary_operation_token
-      end
-
-      def try_evaluating_as_follow_up_to_negation_token(token)
-        return unless @next_expected_token_type == :follow_up_to_negation_token
-        return buffer_negation_expression if negation_token?(token)
-
-        raise_unparseable_expression_text_error unless leaf_token?(token)
-
-        store_to_buffered_expression(build_expression_for_post_completing_binary_expression(token))
-
-        retrieve_buffered_negations
-          .times { store_to_buffered_expression(build_negate_expression(retrieve_buffered_expression)) }
-
-        reset_buffered_negations
-
-        @next_expected_token_type = :follow_up_to_leaf_token
-      end
-
-      def try_evaluating_as_follow_up_to_binary_operation_token(token)
-        return unless @next_expected_token_type == :follow_up_to_binary_operation_token
-
-        raise_unparseable_expression_text_error unless leaf_token?(token)
-
-        store_to_buffered_expression(build_expression_for_post_completing_binary_expression(token))
-        @next_expected_token_type = :follow_up_to_leaf_token
-      end
-
-      def take_list_head(list)
-        list[0]
-      end
-
-      def take_list_tail(list)
-        list[1, list.size].to_a
-      end
-
-      def next_mode_for_initial_token(token)
-        if leaf_token?(token)
-          :follow_up_to_leaf_token
-        elsif negation_token?(token)
-          :follow_up_to_negation_token
-        end
-      end
-
-      def build_expression_for_initial_token(token)
-        if leaf_token?(token)
-          return token.transform_into_expression
-        elsif negation_token?(token)
-          return
+        if stack_item_for_token[:expression_location] == :rightmost
+          command_and_expression_stack = reduce_tail_end_of_stack_while_evaluatable(command_and_expression_stack)
         end
 
-        raise_unparseable_expression_text_error
+        currently_expected_token_type =
+          stack_item_for_token[:expression_location] == :rightmost ? :infix_token_checkers : :prefix_token_checkers
+
+        [command_and_expression_stack, currently_expected_token_type]
       end
 
-      def build_expression_for_post_completing_binary_expression(token)
-        @buffered_binary_operation_token.transform_into_expression(
-          @buffered_expression, token.transform_into_expression
+      def check_stack_item_corresponding_to_token(token, currently_expected_token_type)
+        result_of_checking_stack_item_type = nil
+
+        get_checker_for_currently_expected_token_type(currently_expected_token_type).each do |checker|
+          result_of_checking_stack_item_type = checker.check(token)
+          break if result_of_checking_stack_item_type[:handled]
+        end
+
+        result_of_checking_stack_item_type
+      end
+
+      def reduce_tail_end_of_stack_while_evaluatable(current_stack)
+        while stack_item_is_command_type?(penultimate_item_in_stack(current_stack))
+          current_stack = apply_command_to_arguments_at_tail_end_of_stack(current_stack)
+        end
+
+        current_stack
+      end
+
+      def get_checker_for_currently_expected_token_type(currently_expected_token_type)
+        checkers_by_role[currently_expected_token_type]
+      end
+
+      def apply_command_to_arguments_at_tail_end_of_stack(current_stack)
+        last_argument_stack_item, command_stack_item, previous_argument_stack_item =
+          extract_command_and_arguments_from_tail_end_of_stack(current_stack)
+
+        value_of_executing_command = execute_stack_item_commands_and_arguments(
+          command_stack_item, previous_argument_stack_item, last_argument_stack_item
+        )
+
+        stack_minus_evaluated_items = drop_last_items_of_stack(current_stack, previous_argument_stack_item ? 3 : 2)
+
+        push_item_into_stack(
+          build_expression_type_stack_item(value_of_executing_command),
+          stack_minus_evaluated_items
         )
       end
 
-      def build_negate_expression(negated_expression)
-        NegateExpression.new(negated_expression)
+      def extract_command_and_arguments_from_tail_end_of_stack(current_stack)
+        tail_end = read_last_items_of_stack_backwards(current_stack, 3)
+        last_argument_stack_item = tail_end[0]
+        command_stack_item = tail_end[1]
+        previous_argument_stack_item = (tail_end[2] if stack_item_is_expression_type?(tail_end[2]))
+
+        [last_argument_stack_item, command_stack_item, previous_argument_stack_item]
       end
 
-      def negation_token?(token)
-        operator_token?(token) && token.symbol == "-"
+      def execute_stack_item_commands_and_arguments(command_stack_item,
+                                                    previous_argument_stack_item,
+                                                    last_argument_stack_item)
+        execute_command(
+          stack_item_value(command_stack_item),
+          [stack_item_value(previous_argument_stack_item), stack_item_value(last_argument_stack_item)].compact
+        )
       end
 
-      def leaf_token?(token)
-        token.is_a?(ConstantToken) || token.is_a?(VariableToken)
+      def checkers_by_role
+        @checkers_by_role ||= {
+          prefix_token_checkers: [constant_token_checker, variable_token_checker, subtraction_token_checker],
+          infix_token_checkers: [sum_token_checker, subtraction_token_checker]
+        }.freeze
       end
 
-      def constant_token?(token)
-        token.is_a?(ConstantToken)
-      end
-
-      def variable_token?(token)
-        token.is_a?(VariableToken)
-      end
-
-      def operator_token?(token)
-        token.is_a?(OperatorToken)
-      end
-
-      def raise_unparseable_expression_text_error
+      def raise_invalid_syntax_error
         raise InvalidSyntaxError.new("")
       end
 
-      def buffer_negation_expression
-        @buffered_negations += 1
+      def push_item_into_stack(item, stack)
+        stack + [item]
       end
 
-      def retrieve_buffered_negations
-        @buffered_negations
+      def penultimate_item_in_stack(command_and_expression_stack)
+        size = command_and_expression_stack.size
+        return nil if size <= 0
+
+        command_and_expression_stack[size - 2]
       end
 
-      def reset_buffered_negations
-        @buffered_negations = 0
+      def last_item_in_stack(stack)
+        stack.last
       end
 
-      def retrieve_buffered_expression
-        @buffered_expression
+      def read_last_items_of_stack_backwards(stack, amount)
+        stack.last(amount).reverse
       end
 
-      def store_to_buffered_expression(expression)
-        @buffered_expression = expression
+      def drop_last_items_of_stack(stack, amount)
+        stack[0, stack.size - amount]
+      end
+
+      def multiple_commands_or_expressions_left_in_stack?(stack)
+        stack.size > 1
+      end
+
+      def constant_token_checker
+        @constant_token_checker ||= ConstantTokenChecker.new
+      end
+
+      def variable_token_checker
+        @variable_token_checker ||= VariableTokenChecker.new
+      end
+
+      def sum_token_checker
+        @sum_token_checker ||= SumTokenChecker.new
+      end
+
+      def subtraction_token_checker
+        @subtraction_token_checker ||= SubtractionTokenChecker.new
+      end
+
+      def build_expression_type_stack_item(expression)
+        build_stack_item(:expression, expression)
+      end
+
+      def stack_item_is_expression_type?(stack_item)
+        stack_item_item_type(stack_item) == :expression
+      end
+
+      def stack_item_is_command_type?(stack_item)
+        stack_item_item_type(stack_item) == :pending_command
+      end
+
+      def build_stack_item(item_type, value)
+        { item_type:, value: }
+      end
+
+      def stack_item_item_type(stack_item)
+        stack_item&.[](:item_type)
+      end
+
+      def stack_item_value(stack_item)
+        stack_item&.[](:value)
+      end
+
+      def execute_command(command, arguments = [])
+        command.execute(arguments)
       end
     end
   end
