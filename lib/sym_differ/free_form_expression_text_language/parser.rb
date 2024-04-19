@@ -2,7 +2,12 @@
 
 require "sym_differ/free_form_expression_text_language/token_extractor"
 require "sym_differ/free_form_expression_text_language/expression_tree_builder"
+
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
+
+require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
+require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
+require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
 
 module SymDiffer
   module FreeFormExpressionTextLanguage
