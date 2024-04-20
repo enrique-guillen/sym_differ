@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require "sym_differ/constant_expression"
-
 module SymDiffer
   module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildConstantExpressionCommand into the commands stack if applicable.
     class ConstantTokenChecker
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def check(token)
         return not_handled_response unless constant_token?(token)
 
@@ -28,7 +30,7 @@ module SymDiffer
       end
 
       def build_constant_expression_from_token(token)
-        ConstantExpression.new(token.value)
+        @expression_factory.create_constant_expression(token.value)
       end
 
       def constant_token?(token)
