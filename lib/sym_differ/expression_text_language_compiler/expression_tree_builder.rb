@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/constant_token_checker"
-require "sym_differ/free_form_expression_text_language/variable_token_checker"
-require "sym_differ/free_form_expression_text_language/subtraction_token_checker"
-require "sym_differ/free_form_expression_text_language/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/constant_token_checker"
+require "sym_differ/expression_text_language_compiler/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
+require "sym_differ/expression_text_language_compiler/sum_token_checker"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder

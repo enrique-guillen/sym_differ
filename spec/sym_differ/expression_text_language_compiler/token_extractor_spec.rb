@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/token_extractor"
+require "sym_differ/expression_text_language_compiler/token_extractor"
 
-require "sym_differ/free_form_expression_text_language/variable_token"
-require "sym_differ/free_form_expression_text_language/constant_token"
-require "sym_differ/free_form_expression_text_language/operator_token"
+require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/operator_token"
 
-require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
-require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
+require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
+require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
   describe "#parse" do
     subject(:parse) { described_class.new.parse(expression_text) }
 
-    let(:variable_token_class) { SymDiffer::FreeFormExpressionTextLanguage::VariableToken }
-    let(:constant_token_class) { SymDiffer::FreeFormExpressionTextLanguage::ConstantToken }
-    let(:operator_token_class) { SymDiffer::FreeFormExpressionTextLanguage::OperatorToken }
+    let(:variable_token_class) { SymDiffer::ExpressionTextLanguageCompiler::VariableToken }
+    let(:constant_token_class) { SymDiffer::ExpressionTextLanguageCompiler::ConstantToken }
+    let(:operator_token_class) { SymDiffer::ExpressionTextLanguageCompiler::OperatorToken }
 
     context "when the expression text to parse is ''" do
       let(:expression_text) { "" }
 
       it "raises an error when given an empty string" do
-        expect { parse }.to raise_error(a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError))
+        expect { parse }.to raise_error(a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError))
       end
     end
 
@@ -119,7 +119,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
 
       it "raises an error referencing the unexpected symbol" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError)
           .and(having_attributes(invalid_expression_text: "!"))
         )
       end
@@ -130,7 +130,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::TokenExtractor do
 
       it "raises an error referencing the unexpected symbol" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError)
             .and(having_attributes(invalid_expression_text: "\\"))
         )
       end

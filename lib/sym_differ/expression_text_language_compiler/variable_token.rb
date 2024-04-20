@@ -3,7 +3,7 @@
 require "sym_differ/variable_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Token representing a variable name in an expression in text form.
     class VariableToken
       def initialize(name)

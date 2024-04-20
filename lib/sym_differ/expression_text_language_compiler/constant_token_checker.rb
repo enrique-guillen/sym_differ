@@ -3,7 +3,7 @@
 require "sym_differ/constant_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildConstantExpressionCommand into the commands stack if applicable.
     class ConstantTokenChecker
       def check(token)

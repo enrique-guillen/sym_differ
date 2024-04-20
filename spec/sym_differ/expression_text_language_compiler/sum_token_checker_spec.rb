@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/sum_token_checker"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SumTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new.check(token) }
 
@@ -15,7 +15,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SumTokenChecker do
           handled: true,
           expression_location: :leftmost_or_infix,
           stack_item: { item_type: :pending_command,
-                        value: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::BuildSumExpressionCommand) }
+                        value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSumExpressionCommand) }
         )
       end
     end
@@ -30,7 +30,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SumTokenChecker do
     define_method(:subtract_token) { operator_token("-") }
 
     define_method(:operator_token) do |symbol|
-      SymDiffer::FreeFormExpressionTextLanguage::OperatorToken.new(symbol)
+      SymDiffer::ExpressionTextLanguageCompiler::OperatorToken.new(symbol)
     end
   end
 end

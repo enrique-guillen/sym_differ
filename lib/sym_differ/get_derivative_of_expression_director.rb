@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/derivative_of_expression_getter"
-require "sym_differ/free_form_expression_text_language/parser"
+require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/differentiation/differentiation_visitor"
 require "sym_differ/expression_reducer"
 require "sym_differ/inline_printing/printing_visitor"
@@ -11,7 +11,7 @@ module SymDiffer
   class GetDerivativeOfExpressionDirector
     def calculate_derivative(expression_text, variable)
       DerivativeOfExpressionGetter
-        .new(SymDiffer::FreeFormExpressionTextLanguage::Parser.new,
+        .new(SymDiffer::ExpressionTextLanguageCompiler::Parser.new,
              SymDiffer::Differentiation::DifferentiationVisitor.new(variable),
              SymDiffer::ExpressionReducer.new,
              SymDiffer::InlinePrinting::PrintingVisitor.new)

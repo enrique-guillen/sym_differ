@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/variable_token"
-require "sym_differ/free_form_expression_text_language/constant_token"
-require "sym_differ/free_form_expression_text_language/operator_token"
+require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/operator_token"
 
-require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
-require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
+require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
+require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Parses an expression written down as text, allowing the user to include as much whitespace as they'd like between
     # tokens of the expression, and returns a list of Free Form Expression Text Tokens.
     class TokenExtractor

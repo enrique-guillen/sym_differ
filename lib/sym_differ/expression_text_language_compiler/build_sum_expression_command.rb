@@ -3,7 +3,7 @@
 require "sym_differ/sum_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Builds a SumExpression out of the provided arguments.
     class BuildSumExpressionCommand
       def execute(arguments)

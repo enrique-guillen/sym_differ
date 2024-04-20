@@ -5,7 +5,7 @@ require "sym_differ/negate_expression"
 require "sym_differ/subtract_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Token representing an infix operator appearing in an expression text.
     class OperatorToken
       def initialize(symbol)

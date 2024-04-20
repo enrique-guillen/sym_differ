@@ -3,7 +3,7 @@
 require "sym_differ/subtract_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Builds a SubtractExpression out of the provided arguments.
     class BuildSubtractExpressionCommand
       def execute(arguments)

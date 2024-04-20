@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
+require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError do
   describe ".new" do
     subject(:new) { described_class.new("x~") }
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
+require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError do
   describe ".new" do
     subject(:new) { described_class.new("x~") }
 

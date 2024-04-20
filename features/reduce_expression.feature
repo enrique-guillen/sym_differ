@@ -32,3 +32,8 @@ Feature: Compute a reduction for the expression.
     Given the expression to reduce is x - 1 - 2
     When the expression is reduced
     Then the result is x - 3
+
+  Scenario: The reduction of ++2 + ++1 + ++x is requested
+    Given the expression to reduce is ++2 + ++1 + ++x
+    When the expression is reduced
+    Then the result is x + 3

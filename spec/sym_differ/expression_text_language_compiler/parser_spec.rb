@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/parser"
+require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::Parser do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
   describe "#parse" do
     subject(:parse) do
       described_class.new.parse(expression_text)
@@ -29,7 +29,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::Parser do
       it "raises an error referencing the unexpected symbol" do
         expect { parse }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
-            having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::UnrecognizedTokenError)
+            having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError)
               .and(having_attributes(invalid_expression_text: "!")))
           )
         )
@@ -43,7 +43,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::Parser do
         expect { parse }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
             having_attributes(
-              cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError)
+              cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError)
             )
           )
         )
@@ -56,7 +56,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::Parser do
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
           a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and(having_attributes(cause: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)))
+            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
         )
       end
     end

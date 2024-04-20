@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/variable_token_checker"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::VariableTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::VariableTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new.check(token) }
 
@@ -26,11 +26,11 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::VariableTokenChecker d
     end
 
     define_method(:constant_token) do |value|
-      SymDiffer::FreeFormExpressionTextLanguage::ConstantToken.new(value)
+      SymDiffer::ExpressionTextLanguageCompiler::ConstantToken.new(value)
     end
 
     define_method(:variable_token) do |name|
-      SymDiffer::FreeFormExpressionTextLanguage::VariableToken.new(name)
+      SymDiffer::ExpressionTextLanguageCompiler::VariableToken.new(name)
     end
   end
 end

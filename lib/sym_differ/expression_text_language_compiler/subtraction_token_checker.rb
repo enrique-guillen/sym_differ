@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/build_subtract_expression_command"
+require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildSubtractExpressionCommand into the commands stack if applicable.
     class SubtractionTokenChecker
       def check(token)

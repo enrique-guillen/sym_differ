@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/token_extractor"
-require "sym_differ/free_form_expression_text_language/expression_tree_builder"
+require "sym_differ/expression_text_language_compiler/token_extractor"
+require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
 
-require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
-require "sym_differ/free_form_expression_text_language/unrecognized_token_error"
-require "sym_differ/free_form_expression_text_language/invalid_syntax_error"
+require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
+require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
+require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Receives a string and returns an Expression tree representing the expression defined in the string.
     class Parser
       def parse(expression)

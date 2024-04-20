@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/subtraction_token_checker"
-require "sym_differ/free_form_expression_text_language/build_subtract_expression_command"
+require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
+require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SubtractionTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new.check(token) }
 
@@ -16,7 +16,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SubtractionTokenChecke
           handled: true,
           expression_location: :leftmost_or_infix,
           stack_item: { item_type: :pending_command,
-                        value: a_kind_of(SymDiffer::FreeFormExpressionTextLanguage::BuildSubtractExpressionCommand) }
+                        value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand) }
         )
       end
     end
@@ -28,7 +28,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::SubtractionTokenChecke
     end
 
     define_method(:operator_token) do |symbol|
-      SymDiffer::FreeFormExpressionTextLanguage::OperatorToken.new(symbol)
+      SymDiffer::ExpressionTextLanguageCompiler::OperatorToken.new(symbol)
     end
   end
 end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/empty_expression_text_error"
+require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::EmptyExpressionTextError do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError do
   describe ".new" do
     subject(:new) { described_class.new }
 

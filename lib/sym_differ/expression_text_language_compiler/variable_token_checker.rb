@@ -3,7 +3,7 @@
 require "sym_differ/variable_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildVariableExpressionCommand into the commands stack if applicable.
     class VariableTokenChecker
       def check(token)

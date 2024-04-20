@@ -7,7 +7,7 @@ module SymDiffer
   # expression text into an Expression.
   module ParsingSupport
     def parse_expression(expression_text)
-      SymDiffer::FreeFormExpressionTextLanguage::Parser.new.parse(expression_text)
+      SymDiffer::ExpressionTextLanguageCompiler::Parser.new.parse(expression_text)
     end
 
     def inline_expression(expression)

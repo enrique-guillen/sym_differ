@@ -3,7 +3,7 @@
 require "sym_differ/negate_expression"
 
 module SymDiffer
-  module FreeFormExpressionTextLanguage
+  module ExpressionTextLanguageCompiler
     # Builds a NegateExpression out of the provided arguments.
     class BuildNegateExpressionCommand
       def execute(arguments)

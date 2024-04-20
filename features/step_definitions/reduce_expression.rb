@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/free_form_expression_text_language/parser"
+require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_reducer"
 
 Before do

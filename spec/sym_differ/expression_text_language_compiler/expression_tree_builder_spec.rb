@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/expression_tree_builder"
-require "sym_differ/free_form_expression_text_language/constant_token"
-require "sym_differ/free_form_expression_text_language/variable_token"
-require "sym_differ/free_form_expression_text_language/operator_token"
+require "sym_differ/expression_text_language_compiler/expression_tree_builder"
+require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/operator_token"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
     subject(:build) { described_class.new.build(tokens) }
 
@@ -30,7 +30,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [operator_token("+")] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x"), operator_token("+")] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x"), variable_token("x")] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
       end
     end
 
@@ -111,20 +111,20 @@ RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::ExpressionTreeBuilder 
       end
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::FreeFormExpressionTextLanguage::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
       end
     end
 
     define_method(:constant_token) do |value|
-      SymDiffer::FreeFormExpressionTextLanguage::ConstantToken.new(value)
+      SymDiffer::ExpressionTextLanguageCompiler::ConstantToken.new(value)
     end
 
     define_method(:variable_token) do |name|
-      SymDiffer::FreeFormExpressionTextLanguage::VariableToken.new(name)
+      SymDiffer::ExpressionTextLanguageCompiler::VariableToken.new(name)
     end
 
     define_method(:operator_token) do |symbol|
-      SymDiffer::FreeFormExpressionTextLanguage::OperatorToken.new(symbol)
+      SymDiffer::ExpressionTextLanguageCompiler::OperatorToken.new(symbol)
     end
   end
 end

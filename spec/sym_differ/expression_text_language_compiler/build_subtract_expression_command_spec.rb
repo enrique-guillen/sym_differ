@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/free_form_expression_text_language/build_subtract_expression_command"
+require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
 require "sym_differ/subtract_expression"
 
-RSpec.describe SymDiffer::FreeFormExpressionTextLanguage::BuildSubtractExpressionCommand do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand do
   describe "#execute" do
     subject(:execute) { described_class.new.execute(arguments) }
 
