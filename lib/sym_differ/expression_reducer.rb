@@ -140,10 +140,6 @@ module SymDiffer
       SymDiffer::SumExpression.new(expression_a, expression_b)
     end
 
-    def build_variable_expression(name)
-      SymDiffer::VariableExpression.new(name)
-    end
-
     def build_negate_expression(negated_expression)
       SymDiffer::NegateExpression.new(negated_expression)
     end
