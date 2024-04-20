@@ -38,14 +38,6 @@ module SymDiffer
       def build_sum_expression_command
         @build_sum_expression_command ||= BuildSumExpressionCommand.new(@expression_factory)
       end
-
-      def operator_token?(token)
-        token.is_a?(OperatorToken)
-      end
-
-      def token_symbol_is_plus?(token)
-        token.symbol == "-"
-      end
     end
   end
 end
