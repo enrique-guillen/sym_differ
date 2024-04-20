@@ -5,7 +5,9 @@ require "sym_differ/expression_text_language_compiler/variable_token_checker"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::VariableTokenChecker do
   describe "#check" do
-    subject(:check) { described_class.new.check(token) }
+    subject(:check) { described_class.new(expression_factory).check(token) }
+
+    let(:expression_factory) { build_expression_factory }
 
     context "when the provided token is x" do
       let(:token) { variable_token("x") }
@@ -23,6 +25,15 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::VariableTokenChecker d
       let(:token) { constant_token(1) }
 
       it { is_expected.to eq(handled: false) }
+    end
+
+    define_method(:build_expression_factory) do
+      expression_factory = double(:expression_factory)
+
+      allow(expression_factory)
+        .to receive(:create_variable_expression) { |name| double(:constant_expression, name:) }
+
+      expression_factory
     end
 
     define_method(:constant_token) do |value|
