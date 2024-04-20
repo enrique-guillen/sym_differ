@@ -11,11 +11,31 @@ module SymDiffer
   class GetDerivativeOfExpressionDirector
     def calculate_derivative(expression_text, variable)
       DerivativeOfExpressionGetter
-        .new(SymDiffer::ExpressionTextLanguageCompiler::Parser.new,
-             SymDiffer::Differentiation::DifferentiationVisitor.new(variable),
-             SymDiffer::ExpressionReducer.new,
-             SymDiffer::InlinePrinting::PrintingVisitor.new)
+        .new(parser,
+             differentiation_visitor(variable),
+             expression_reducer,
+             printing_visitor)
         .get(expression_text, variable)
+    end
+
+    private
+
+    def parser
+      SymDiffer::ExpressionTextLanguageCompiler::Parser.new(
+        SymDiffer::ExpressionFactory.new
+      )
+    end
+
+    def differentiation_visitor(variable)
+      SymDiffer::Differentiation::DifferentiationVisitor.new(variable)
+    end
+
+    def expression_reducer
+      SymDiffer::ExpressionReducer.new
+    end
+
+    def printing_visitor
+      SymDiffer::InlinePrinting::PrintingVisitor.new
     end
   end
 end
