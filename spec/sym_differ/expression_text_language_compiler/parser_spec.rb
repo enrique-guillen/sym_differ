@@ -5,9 +5,11 @@ require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
+  let(:parser) { described_class.new(SymDiffer::ExpressionFactory.new) }
+
   describe "#parse" do
     subject(:parse) do
-      described_class.new.parse(expression_text)
+      parser.parse(expression_text)
     end
 
     context "when the expression is x + x" do
@@ -64,7 +66,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
   describe "#validate_variable" do
     subject(:validate_variable) do
-      described_class.new.validate_variable(variable)
+      parser.validate_variable(variable)
     end
 
     context "when the variable is empty" do
