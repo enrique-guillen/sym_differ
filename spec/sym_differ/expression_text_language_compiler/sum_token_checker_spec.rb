@@ -5,7 +5,9 @@ require "sym_differ/expression_text_language_compiler/sum_token_checker"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
   describe "#check" do
-    subject(:check) { described_class.new.check(token) }
+    subject(:check) { described_class.new(expression_factory).check(token) }
+
+    let(:expression_factory) { double(:expression_factory) }
 
     context "when the provided token is +" do
       let(:token) { sum_token }

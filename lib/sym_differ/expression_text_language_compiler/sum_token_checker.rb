@@ -6,6 +6,10 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildSumExpressionCommand into the commands stack if applicable.
     class SumTokenChecker
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def check(token)
         return not_handled_response unless sum_token?(token)
 
@@ -32,7 +36,7 @@ module SymDiffer
       end
 
       def build_sum_expression_command
-        @build_sum_expression_command ||= BuildSumExpressionCommand.new
+        @build_sum_expression_command ||= BuildSumExpressionCommand.new(@expression_factory)
       end
 
       def operator_token?(token)
