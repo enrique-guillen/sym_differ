@@ -6,6 +6,10 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildSubtractExpressionCommand into the commands stack if applicable.
     class SubtractionTokenChecker
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def check(token)
         return not_handled_response unless subtraction_token?(token)
 
@@ -36,7 +40,7 @@ module SymDiffer
       end
 
       def build_subtract_expression_command
-        @build_subtract_expression_command ||= BuildSubtractExpressionCommand.new
+        @build_subtract_expression_command ||= BuildSubtractExpressionCommand.new(@expression_factory)
       end
 
       def operator_token?(token)

@@ -6,7 +6,11 @@ require "sym_differ/expression_text_language_compiler/build_subtract_expression_
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecker do
   describe "#check" do
-    subject(:check) { described_class.new.check(token) }
+    subject(:check) do
+      described_class.new(expression_factory).check(token)
+    end
+
+    let(:expression_factory) { double(:expression_factory) }
 
     context "when the token being checked is -" do
       let(:token) { operator_token("-") }
