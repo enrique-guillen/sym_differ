@@ -46,6 +46,17 @@ Metrics/ClassLength:
 Style/RaiseArgs:
   EnforcedStyle: compact
 
+# We want to enable snake_case to give some space to breathe between all words of an identifier (as a general rule), and
+# I think snake_case makes it easier to mentally parse indexed variables at a glance.
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+
+# This cop exists presumably (at the time of writing this) because different numbers tend to be used in lieu of
+# meaningful names, but numbers can be shorthands for meaningful information (e.g., ordering of items in an array). We
+# should be fine to disable this cop as long as we don't introduce multiple Indexed Lets.
+RSpec/IndexedLet:
+  Enabled: false
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
@@ -299,8 +310,6 @@ RSpec/DuplicatedMetadata:
 RSpec/ExcessiveDocstringSpacing:
   Enabled: true
 RSpec/IdenticalEqualityAssertion:
-  Enabled: true
-RSpec/IndexedLet:
   Enabled: true
 RSpec/MatchArray:
   Enabled: true
