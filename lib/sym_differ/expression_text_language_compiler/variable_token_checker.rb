@@ -6,6 +6,10 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     # Checks the provided token and pushes a BuildVariableExpressionCommand into the commands stack if applicable.
     class VariableTokenChecker
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def check(token)
         return not_handled_response unless variable_token?(token)
 
@@ -33,7 +37,7 @@ module SymDiffer
       end
 
       def build_variable_expression_from_token(token)
-        VariableExpression.new(token.name)
+        @expression_factory.create_variable_expression(token.name)
       end
     end
   end
