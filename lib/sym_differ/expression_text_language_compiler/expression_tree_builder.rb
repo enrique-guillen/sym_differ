@@ -11,6 +11,10 @@ module SymDiffer
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def build(tokens)
         raise_invalid_syntax_error if tokens.empty?
         convert_tokens_into_expression(tokens)
@@ -100,15 +104,15 @@ module SymDiffer
       end
 
       def constant_token_checker
-        @constant_token_checker ||= ConstantTokenChecker.new
+        @constant_token_checker ||= ConstantTokenChecker.new(@expression_factory)
       end
 
       def variable_token_checker
-        @variable_token_checker ||= VariableTokenChecker.new
+        @variable_token_checker ||= VariableTokenChecker.new(@expression_factory)
       end
 
       def sum_token_checker
-        @sum_token_checker ||= SumTokenChecker.new
+        @sum_token_checker ||= SumTokenChecker.new(@expression_factory)
       end
 
       def subtraction_token_checker
