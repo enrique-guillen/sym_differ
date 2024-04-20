@@ -11,10 +11,6 @@ module SymDiffer
       end
 
       attr_reader :value
-
-      def transform_into_expression
-        ConstantExpression.new(@value)
-      end
     end
   end
 end
