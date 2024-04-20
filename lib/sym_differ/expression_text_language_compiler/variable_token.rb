@@ -11,10 +11,6 @@ module SymDiffer
       end
 
       attr_reader :name
-
-      def transform_into_expression
-        VariableExpression.new(@name)
-      end
     end
   end
 end
