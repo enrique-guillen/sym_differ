@@ -35,10 +35,6 @@ module SymDiffer
         operator_token?(token) && token_symbol_is_dash?(token)
       end
 
-      def push_command_into_stack(stack, command)
-        stack.push(command)
-      end
-
       def build_subtract_expression_command
         @build_subtract_expression_command ||= BuildSubtractExpressionCommand.new(@expression_factory)
       end
