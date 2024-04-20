@@ -6,7 +6,9 @@ require "sym_differ/subtract_expression"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand do
   describe "#execute" do
-    subject(:execute) { described_class.new.execute(arguments) }
+    subject(:execute) { described_class.new(expression_factory).execute(arguments) }
+
+    let(:expression_factory) { build_expression_factory }
 
     context "when the arguments have two expressions" do
       let(:arguments) { [minuend, subtrahend] }
@@ -23,6 +25,20 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressio
       let(:negated_expression) { double(:negated_expression) }
 
       it { is_expected.to have_attributes(negated_expression:) }
+    end
+
+    define_method(:build_expression_factory) do
+      expression_factory = double(:expression_factory)
+
+      allow(expression_factory).to receive(:create_subtract_expression) do |minuend, subtrahend|
+        double(:subtract_expression, minuend:, subtrahend:)
+      end
+
+      allow(expression_factory).to receive(:create_negate_expression) do |negated_expression|
+        double(:negate_expression, negated_expression:)
+      end
+
+      expression_factory
     end
   end
 end

@@ -6,6 +6,10 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     # Builds a SubtractExpression out of the provided arguments.
     class BuildSubtractExpressionCommand
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def execute(arguments)
         if arguments.size == 1
           negated_expression = arguments.first
@@ -19,11 +23,11 @@ module SymDiffer
       private
 
       def build_subtract_expression(minuend, subtrahend)
-        SubtractExpression.new(minuend, subtrahend)
+        @expression_factory.create_subtract_expression(minuend, subtrahend)
       end
 
       def build_negate_expression(negated_expression)
-        NegateExpression.new(negated_expression)
+        @expression_factory.create_negate_expression(negated_expression)
       end
     end
   end
