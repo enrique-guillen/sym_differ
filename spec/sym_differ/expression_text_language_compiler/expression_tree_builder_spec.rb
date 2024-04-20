@@ -2,13 +2,16 @@
 
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
-require "sym_differ/expression_text_language_compiler/constant_token"
-require "sym_differ/expression_text_language_compiler/variable_token"
-require "sym_differ/expression_text_language_compiler/operator_token"
+
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
-    subject(:build) { described_class.new.build(tokens) }
+    subject(:build) do
+      described_class
+        .new(SymDiffer::ExpressionFactory.new)
+        .build(tokens)
+    end
 
     context "when the tokens list is 1" do
       let(:tokens) { [constant_token(1)] }

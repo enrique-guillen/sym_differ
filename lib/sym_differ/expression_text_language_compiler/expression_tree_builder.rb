@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/variable_token_checker"
 require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
@@ -64,49 +65,15 @@ module SymDiffer
       end
 
       def reduce_tail_end_of_stack_while_evaluatable(current_stack)
-        while stack_item_is_command_type?(penultimate_item_in_stack(current_stack))
-          current_stack = apply_command_to_arguments_at_tail_end_of_stack(current_stack)
-        end
-
-        current_stack
+        command_and_expression_stack_reducer.reduce(current_stack)
       end
 
       def get_checker_for_currently_expected_token_type(currently_expected_token_type)
         checkers_by_role[currently_expected_token_type]
       end
 
-      def apply_command_to_arguments_at_tail_end_of_stack(current_stack)
-        last_argument_stack_item, command_stack_item, previous_argument_stack_item =
-          extract_command_and_arguments_from_tail_end_of_stack(current_stack)
-
-        value_of_executing_command = execute_stack_item_commands_and_arguments(
-          command_stack_item, previous_argument_stack_item, last_argument_stack_item
-        )
-
-        stack_minus_evaluated_items = drop_last_items_of_stack(current_stack, previous_argument_stack_item ? 3 : 2)
-
-        push_item_into_stack(
-          build_expression_type_stack_item(value_of_executing_command),
-          stack_minus_evaluated_items
-        )
-      end
-
-      def extract_command_and_arguments_from_tail_end_of_stack(current_stack)
-        tail_end = read_last_items_of_stack_backwards(current_stack, 3)
-        last_argument_stack_item = tail_end[0]
-        command_stack_item = tail_end[1]
-        previous_argument_stack_item = (tail_end[2] if stack_item_is_expression_type?(tail_end[2]))
-
-        [last_argument_stack_item, command_stack_item, previous_argument_stack_item]
-      end
-
-      def execute_stack_item_commands_and_arguments(command_stack_item,
-                                                    previous_argument_stack_item,
-                                                    last_argument_stack_item)
-        execute_command(
-          stack_item_value(command_stack_item),
-          [stack_item_value(previous_argument_stack_item), stack_item_value(last_argument_stack_item)].compact
-        )
+      def command_and_expression_stack_reducer
+        @command_and_expression_stack_reducer ||= CommandAndExpressionStackReducer.new
       end
 
       def checkers_by_role
@@ -124,23 +91,8 @@ module SymDiffer
         stack + [item]
       end
 
-      def penultimate_item_in_stack(command_and_expression_stack)
-        size = command_and_expression_stack.size
-        return nil if size <= 0
-
-        command_and_expression_stack[size - 2]
-      end
-
       def last_item_in_stack(stack)
         stack.last
-      end
-
-      def read_last_items_of_stack_backwards(stack, amount)
-        stack.last(amount).reverse
-      end
-
-      def drop_last_items_of_stack(stack, amount)
-        stack[0, stack.size - amount]
       end
 
       def multiple_commands_or_expressions_left_in_stack?(stack)
@@ -160,35 +112,11 @@ module SymDiffer
       end
 
       def subtraction_token_checker
-        @subtraction_token_checker ||= SubtractionTokenChecker.new
-      end
-
-      def build_expression_type_stack_item(expression)
-        build_stack_item(:expression, expression)
-      end
-
-      def stack_item_is_expression_type?(stack_item)
-        stack_item_item_type(stack_item) == :expression
-      end
-
-      def stack_item_is_command_type?(stack_item)
-        stack_item_item_type(stack_item) == :pending_command
-      end
-
-      def build_stack_item(item_type, value)
-        { item_type:, value: }
-      end
-
-      def stack_item_item_type(stack_item)
-        stack_item&.[](:item_type)
+        @subtraction_token_checker ||= SubtractionTokenChecker.new(@expression_factory)
       end
 
       def stack_item_value(stack_item)
         stack_item&.[](:value)
-      end
-
-      def execute_command(command, arguments = [])
-        command.execute(arguments)
       end
     end
   end
