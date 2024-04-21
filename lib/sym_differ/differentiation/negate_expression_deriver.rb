@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/negate_expression"
-
 module SymDiffer
   module Differentiation
     # Computes the derivative of the provided expression in the form -subexpression.

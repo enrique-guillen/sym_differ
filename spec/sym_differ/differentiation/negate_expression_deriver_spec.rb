@@ -23,7 +23,7 @@ RSpec.describe SymDiffer::Differentiation::NegateExpressionDeriver do
     it { is_expected.to have_attributes(negated_expression: negated_expression_derivative) }
 
     define_method(:negate_expression) do |negated_expression|
-      SymDiffer::NegateExpression.new(negated_expression)
+      expression_factory.create_negate_expression(negated_expression)
     end
   end
 end

@@ -4,7 +4,7 @@ require "sym_differ/expressions/constant_expression"
 require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
-require "sym_differ/negate_expression"
+require "sym_differ/expressions/negate_expression"
 require "sym_differ/positive_expression"
 
 module SymDiffer
@@ -28,7 +28,7 @@ module SymDiffer
     end
 
     def create_negate_expression(negated_expression)
-      NegateExpression.new(negated_expression)
+      Expressions::NegateExpression.new(negated_expression)
     end
 
     def create_positive_expression(summand)

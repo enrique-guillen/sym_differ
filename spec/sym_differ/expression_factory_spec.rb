@@ -7,7 +7,7 @@ require "sym_differ/expressions/constant_expression"
 require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
-require "sym_differ/negate_expression"
+require "sym_differ/expressions/negate_expression"
 require "sym_differ/positive_expression"
 
 RSpec.describe SymDiffer::ExpressionFactory do
@@ -56,7 +56,7 @@ RSpec.describe SymDiffer::ExpressionFactory do
 
     let(:negated_expression) { double(:negated_expression) }
 
-    it { is_expected.to be_a_kind_of(SymDiffer::NegateExpression).and have_attributes(negated_expression:) }
+    it { is_expected.to be_a_kind_of(SymDiffer::Expressions::NegateExpression).and have_attributes(negated_expression:) }
   end
 
   describe "#create_positive_expression" do

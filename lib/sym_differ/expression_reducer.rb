@@ -4,8 +4,8 @@ require "sym_differ/expressions/constant_expression"
 require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
-require "sym_differ/negate_expression"
-require "sym_differ/positive_expression"
+require "sym_differ/expressions/negate_expression"
+require "sym_differ/expressions/positive_expression"
 
 module SymDiffer
   # Reduces the terms in the provided expression.
@@ -149,7 +149,7 @@ module SymDiffer
     end
 
     def negate_expression?(expression)
-      expression.is_a?(NegateExpression)
+      expression.is_a?(Expressions::NegateExpression)
     end
 
     def build_constant_expression(value)
