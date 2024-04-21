@@ -8,6 +8,7 @@ require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
+require "sym_differ/positive_expression"
 
 RSpec.describe SymDiffer::ExpressionFactory do
   describe "#create_constant_expression" do
@@ -56,5 +57,15 @@ RSpec.describe SymDiffer::ExpressionFactory do
     let(:negated_expression) { double(:negated_expression) }
 
     it { is_expected.to be_a_kind_of(SymDiffer::NegateExpression).and have_attributes(negated_expression:) }
+  end
+
+  describe "#create_positive_expression" do
+    subject(:create_positive_expression) do
+      described_class.new.create_positive_expression(summand)
+    end
+
+    let(:summand) { double(:summand) }
+
+    it { is_expected.to be_a_kind_of(SymDiffer::PositiveExpression).and have_attributes(summand:) }
   end
 end

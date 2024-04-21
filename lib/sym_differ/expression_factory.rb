@@ -5,6 +5,7 @@ require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
+require "sym_differ/positive_expression"
 
 module SymDiffer
   # Implements an interface that allows the Factory users instantiate expressions regardless of the implementation
@@ -28,6 +29,10 @@ module SymDiffer
 
     def create_negate_expression(negated_expression)
       NegateExpression.new(negated_expression)
+    end
+
+    def create_positive_expression(summand)
+      PositiveExpression.new(summand)
     end
   end
 end
