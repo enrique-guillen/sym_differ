@@ -12,6 +12,7 @@ require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
   let(:visitor) { described_class.new(variable, expression_factory) }
+
   let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
   describe "#visit_constant_expression" do
@@ -19,7 +20,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       visitor.visit_constant_expression(expression)
     end
 
-    let(:expression) { SymDiffer::ConstantExpression.new(0) }
+    let(:expression) { constant_expression(0) }
     let(:variable) { "x" }
 
     it "returns the result of deriving the constant expression" do
@@ -34,7 +35,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
     let(:variable) { "x" }
 
-    let(:expression) { SymDiffer::VariableExpression.new("x") }
+    let(:expression) { variable_expression("x") }
 
     it "returns the result of deriving the variable expression" do
       expect(visit_variable_expression).to have_attributes(value: 1)
@@ -49,8 +50,8 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:variable) { "x" }
 
     context "when the expression to derive is -x" do
-      let(:expression) { SymDiffer::NegateExpression.new(negated_expression) }
-      let(:negated_expression) { SymDiffer::VariableExpression.new("x") }
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { variable_expression("x") }
 
       it "returns the result of deriving the negate expression" do
         expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
@@ -58,8 +59,8 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
 
     context "when the expression to derive is -2" do
-      let(:expression) { SymDiffer::NegateExpression.new(negated_expression) }
-      let(:negated_expression) { SymDiffer::ConstantExpression.new(2) }
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { constant_expression(2) }
 
       it "returns the result of deriving the negate expression" do
         expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 0))
@@ -73,9 +74,9 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
 
     let(:variable) { "x" }
-    let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
-    let(:expression_a) { SymDiffer::VariableExpression.new("var") }
-    let(:expression_b) { SymDiffer::VariableExpression.new("x") }
+    let(:expression) { sum_expression(expression_a, expression_b) }
+    let(:expression_a) { variable_expression("var") }
+    let(:expression_b) { variable_expression("x") }
 
     it "returns the result of deriving the sum expression" do
       expect(visit_sum_expression).to have_attributes(
@@ -90,11 +91,11 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       visitor.visit_subtract_expression(expression)
     end
 
-    let(:expression) { SymDiffer::SubtractExpression.new(minuend, subtrahend) }
+    let(:expression) { subtract_expression(minuend, subtrahend) }
     let(:variable) { "x" }
 
-    let(:minuend) { SymDiffer::VariableExpression.new("x") }
-    let(:subtrahend) { SymDiffer::ConstantExpression.new(1) }
+    let(:minuend) { variable_expression("x") }
+    let(:subtrahend) { constant_expression(1) }
 
     it "returns the result of deriving the expression" do
       expect(visit_subtract_expression).to have_attributes(
@@ -110,11 +111,36 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
 
     let(:variable) { "x" }
-    let(:expression) { SymDiffer::PositiveExpression.new(summand) }
-    let(:summand) { SymDiffer::VariableExpression.new("x") }
+    let(:expression) { positive_expression(summand) }
+    let(:summand) { variable_expression("x") }
 
     it "returns the result of deriving the expression" do
       expect(visit_positive_expression).to have_attributes(value: 1)
     end
+  end
+
+
+  define_method(:constant_expression) do |value|
+    expression_factory.create_constant_expression(value)
+  end
+
+  define_method(:variable_expression) do |name|
+    expression_factory.create_variable_expression(name)
+  end
+
+  define_method(:sum_expression) do |expression_a, expression_b|
+    expression_factory.create_sum_expression(expression_a, expression_b)
+  end
+
+  define_method(:subtract_expression) do |expression_a, expression_b|
+    expression_factory.create_subtract_expression(expression_a, expression_b)
+  end
+
+  define_method(:negate_expression) do |negated_expression|
+    expression_factory.create_negate_expression(negated_expression)
+  end
+
+  define_method(:positive_expression) do |summand|
+    expression_factory.create_positive_expression(summand)
   end
 end
