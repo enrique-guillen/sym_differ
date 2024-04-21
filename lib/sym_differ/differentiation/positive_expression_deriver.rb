@@ -2,6 +2,7 @@
 
 module SymDiffer
   module Differentiation
+    # Computes the expression that represents the derivative of a function f(x) = +a(x).
     class PositiveExpressionDeriver
       def initialize(deriver)
         @deriver = deriver
