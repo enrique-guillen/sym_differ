@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/sum_expression"
 require "sym_differ/differentiation/sum_expression_deriver"
+
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::SumExpressionDeriver do
   describe "#derive" do
-    subject(:derive) { described_class.new(deriver).derive(expression) }
+    subject(:derive) { described_class.new(deriver, expression_factory).derive(expression) }
 
     before do
       allow(expression_a).to receive(:accept).with(deriver).and_return(expression_a_derivative)
@@ -15,6 +16,7 @@ RSpec.describe SymDiffer::Differentiation::SumExpressionDeriver do
 
     let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
     let(:deriver) { double(:deriver) }
+    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     let(:expression_a) { double(:expression_a) }
     let(:expression_b) { double(:expression_b) }

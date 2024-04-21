@@ -56,7 +56,10 @@ RSpec.describe SymDiffer::ExpressionFactory do
 
     let(:negated_expression) { double(:negated_expression) }
 
-    it { is_expected.to be_a_kind_of(SymDiffer::Expressions::NegateExpression).and have_attributes(negated_expression:) }
+    it "returns NegatedExpression" do
+      expect(create_negate_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::NegateExpression).and have_attributes(negated_expression:)
+    end
   end
 
   describe "#create_positive_expression" do

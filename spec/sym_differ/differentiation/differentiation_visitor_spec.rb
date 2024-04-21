@@ -114,7 +114,6 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
-
   define_method(:constant_expression) do |value|
     expression_factory.create_constant_expression(value)
   end

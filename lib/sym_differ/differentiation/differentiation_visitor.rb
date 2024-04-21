@@ -55,11 +55,11 @@ module SymDiffer
       end
 
       def sum_expression_deriver
-        @sum_expression_deriver ||= SumExpressionDeriver.new(self)
+        @sum_expression_deriver ||= SumExpressionDeriver.new(self, @expression_factory)
       end
 
       def subtract_expression_deriver
-        @subtract_expression_deriver ||= SubtractExpressionDeriver.new(self)
+        @subtract_expression_deriver ||= SubtractExpressionDeriver.new(self, @expression_factory)
       end
 
       def positive_expression_deriver
