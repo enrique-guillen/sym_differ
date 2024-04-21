@@ -2,7 +2,6 @@
 
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/build_sum_expression_command"
-require "sym_differ/sum_expression"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSumExpressionCommand do
   describe "#execute" do

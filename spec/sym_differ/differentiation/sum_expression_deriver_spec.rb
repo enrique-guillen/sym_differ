@@ -14,7 +14,7 @@ RSpec.describe SymDiffer::Differentiation::SumExpressionDeriver do
       allow(expression_b).to receive(:accept).with(deriver).and_return(expression_b_derivative)
     end
 
-    let(:expression) { SymDiffer::SumExpression.new(expression_a, expression_b) }
+    let(:expression) { expression_factory.create_sum_expression(expression_a, expression_b) }
     let(:deriver) { double(:deriver) }
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 

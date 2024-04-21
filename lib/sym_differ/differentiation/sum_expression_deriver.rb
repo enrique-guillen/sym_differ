@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/sum_expression"
-
 module SymDiffer
   module Differentiation
     # Computes the expresion that represents the derivative of the sum of two functions.

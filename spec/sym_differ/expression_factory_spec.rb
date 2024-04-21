@@ -5,7 +5,7 @@ require "spec_helper"
 require "sym_differ/expression_factory"
 require "sym_differ/expressions/constant_expression"
 require "sym_differ/expressions/variable_expression"
-require "sym_differ/sum_expression"
+require "sym_differ/expressions/sum_expression"
 require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
@@ -35,7 +35,10 @@ RSpec.describe SymDiffer::ExpressionFactory do
     let(:expression_a) { double(:expression_a) }
     let(:expression_b) { double(:expression_b) }
 
-    it { is_expected.to be_a_kind_of(SymDiffer::SumExpression).and have_attributes(expression_a:, expression_b:) }
+    it "returns SumExpression" do
+      expect(create_sum_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::SumExpression).and have_attributes(expression_a:, expression_b:)
+    end
   end
 
   describe "#create_subtract_expression" do
