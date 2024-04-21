@@ -10,6 +10,7 @@ module SymDiffer
     end
 
     def reduce(expression)
+      return reduce_positive_expression(expression) if positive_expression?(expression)
       return reduce_sum_expression(expression) if sum_expression?(expression)
       return reduce_subtract_expression(expression) if subtract_expression?(expression)
       return reduce_negate_expression(expression) if negate_expression?(expression)
@@ -18,6 +19,11 @@ module SymDiffer
     end
 
     private
+
+    def reduce_positive_expression(expression)
+      _, subexpression = extract_constant_value_and_subexpression(expression.summand)
+      subexpression
+    end
 
     def reduce_sum_expression(expression)
       value, subexp = extract_constant_value_and_subexpression(expression)
@@ -64,6 +70,7 @@ module SymDiffer
       return extract_constant_value_and_subexpression_of_constant(expression) if constant_expression?(expression)
       return extract_constant_value_and_subexpression_of_variable(expression) if variable_expression?(expression)
       return extract_constant_value_and_subexpression_of_subtract(expression) if subtract_expression?(expression)
+      return extract_constant_value_and_subexpression(expression.summand) if positive_expression?(expression)
 
       extract_constant_value_and_subexpression_of_sum(expression)
     end
@@ -114,6 +121,10 @@ module SymDiffer
       return build_constant_expression(total_value) if total_value.positive? || total_value.zero?
 
       build_negate_expression(build_constant_expression(-total_value))
+    end
+
+    def positive_expression?(expression)
+      expression.is_a?(PositiveExpression)
     end
 
     def sum_expression?(expression)
