@@ -129,7 +129,7 @@ module SymDiffer
     end
 
     def positive_expression?(expression)
-      expression.is_a?(PositiveExpression)
+      expression.is_a?(Expressions::PositiveExpression)
     end
 
     def sum_expression?(expression)

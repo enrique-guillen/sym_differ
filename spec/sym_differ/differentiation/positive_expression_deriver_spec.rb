@@ -2,11 +2,13 @@
 
 require "spec_helper"
 require "sym_differ/differentiation/positive_expression_deriver"
-require "sym_differ/positive_expression"
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::PositiveExpressionDeriver do
   describe "#derive" do
     subject(:derive) { described_class.new(deriver).derive(expression) }
+
+    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     before do
       allow(summand)
@@ -16,7 +18,7 @@ RSpec.describe SymDiffer::Differentiation::PositiveExpressionDeriver do
     end
 
     let(:deriver) { double(:deriver) }
-    let(:expression) { SymDiffer::PositiveExpression.new(summand) }
+    let(:expression) { expression_factory.create_positive_expression(summand) }
     let(:summand) { double(:summand) }
     let(:summand_derivative) { double(:summand_derivative) }
 

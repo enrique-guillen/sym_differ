@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/sum_expression"
-require "sym_differ/positive_expression"
-
 module SymDiffer
   module ExpressionTextLanguageCompiler
     # Builds a SumExpression out of the provided arguments.
