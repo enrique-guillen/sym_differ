@@ -4,7 +4,7 @@ require "spec_helper"
 
 require "sym_differ/expression_factory"
 require "sym_differ/expressions/constant_expression"
-require "sym_differ/variable_expression"
+require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
@@ -24,7 +24,7 @@ RSpec.describe SymDiffer::ExpressionFactory do
       described_class.new.create_variable_expression("x")
     end
 
-    it { is_expected.to be_a_kind_of(SymDiffer::VariableExpression).and have_attributes(name: "x") }
+    it { is_expected.to be_a_kind_of(SymDiffer::Expressions::VariableExpression).and have_attributes(name: "x") }
   end
 
   describe "#create_sum_expression" do

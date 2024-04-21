@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/constant_expression"
+require "sym_differ/expressions/variable_expression"
+require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
+require "sym_differ/negate_expression"
+require "sym_differ/positive_expression"
 
 module SymDiffer
   # Reduces the terms in the provided expression.
@@ -140,7 +145,7 @@ module SymDiffer
     end
 
     def variable_expression?(expression)
-      expression.is_a?(VariableExpression)
+      expression.is_a?(Expressions::VariableExpression)
     end
 
     def negate_expression?(expression)

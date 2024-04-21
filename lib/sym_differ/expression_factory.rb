@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expressions/constant_expression"
-require "sym_differ/variable_expression"
+require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
@@ -16,7 +16,7 @@ module SymDiffer
     end
 
     def create_variable_expression(name)
-      VariableExpression.new(name)
+      Expressions::VariableExpression.new(name)
     end
 
     def create_sum_expression(expression_a, expression_b)
