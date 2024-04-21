@@ -172,8 +172,4 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
   define_method(:negate_expression) do |negated_expression|
     expression_factory.create_negate_expression(negated_expression)
   end
-
-  define_method(:positive_expression) do |summand|
-    expression_factory.create_positive_expression(summand)
-  end
 end
