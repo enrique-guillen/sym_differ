@@ -92,11 +92,25 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:minuend) { SymDiffer::VariableExpression.new("x") }
     let(:subtrahend) { SymDiffer::ConstantExpression.new(1) }
 
-    it do
+    it "returns the result of deriving the expression" do
       expect(visit_subtract_expression).to have_attributes(
         minuend: an_object_having_attributes(value: 1),
         subtrahend: an_object_having_attributes(value: 0)
       )
+    end
+  end
+
+  describe "#visit_positive_expression" do
+    subject(:visit_positive_expression) do
+      described_class.new(variable).visit_positive_expression(expression)
+    end
+
+    let(:variable) { "x" }
+    let(:expression) { SymDiffer::PositiveExpression.new(summand) }
+    let(:summand) { SymDiffer::VariableExpression.new("x") }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_positive_expression).to have_attributes(value: 1)
     end
   end
 end
