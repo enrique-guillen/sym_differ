@@ -25,7 +25,7 @@ module SymDiffer
     end
 
     def differentiation_visitor(variable)
-      Differentiation::DifferentiationVisitor.new(variable)
+      Differentiation::DifferentiationVisitor.new(variable, expression_factory)
     end
 
     def expression_reducer

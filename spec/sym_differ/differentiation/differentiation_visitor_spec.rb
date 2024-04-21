@@ -8,11 +8,15 @@ require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
 require "sym_differ/negate_expression"
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
+  let(:visitor) { described_class.new(variable, expression_factory) }
+  let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+
   describe "#visit_constant_expression" do
     subject(:visit_constant_expression) do
-      described_class.new(variable).visit_constant_expression(expression)
+      visitor.visit_constant_expression(expression)
     end
 
     let(:expression) { SymDiffer::ConstantExpression.new(0) }
@@ -25,7 +29,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   describe "#visit_variable_expression" do
     subject(:visit_variable_expression) do
-      described_class.new(variable).visit_variable_expression(expression)
+      visitor.visit_variable_expression(expression)
     end
 
     let(:variable) { "x" }
@@ -39,7 +43,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   describe "#visit_negate_expression" do
     subject(:visit_negate_expression) do
-      described_class.new(variable).visit_negate_expression(expression)
+      visitor.visit_negate_expression(expression)
     end
 
     let(:variable) { "x" }
@@ -65,7 +69,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   describe "#visit_sum_expression" do
     subject(:visit_sum_expression) do
-      described_class.new(variable).visit_sum_expression(expression)
+      visitor.visit_sum_expression(expression)
     end
 
     let(:variable) { "x" }
@@ -83,7 +87,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   describe "#visit_subtract_expression" do
     subject(:visit_subtract_expression) do
-      described_class.new(variable).visit_subtract_expression(expression)
+      visitor.visit_subtract_expression(expression)
     end
 
     let(:expression) { SymDiffer::SubtractExpression.new(minuend, subtrahend) }
@@ -102,7 +106,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   describe "#visit_positive_expression" do
     subject(:visit_positive_expression) do
-      described_class.new(variable).visit_positive_expression(expression)
+      visitor.visit_positive_expression(expression)
     end
 
     let(:variable) { "x" }

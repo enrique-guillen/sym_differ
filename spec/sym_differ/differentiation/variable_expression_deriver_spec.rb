@@ -2,10 +2,13 @@
 
 require "spec_helper"
 require "sym_differ/differentiation/variable_expression_deriver"
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::VariableExpressionDeriver do
   describe "#derive" do
-    subject(:derive) { described_class.new.derive(expression, variable) }
+    subject(:derive) { described_class.new(expression_factory).derive(expression, variable) }
+
+    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     context "when the provided variable has name 'var'" do
       let(:variable) { "var" }

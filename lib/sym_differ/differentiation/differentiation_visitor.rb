@@ -11,8 +11,9 @@ module SymDiffer
   module Differentiation
     # Performs the appropriate differentiation operation on each element of the Expression hierarchy.
     class DifferentiationVisitor
-      def initialize(variable)
+      def initialize(variable, expression_factory)
         @variable = variable
+        @expression_factory = expression_factory
       end
 
       def visit_constant_expression(expression)
@@ -42,15 +43,15 @@ module SymDiffer
       private
 
       def constant_expression_deriver
-        @constant_expression_deriver ||= ConstantExpressionDeriver.new
+        @constant_expression_deriver ||= ConstantExpressionDeriver.new(@expression_factory)
       end
 
       def variable_expression_deriver
-        @variable_expression_deriver ||= VariableExpressionDeriver.new
+        @variable_expression_deriver ||= VariableExpressionDeriver.new(@expression_factory)
       end
 
       def negate_expression_deriver
-        @negate_expression_deriver ||= NegateExpressionDeriver.new(self)
+        @negate_expression_deriver ||= NegateExpressionDeriver.new(self, @expression_factory)
       end
 
       def sum_expression_deriver

@@ -6,6 +6,10 @@ module SymDiffer
   module Differentiation
     # Computes the expresion that represents the derivative of an identity function.
     class VariableExpressionDeriver
+      def initialize(expression_factory)
+        @expression_factory = expression_factory
+      end
+
       def derive(expression, variable)
         return build_constant_one if expression.name == variable
 
@@ -23,7 +27,7 @@ module SymDiffer
       end
 
       def build_constant_expression(value)
-        ConstantExpression.new(value)
+        @expression_factory.create_constant_expression(value)
       end
     end
   end
