@@ -2,7 +2,7 @@
 
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
-require "sym_differ/subtract_expression"
+require "sym_differ/expressions/subtract_expression"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand do
   describe "#execute" do

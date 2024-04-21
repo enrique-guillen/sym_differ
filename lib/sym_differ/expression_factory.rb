@@ -3,7 +3,7 @@
 require "sym_differ/expressions/constant_expression"
 require "sym_differ/expressions/variable_expression"
 require "sym_differ/sum_expression"
-require "sym_differ/subtract_expression"
+require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
 
@@ -24,7 +24,7 @@ module SymDiffer
     end
 
     def create_subtract_expression(minuend, subtrahend)
-      SubtractExpression.new(minuend, subtrahend)
+      Expressions::SubtractExpression.new(minuend, subtrahend)
     end
 
     def create_negate_expression(negated_expression)

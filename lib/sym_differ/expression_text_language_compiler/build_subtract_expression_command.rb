@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/subtract_expression"
+require "sym_differ/expressions/subtract_expression"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
