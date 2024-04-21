@@ -3,7 +3,7 @@
 require "spec_helper"
 
 require "sym_differ/expression_factory"
-require "sym_differ/constant_expression"
+require "sym_differ/expressions/constant_expression"
 require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
@@ -16,7 +16,7 @@ RSpec.describe SymDiffer::ExpressionFactory do
       described_class.new.create_constant_expression(1)
     end
 
-    it { is_expected.to be_a_kind_of(SymDiffer::ConstantExpression).and have_attributes(value: 1) }
+    it { is_expected.to be_a_kind_of(SymDiffer::Expressions::ConstantExpression).and have_attributes(value: 1) }
   end
 
   describe "#create_variable_expression" do

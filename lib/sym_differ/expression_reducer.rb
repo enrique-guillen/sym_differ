@@ -136,7 +136,7 @@ module SymDiffer
     end
 
     def constant_expression?(expression)
-      expression.is_a?(ConstantExpression)
+      expression.is_a?(Expressions::ConstantExpression)
     end
 
     def variable_expression?(expression)

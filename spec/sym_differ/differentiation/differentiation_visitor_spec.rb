@@ -3,11 +3,6 @@
 require "spec_helper"
 require "sym_differ/differentiation/differentiation_visitor"
 
-require "sym_differ/constant_expression"
-require "sym_differ/variable_expression"
-require "sym_differ/sum_expression"
-require "sym_differ/subtract_expression"
-require "sym_differ/negate_expression"
 require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do

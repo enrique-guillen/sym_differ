@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/constant_expression"
+require "sym_differ/expressions/constant_expression"
 require "sym_differ/variable_expression"
 require "sym_differ/sum_expression"
 require "sym_differ/subtract_expression"
@@ -12,7 +12,7 @@ module SymDiffer
   # of the Expressions, e.g., the module and class names.
   class ExpressionFactory
     def create_constant_expression(value)
-      ConstantExpression.new(value)
+      Expressions::ConstantExpression.new(value)
     end
 
     def create_variable_expression(name)

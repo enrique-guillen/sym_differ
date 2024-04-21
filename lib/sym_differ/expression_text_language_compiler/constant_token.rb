@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/constant_expression"
-
 module SymDiffer
   module ExpressionTextLanguageCompiler
     # Token representing a constant value appearing in an expression in text form.
