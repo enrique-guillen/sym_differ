@@ -19,7 +19,10 @@ end
 When("the expression is reduced") do
   expression = parse_expression(@expression_text)
 
-  @payload = SymDiffer::ExpressionReducer.new.reduce(expression)
+  @payload =
+    SymDiffer::ExpressionReducer
+    .new(SymDiffer::ExpressionFactory.new)
+    .reduce(expression)
 end
 
 Then("the result is {}") do |expression_text|

@@ -21,21 +21,23 @@ module SymDiffer
     private
 
     def parser
-      SymDiffer::ExpressionTextLanguageCompiler::Parser.new(
-        SymDiffer::ExpressionFactory.new
-      )
+      ExpressionTextLanguageCompiler::Parser.new(expression_factory)
     end
 
     def differentiation_visitor(variable)
-      SymDiffer::Differentiation::DifferentiationVisitor.new(variable)
+      Differentiation::DifferentiationVisitor.new(variable)
     end
 
     def expression_reducer
-      SymDiffer::ExpressionReducer.new
+      ExpressionReducer.new(expression_factory)
     end
 
     def printing_visitor
-      SymDiffer::InlinePrinting::PrintingVisitor.new
+      InlinePrinting::PrintingVisitor.new
+    end
+
+    def expression_factory
+      @expression_factory = ExpressionFactory.new
     end
   end
 end

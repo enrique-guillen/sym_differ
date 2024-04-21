@@ -5,6 +5,10 @@ require "sym_differ/subtract_expression"
 module SymDiffer
   # Reduces the terms in the provided expression.
   class ExpressionReducer
+    def initialize(expression_factory)
+      @expression_factory = expression_factory
+    end
+
     def reduce(expression)
       return reduce_sum_expression(expression) if sum_expression?(expression)
       return reduce_subtract_expression(expression) if subtract_expression?(expression)
@@ -133,19 +137,19 @@ module SymDiffer
     end
 
     def build_constant_expression(value)
-      SymDiffer::ConstantExpression.new(value)
+      @expression_factory.create_constant_expression(value)
     end
 
     def build_sum_expression(expression_a, expression_b)
-      SymDiffer::SumExpression.new(expression_a, expression_b)
+      @expression_factory.create_sum_expression(expression_a, expression_b)
     end
 
     def build_negate_expression(negated_expression)
-      SymDiffer::NegateExpression.new(negated_expression)
+      @expression_factory.create_negate_expression(negated_expression)
     end
 
     def build_subtract_expression(minuend, subtrahend)
-      SymDiffer::SubtractExpression.new(minuend, subtrahend)
+      @expression_factory.create_subtract_expression(minuend, subtrahend)
     end
   end
 end
