@@ -52,25 +52,31 @@ module SymDiffer
       end
 
       def try_to_extract_nil_token_from_expression_head(expression_text)
-        build_nil_token_and_empty_string if expression_text.empty?
+        extract_token_response = NilTokenExtractor.new.extract(ExpressionText.new(expression_text))
+        return unless extract_token_response[:handled]
+
+        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
       end
 
       def try_to_extract_operator_token_from_expression_head(expression_text)
-        return unless first_character_in_text_is_recognized_infix_operator?(expression_text)
+        extract_token_response = OperatorTokenExtractor.new.extract(ExpressionText.new(expression_text))
+        return unless extract_token_response[:handled]
 
-        build_operator_token_and_split_text_on_first_letter(expression_text)
+        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
       end
 
       def try_to_extract_variable_token_from_expression_head(expression_text)
-        return unless first_character_in_text_is_alphabetical_letter?(expression_text)
+        extract_token_response = VariableTokenExtractor.new.extract(ExpressionText.new(expression_text))
+        return unless extract_token_response[:handled]
 
-        build_variable_token_with_rest_of_text(expression_text)
+        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
       end
 
       def try_to_extract_constant_token_from_expression_head(expression_text)
-        return unless first_character_in_text_is_numeric?(expression_text)
+        extract_token_response = ConstantTokenExtractor.new.extract(ExpressionText.new(expression_text))
+        return unless extract_token_response[:handled]
 
-        build_constant_token_and_split_text_on_first_non_numerical_character(expression_text)
+        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
       end
 
       def raise_error_if_expression_text_is_empty(expression_text)

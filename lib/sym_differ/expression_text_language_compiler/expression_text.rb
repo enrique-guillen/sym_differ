@@ -17,6 +17,10 @@ module SymDiffer
       def tail_end_of_text
         @text[1, @text.size].to_s
       end
+
+      def empty?
+        @text.empty?
+      end
     end
   end
 end
