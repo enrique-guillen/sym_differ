@@ -19,9 +19,17 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionText do
       expression_text.first_character_in_text
     end
 
-    let(:expression_text) { described_class.new("x+1") }
+    context "when expression text is x+1" do
+      let(:expression_text) { described_class.new("x+1") }
 
-    it { expect(first_character_in_text).to eq("x") }
+      it { expect(first_character_in_text).to eq("x") }
+    end
+
+    context "when expression text is empty" do
+      let(:expression_text) { described_class.new("") }
+
+      it { expect(first_character_in_text).to eq("") }
+    end
   end
 
   describe "#tail_end_of_text" do

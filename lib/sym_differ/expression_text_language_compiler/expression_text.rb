@@ -11,7 +11,7 @@ module SymDiffer
       attr_accessor :text
 
       def first_character_in_text
-        @text[0]
+        @text[0].to_s
       end
 
       def tail_end_of_text
