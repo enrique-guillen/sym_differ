@@ -7,7 +7,7 @@ module SymDiffer
     class NilTokenExtractor
       def extract(expression_text)
         if expression_text.empty?
-          build_handled_response
+          build_handled_response(expression_text)
         else
           build_not_handled_response
         end
@@ -15,8 +15,8 @@ module SymDiffer
 
       private
 
-      def build_handled_response
-        { handled: true, token: nil, next_expression_text: "" }
+      def build_handled_response(expression_text)
+        { handled: true, token: nil, next_expression_text: expression_text }
       end
 
       def build_not_handled_response
