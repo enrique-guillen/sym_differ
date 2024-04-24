@@ -13,7 +13,9 @@ module SymDiffer
     # tokens of the expression, and returns a list of Free Form Expression Text Tokens.
     class TokenExtractor
       def parse(expression_text)
+        expression_text = ExpressionText.new(expression_text)
         raise_error_if_expression_text_is_empty(expression_text)
+
         extract_tokens(expression_text)
       end
 
@@ -23,146 +25,70 @@ module SymDiffer
         tokens = []
 
         until expression_text.empty?
-          next_token, new_expression_text =
-            remove_leading_whitespace_and_get_next_token_and_expression_text_pair(expression_text)
+          expression_text = remove_leading_whitespace_from_text(expression_text)
+          next_token, expression_text = get_next_token_and_expression_text_pair(expression_text)
 
-          expression_text = new_expression_text
           tokens.push(next_token) unless next_token.nil?
         end
 
         tokens.compact
       end
 
-      def remove_leading_whitespace_and_get_next_token_and_expression_text_pair(expression_text)
-        expression_text = remove_leading_whitespace_from_text(expression_text)
-
-        try_to_extract_nil_token_from_expression_head(expression_text) ||
-          try_to_extract_operator_token_from_expression_head(expression_text) ||
-          try_to_extract_variable_token_from_expression_head(expression_text) ||
-          try_to_extract_constant_token_from_expression_head(expression_text) ||
-          raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-      end
-
-      def remove_leading_whitespace_from_text(text)
-        while character_is_whitespace?(first_character_in_text(text))
-          (text = tail_end_of_text(text))
+      def remove_leading_whitespace_from_text(expression_text)
+        while character_is_whitespace?(first_character_in_text(expression_text))
+          (expression_text.text = tail_end_of_text(expression_text))
         end
 
-        text
+        expression_text
       end
 
-      def try_to_extract_nil_token_from_expression_head(expression_text)
-        extract_token_response = NilTokenExtractor.new.extract(ExpressionText.new(expression_text))
-        return unless extract_token_response[:handled]
+      def get_next_token_and_expression_text_pair(expression_text)
+        extract_token_response = nil
 
-        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
+        token_extractors.detect do |extractor|
+          extract_token_response = extract_token_and_next_expression_text(extractor, expression_text)
+          !extract_token_response.nil?
+        end
+
+        raise_unrecognized_token_error(expression_text) if extract_token_response.nil?
+
+        [extract_token_response[:token], extract_token_response[:next_expression_text]]
       end
 
-      def try_to_extract_operator_token_from_expression_head(expression_text)
-        extract_token_response = OperatorTokenExtractor.new.extract(ExpressionText.new(expression_text))
+      def extract_token_and_next_expression_text(extractor, expression_text)
+        extract_token_response = extractor.extract(expression_text)
         return unless extract_token_response[:handled]
 
-        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
+        extract_token_response
       end
 
-      def try_to_extract_variable_token_from_expression_head(expression_text)
-        extract_token_response = VariableTokenExtractor.new.extract(ExpressionText.new(expression_text))
-        return unless extract_token_response[:handled]
-
-        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
-      end
-
-      def try_to_extract_constant_token_from_expression_head(expression_text)
-        extract_token_response = ConstantTokenExtractor.new.extract(ExpressionText.new(expression_text))
-        return unless extract_token_response[:handled]
-
-        [extract_token_response[:token], extract_token_response[:next_expression_text].text]
+      def token_extractors
+        @token_extractors ||= [
+          NilTokenExtractor.new,
+          OperatorTokenExtractor.new,
+          VariableTokenExtractor.new,
+          ConstantTokenExtractor.new
+        ]
       end
 
       def raise_error_if_expression_text_is_empty(expression_text)
         raise EmptyExpressionTextError if expression_text.empty?
       end
 
-      def raise_unparseable_text_error_due_to_unrecognized_token(expression_text)
-        raise UnrecognizedTokenError.new(expression_text)
-      end
-
-      def build_nil_token_and_empty_string
-        [nil, ""]
-      end
-
-      def first_character_in_text_is_recognized_infix_operator?(text)
-        character_is_recognized_infix_operator?(first_character_in_text(text))
-      end
-
-      def build_operator_token_and_split_text_on_first_letter(text)
-        [build_operator_token(first_character_in_text(text)), tail_end_of_text(text)]
-      end
-
-      def first_character_in_text_is_alphabetical_letter?(text)
-        character_is_alphabetic?(first_character_in_text(text))
-      end
-
-      def build_variable_token_with_rest_of_text(text)
-        buffer = []
-
-        while character_is_alphabetic?(first_character_in_text(text))
-          buffer.push(first_character_in_text(text))
-          text = tail_end_of_text(text)
-        end
-
-        [build_variable_token(buffer.join), text]
-      end
-
-      def first_character_in_text_is_numeric?(expression_text)
-        character_is_numeric?(first_character_in_text(expression_text))
-      end
-
-      def build_constant_token_and_split_text_on_first_non_numerical_character(text)
-        buffer = []
-
-        while character_is_numeric?(first_character_in_text(text))
-          buffer.push(first_character_in_text(text))
-          text = tail_end_of_text(text)
-        end
-
-        [build_constant_token(buffer.join.to_i), text]
+      def raise_unrecognized_token_error(expression_text)
+        raise UnrecognizedTokenError.new(expression_text.text)
       end
 
       def tail_end_of_text(text)
-        text[1, text.size].to_s
+        text.tail_end_of_text
       end
 
       def first_character_in_text(text)
-        text[0].to_s
-      end
-
-      def build_operator_token(symbol)
-        OperatorToken.new(symbol)
-      end
-
-      def build_variable_token(name)
-        VariableToken.new(name)
-      end
-
-      def build_constant_token(value)
-        ConstantToken.new(value)
+        text.first_character_in_text
       end
 
       def character_is_whitespace?(character)
         character.match?(/\s/)
-      end
-
-      def character_is_recognized_infix_operator?(character)
-        %w[+ -].include?(character)
-      end
-
-      def character_is_alphabetic?(character)
-        character.match?(/[a-zA-Z]/)
-      end
-
-      def character_is_numeric?(character)
-        character.match?(/[0-9]/)
       end
     end
   end
