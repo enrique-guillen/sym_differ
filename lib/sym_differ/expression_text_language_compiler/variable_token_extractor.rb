@@ -4,6 +4,8 @@ require "sym_differ/expression_text_language_compiler/variable_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
+    # Scans the head of the expression text and extracts the token at the head of the expression text if it's a variable
+    # name.
     class VariableTokenExtractor
       def extract(expression_text)
         first_character_in_text = first_character_in_text(expression_text)
@@ -33,7 +35,7 @@ module SymDiffer
 
         while valid_variable_character?(first_character_in_text(expression_text))
           variable_name += first_character_in_text(expression_text)
-          expression_text = tail_end_of_text(expression_text)
+          expression_text.text = tail_end_of_text(expression_text)
         end
 
         [variable_name, expression_text]
@@ -44,11 +46,11 @@ module SymDiffer
       end
 
       def first_character_in_text(text)
-        text[0]
+        text.first_character_in_text
       end
 
       def tail_end_of_text(text)
-        text[1, text.size].to_s
+        text.tail_end_of_text
       end
 
       def build_variable_token(name)
