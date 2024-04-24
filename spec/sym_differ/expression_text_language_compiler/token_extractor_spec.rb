@@ -97,7 +97,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
       end
     end
 
-    context "when the expression text to parse is '1\n  +\n  1'" do
+    context "when the expression text to parse is '1\n  +\n  1\n'" do
       let(:expression_text) { <<~EXPRESSION }
         1
           +
