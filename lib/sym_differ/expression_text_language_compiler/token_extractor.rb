@@ -4,6 +4,12 @@ require "sym_differ/expression_text_language_compiler/variable_token"
 require "sym_differ/expression_text_language_compiler/constant_token"
 require "sym_differ/expression_text_language_compiler/operator_token"
 
+require "sym_differ/expression_text_language_compiler/expression_text"
+require "sym_differ/expression_text_language_compiler/nil_token_extractor"
+require "sym_differ/expression_text_language_compiler/operator_token_extractor"
+require "sym_differ/expression_text_language_compiler/constant_token_extractor"
+require "sym_differ/expression_text_language_compiler/variable_token_extractor"
+
 require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
 require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
 
