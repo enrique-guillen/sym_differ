@@ -29,7 +29,7 @@ module SymDiffer
       end
 
       def build_expression_type_stack_item(expression)
-        { item_type: :expression, value: expression }
+        { item_type: :expression, precedence: 1, value: expression }
       end
 
       def variable_token?(token)
