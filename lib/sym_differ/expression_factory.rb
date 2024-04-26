@@ -34,5 +34,9 @@ module SymDiffer
     def create_positive_expression(summand)
       Expressions::PositiveExpression.new(summand)
     end
+
+    def create_multiplicate_expression(multiplicand, multiplier)
+      Expressions::MultiplicateExpression.new(multiplicand, multiplier)
+    end
   end
 end

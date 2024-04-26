@@ -77,4 +77,19 @@ RSpec.describe SymDiffer::ExpressionFactory do
 
     it { is_expected.to be_a_kind_of(SymDiffer::Expressions::PositiveExpression).and have_attributes(summand:) }
   end
+
+  describe "#create_multiplicate_expression" do
+    subject(:create_multiplicate_expression) do
+      described_class.new.create_multiplicate_expression(multiplicand, multiplier)
+    end
+
+    let(:multiplicand) { double(:multiplicand) }
+    let(:multiplier) { double(:multiplier) }
+
+    it "returns a MultiplicateExpression" do
+      expect(create_multiplicate_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::MultiplicateExpression)
+        .and have_attributes(multiplicand:, multiplier:)
+    end
+  end
 end
