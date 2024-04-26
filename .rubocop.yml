@@ -33,12 +33,11 @@ RSpec/ExampleLength:
 RSpec/NestedGroups:
   Max: 5
 
-# The work some classes do, such as free_form_expression_text_token_extractor, are traditionally done as a single file,
-# so some of them are (tentatively temporarily) excluded from this check.
+# We've decided to accept the technical debt of these files temporally.
 Metrics/ClassLength:
   Enabled: true
   Exclude:
-  - "lib/sym_differ/expression_text_language_compiler/token_extractor.rb"
+  - "lib/sym_differ/expression_text_language_compiler/expression_tree_builder.rb"
   - "lib/sym_differ/expression_reducer.rb"
 
 # The compact style of the `raise` call discourages exception messages (but still allows them), and encourages
