@@ -16,7 +16,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ConstantTokenChecker d
         expect(check).to include(
           handled: true,
           expression_location: :rightmost,
-          stack_item: { item_type: :expression, value: an_object_having_attributes(value: 1) }
+          stack_item: { item_type: :expression,
+                        precedence: 1,
+                        value: an_object_having_attributes(value: 1) }
         )
       end
     end
