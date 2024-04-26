@@ -4,6 +4,7 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
 require "sym_differ/expression_factory"
+require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do

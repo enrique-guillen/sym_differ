@@ -3,6 +3,9 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/sum_token_checker"
 
+require "sym_differ/expression_text_language_compiler/build_sum_expression_command"
+require "sym_differ/expression_text_language_compiler/operator_token"
+
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new(expression_factory).check(token) }

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
+require "sym_differ/expression_text_language_compiler/operator_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler

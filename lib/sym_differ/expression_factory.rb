@@ -6,6 +6,7 @@ require "sym_differ/expressions/sum_expression"
 require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
+require "sym_differ/expressions/multiplicate_expression"
 
 module SymDiffer
   # Implements an interface that allows the Factory users instantiate expressions regardless of the implementation

@@ -4,6 +4,7 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
 
 require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
+require "sym_differ/expression_text_language_compiler/operator_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::MultiplicationTokenChecker do
   describe "#check" do

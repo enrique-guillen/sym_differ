@@ -3,6 +3,9 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
 
+require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/variable_token"
+
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ConstantTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new(expression_factory).check(token) }
