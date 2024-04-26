@@ -17,6 +17,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
           handled: true,
           expression_location: :leftmost_or_infix,
           stack_item: { item_type: :pending_command,
+                        precedence: 0,
                         value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSumExpressionCommand) }
         )
       end

@@ -28,7 +28,7 @@ module SymDiffer
       end
 
       def build_command_type_stack_item(command)
-        { item_type: :pending_command, value: command }
+        { item_type: :pending_command, precedence: 0, value: command }
       end
 
       def sum_token?(token)
