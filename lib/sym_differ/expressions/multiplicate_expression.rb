@@ -10,6 +10,10 @@ module SymDiffer
       end
 
       attr_reader :multiplicand, :multiplier
+
+      def accept(visitor)
+        visitor.visit_multiplicate_expression(self)
+      end
     end
   end
 end
