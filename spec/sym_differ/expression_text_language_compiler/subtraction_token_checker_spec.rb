@@ -20,6 +20,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecke
           handled: true,
           expression_location: :leftmost_or_infix,
           stack_item: { item_type: :pending_command,
+                        precedence: 1,
                         value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand) }
         )
       end
