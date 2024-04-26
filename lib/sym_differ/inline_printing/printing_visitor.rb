@@ -41,6 +41,10 @@ module SymDiffer
         @parenthesize_subtraction_expressions ? surround_in_parenthesis(result) : result
       end
 
+      def visit_multiplicate_expression(expression)
+        "(#{stringify_expression(expression.multiplicand)}) * (#{stringify_expression(expression.multiplier)})"
+      end
+
       private
 
       def prefix_with_dash(expression)

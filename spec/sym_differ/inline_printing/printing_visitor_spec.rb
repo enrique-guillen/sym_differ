@@ -48,23 +48,33 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       printing_visitor.visit_sum_expression(expression)
     end
 
-    before do
-      allow(expression_a)
-        .to receive(:accept)
-        .with(printing_visitor)
-        .and_return("exp_a")
+    context "when the expression is expression_a + expression_b" do
+      before do
+        allow(expression_a)
+          .to receive(:accept)
+          .with(printing_visitor)
+          .and_return("exp_a")
 
-      allow(expression_b)
-        .to receive(:accept)
-        .with(printing_visitor)
-        .and_return("exp_b")
+        allow(expression_b)
+          .to receive(:accept)
+          .with(printing_visitor)
+          .and_return("exp_b")
+      end
+
+      let(:expression) { sum_expression(expression_a, expression_b) }
+      let(:expression_a) { double(:expression_a) }
+      let(:expression_b) { double(:expression_b) }
+
+      it { is_expected.to eq("exp_a + exp_b") }
     end
 
-    let(:expression) { sum_expression(expression_a, expression_b) }
-    let(:expression_a) { double(:expression_a) }
-    let(:expression_b) { double(:expression_b) }
+    context "when the expression is expa * expb + expc * expd" do
+      let(:expression) { sum_expression(expression_a, expression_b) }
+      let(:expression_a) { multiplicate_expression(constant_expression(1), variable_expression("x")) }
+      let(:expression_b) { multiplicate_expression(variable_expression("x"), constant_expression(1)) }
 
-    it { is_expected.to eq("exp_a + exp_b") }
+      it { is_expected.to eq("(1) * (x) + (x) * (1)") }
+    end
   end
 
   describe "#visit_subtract_expression" do
@@ -171,5 +181,9 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
 
   define_method(:negate_expression) do |negated_expression|
     expression_factory.create_negate_expression(negated_expression)
+  end
+
+  define_method(:multiplicate_expression) do |multiplicand, multiplier|
+    expression_factory.create_multiplicate_expression(multiplicand, multiplier)
   end
 end
