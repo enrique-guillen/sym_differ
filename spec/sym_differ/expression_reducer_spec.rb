@@ -305,6 +305,21 @@ RSpec.describe SymDiffer::ExpressionReducer do
       end
     end
 
+    context "when the expression is 1 * x + x * 1 (e.g., no reductions to do at the moment)" do
+      let(:expression) { sum_expression(expression_a, expression_b) }
+      let(:expression_a) { multiplicate_expression(constant_expression(1), variable_expression("x")) }
+      let(:expression_b) { multiplicate_expression(variable_expression("x"), constant_expression(1)) }
+
+      it "returns 1 * 1" do
+        expect(reduce).to have_attributes(
+          expression_a: an_object_having_attributes(multiplicand: an_object_having_attributes(value: 1),
+                                                    multiplier: an_object_having_attributes(name: "x")),
+          expression_b: an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
+                                                    multiplier: an_object_having_attributes(value: 1))
+        )
+      end
+    end
+
     define_method(:constant_expression) do |value|
       expression_factory.create_constant_expression(value)
     end
@@ -327,6 +342,10 @@ RSpec.describe SymDiffer::ExpressionReducer do
 
     define_method(:positive_expression) do |summand|
       expression_factory.create_positive_expression(summand)
+    end
+
+    define_method(:multiplicate_expression) do |multiplicand, multiplier|
+      expression_factory.create_multiplicate_expression(multiplicand, multiplier)
     end
   end
 end

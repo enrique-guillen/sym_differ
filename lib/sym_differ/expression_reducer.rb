@@ -76,8 +76,9 @@ module SymDiffer
       return extract_constant_value_and_subexpression_of_variable(expression) if variable_expression?(expression)
       return extract_constant_value_and_subexpression_of_subtract(expression) if subtract_expression?(expression)
       return extract_constant_value_and_subexpression(expression.summand) if positive_expression?(expression)
+      return extract_constant_value_and_subexpression_of_sum(expression) if sum_expression?(expression)
 
-      extract_constant_value_and_subexpression_of_sum(expression)
+      [0, expression]
     end
 
     def extract_constant_value_and_subexpression_of_negate(expression)
