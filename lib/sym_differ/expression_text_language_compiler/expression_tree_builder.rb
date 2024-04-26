@@ -5,6 +5,7 @@ require "sym_differ/expression_text_language_compiler/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/variable_token_checker"
 require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -16,17 +17,21 @@ module SymDiffer
       end
 
       def build(tokens)
-        raise_invalid_syntax_error_if_empty_tokens(tokens)
+        raise_invalid_syntax_error if tokens.empty?
         convert_tokens_into_expression(tokens)
       end
 
       private
 
-      def raise_invalid_syntax_error_if_empty_tokens(tokens)
-        raise_invalid_syntax_error if tokens.empty?
+      def convert_tokens_into_expression(tokens)
+        command_and_expression_stack = calculate_command_and_expression_stack_plus_token_type_for_tokens(tokens)
+
+        command_and_expression_stack = reduce_tail_end_of_stack_while_evaluatable(command_and_expression_stack)
+
+        value_of_last_stack_item(command_and_expression_stack)
       end
 
-      def convert_tokens_into_expression(tokens)
+      def calculate_command_and_expression_stack_plus_token_type_for_tokens(tokens)
         expected_token_type = :prefix_token_checkers
         command_and_expression_stack = []
 
@@ -35,22 +40,16 @@ module SymDiffer
             update_command_and_expression_stack_based_on_token(t, command_and_expression_stack, expected_token_type)
         end
 
-        raise_invalid_syntax_error_if_stack_not_reduced_to_one_expression(command_and_expression_stack)
+        raise_invalid_syntax_error if expected_token_type == :prefix_token_checkers
 
-        value_of_last_stack_item(command_and_expression_stack)
+        command_and_expression_stack
       end
 
       def update_command_and_expression_stack_based_on_token(token, command_and_expression_stack, expected_token_type)
-        stack_item_for_token = check_stack_item_corresponding_to_token(token, expected_token_type)
-
-        raise_invalid_syntax_error unless stack_item_for_token[:handled]
+        stack_item_for_token = check_token_stack_item(token, expected_token_type)
 
         command_and_expression_stack =
           push_item_into_stack(stack_item_for_token[:stack_item], command_and_expression_stack)
-
-        if stack_item_for_token[:expression_location] == :rightmost
-          command_and_expression_stack = reduce_tail_end_of_stack_while_evaluatable(command_and_expression_stack)
-        end
 
         expected_token_type =
           stack_item_for_token[:expression_location] == :rightmost ? :infix_token_checkers : :prefix_token_checkers
@@ -58,24 +57,23 @@ module SymDiffer
         [command_and_expression_stack, expected_token_type]
       end
 
-      def raise_invalid_syntax_error_if_stack_not_reduced_to_one_expression(command_and_expression_stack)
-        if multiple_commands_or_expressions_left_in_stack?(command_and_expression_stack) ||
-           !expression_type_stack_item?(last_item_in_stack(command_and_expression_stack))
-          raise_invalid_syntax_error
-        end
-      end
-
       def value_of_last_stack_item(command_and_expression_stack)
         stack_item_value(last_item_in_stack(command_and_expression_stack))
       end
 
-      def check_stack_item_corresponding_to_token(token, currently_expected_token_type)
+      def check_token_stack_item(token, currently_expected_token_type)
+        token_checkers_for_currently_expected_token_type =
+          get_checkers_for_currently_expected_token_type(currently_expected_token_type)
+
         result_of_checking_stack_item_type = nil
 
-        get_checker_for_currently_expected_token_type(currently_expected_token_type).each do |checker|
+        token_checkers_for_currently_expected_token_type.each do |checker|
           result_of_checking_stack_item_type = checker.check(token)
+
           break if result_of_checking_stack_item_type[:handled]
         end
+
+        raise_invalid_syntax_error unless result_of_checking_stack_item_type[:handled]
 
         result_of_checking_stack_item_type
       end
@@ -84,7 +82,7 @@ module SymDiffer
         command_and_expression_stack_reducer.reduce(current_stack)
       end
 
-      def get_checker_for_currently_expected_token_type(currently_expected_token_type)
+      def get_checkers_for_currently_expected_token_type(currently_expected_token_type)
         checkers_by_role[currently_expected_token_type]
       end
 
@@ -97,7 +95,7 @@ module SymDiffer
           prefix_token_checkers: [
             constant_token_checker, variable_token_checker, subtraction_token_checker, sum_token_checker
           ],
-          infix_token_checkers: [sum_token_checker, subtraction_token_checker]
+          infix_token_checkers: [multiplicate_token_checker, sum_token_checker, subtraction_token_checker]
         }.freeze
       end
 
@@ -113,14 +111,6 @@ module SymDiffer
         stack.last
       end
 
-      def multiple_commands_or_expressions_left_in_stack?(stack)
-        stack.size > 1
-      end
-
-      def expression_type_stack_item?(stack_item)
-        stack_item_item_type(stack_item) == :expression
-      end
-
       def constant_token_checker
         @constant_token_checker ||= ConstantTokenChecker.new(@expression_factory)
       end
@@ -129,16 +119,16 @@ module SymDiffer
         @variable_token_checker ||= VariableTokenChecker.new(@expression_factory)
       end
 
+      def multiplicate_token_checker
+        @multiplicate_token_checker ||= MultiplicationTokenChecker.new(@expression_factory)
+      end
+
       def sum_token_checker
         @sum_token_checker ||= SumTokenChecker.new(@expression_factory)
       end
 
       def subtraction_token_checker
         @subtraction_token_checker ||= SubtractionTokenChecker.new(@expression_factory)
-      end
-
-      def stack_item_item_type(stack_item)
-        stack_item&.[](:item_type)
       end
 
       def stack_item_value(stack_item)

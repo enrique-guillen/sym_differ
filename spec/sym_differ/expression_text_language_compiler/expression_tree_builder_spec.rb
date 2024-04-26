@@ -37,6 +37,14 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
+    context "when the tokens list is -" do
+      let(:tokens) { [operator_token("-")] }
+
+      it "raises an invalid syntax error" do
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+      end
+    end
+
     context "when the tokens list is x + x" do
       let(:tokens) { [variable_token("x"), operator_token("+"), variable_token("x")] }
 
@@ -123,6 +131,58 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
       it "returns a PositiveExpression" do
         expect(build).to have_attributes(summand: an_object_having_attributes(name: "x"))
+      end
+    end
+
+    context "when the tokens list is x * x" do
+      let(:tokens) { [variable_token("x"), operator_token("*"), variable_token("x")] }
+
+      it "returns a MultiplicateExpression" do
+        expect(build).to have_attributes(
+          multiplicand: an_object_having_attributes(name: "x"),
+          multiplier: an_object_having_attributes(name: "x")
+        )
+      end
+    end
+
+    context "when the tokens list is 1 + x * x" do
+      let(:tokens) do
+        [constant_token(1), operator_token("+"), variable_token("x"), operator_token("*"), variable_token("x")]
+      end
+
+      it "returns a SumExpression" do
+        expect(build).to have_attributes(
+          expression_a: an_object_having_attributes(value: 1),
+          expression_b: an_object_having_attributes(
+            multiplicand: an_object_having_attributes(name: "x"),
+            multiplier: an_object_having_attributes(name: "x")
+          )
+        )
+      end
+    end
+
+    context "when the tokens list is 1 + x * x + 1 (clarification)" do
+      let(:tokens) do
+        [constant_token(1),
+         operator_token("+"),
+         variable_token("x"),
+         operator_token("*"),
+         variable_token("x"),
+         operator_token("+"),
+         constant_token(1)]
+      end
+
+      it "returns a SumExpression" do
+        expect(build).to have_attributes(
+          expression_a: an_object_having_attributes(
+            expression_a: an_object_having_attributes(value: 1),
+            expression_b: an_object_having_attributes(
+              multiplicand: an_object_having_attributes(name: "x"),
+              multiplier: an_object_having_attributes(name: "x")
+            )
+          ),
+          expression_b: an_object_having_attributes(value: 1)
+        )
       end
     end
 
