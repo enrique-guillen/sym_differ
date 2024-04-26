@@ -22,7 +22,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         allow(command)
           .to receive(:execute)
           .with([expression_a, expression_b])
-          .and_return(value_of_applying_command_to_expressions)
+          .and_return(command_execution_value)
       end
 
       let(:command_and_expression_stack) do
@@ -37,24 +37,22 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:command) { double(:command) }
       let(:expression_b) { double(:expression_b) }
 
-      let(:value_of_applying_command_to_expressions) do
-        double(:value_of_applying_command_to_expressions)
-      end
+      let(:command_execution_value) { double(:command_execution_value) }
 
-      it { is_expected.to eq([expression_stack_item(value_of_applying_command_to_expressions)]) }
+      it { is_expected.to eq([expression_stack_item(command_execution_value)]) }
     end
 
     context "when the stack = [twice_earlier_expression, command1, earlier_expression, command2, last_expression]" do
       before do
-        allow(command_2)
-          .to receive(:execute)
-          .with([expression_b, expression_c])
-          .and_return(value_of_applying_command_2_to_expressions)
-
         allow(command_1)
           .to receive(:execute)
-          .with([expression_a, value_of_applying_command_2_to_expressions])
-          .and_return(value_of_applying_command_1_to_expressions)
+          .with([expression_a, expression_b])
+          .and_return(command_1_value)
+
+        allow(command_2)
+          .to receive(:execute)
+          .with([command_1_value, expression_c])
+          .and_return(command_2_value)
       end
 
       let(:command_and_expression_stack) do
@@ -73,15 +71,15 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:command_2) { double(:command_2) }
       let(:expression_c) { double(:expression_c) }
 
-      let(:value_of_applying_command_1_to_expressions) do
-        double(:value_of_applying_command_1_to_expressions)
+      let(:command_1_value) do
+        double(:command_1_value)
       end
 
-      let(:value_of_applying_command_2_to_expressions) do
-        double(:value_of_applying_command_2_to_expressions)
+      let(:command_2_value) do
+        double(:command_2_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(value_of_applying_command_1_to_expressions)]) }
+      it { is_expected.to eq([expression_stack_item(command_2_value)]) }
     end
 
     context "when the stack = [command1, command2, expression]" do
@@ -89,12 +87,12 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         allow(command_2)
           .to receive(:execute)
           .with([expression])
-          .and_return(value_of_applying_command_2_to_expression)
+          .and_return(command_2_execution_value)
 
         allow(command_1)
           .to receive(:execute)
-          .with([value_of_applying_command_2_to_expression])
-          .and_return(value_of_applying_command_1_to_expression)
+          .with([command_2_execution_value])
+          .and_return(command_1_execution_value)
       end
 
       let(:command_and_expression_stack) do
@@ -109,27 +107,67 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:command_2) { double(:command_2) }
       let(:expression) { double(:expression) }
 
-      let(:value_of_applying_command_2_to_expression) do
-        double(:value_of_applying_command_2_to_expression)
+      let(:command_2_execution_value) do
+        double(:command_2_execution_value)
       end
 
-      let(:value_of_applying_command_1_to_expression) do
-        double(:value_of_applying_command_1_to_expression)
+      let(:command_1_execution_value) do
+        double(:command_1_execution_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(value_of_applying_command_1_to_expression)]) }
+      it { is_expected.to eq([expression_stack_item(command_1_execution_value)]) }
     end
 
-    define_method(:command_stack_item) do |command|
-      build_stack_item(:pending_command, command)
+    context "when the stack = [exp, { command precedence 0 }, exp, { command precedence 1 }, exp]" do
+      before do
+        allow(higher_precedence_command)
+          .to receive(:execute)
+          .with([expression_b, expression_c])
+          .and_return(higher_precedence_command_value)
+
+        allow(lower_precedence_command)
+          .to receive(:execute)
+          .with([expression_a, higher_precedence_command_value])
+          .and_return(lower_precedence_command_value)
+      end
+
+      let(:command_and_expression_stack) do
+        [
+          expression_stack_item(expression_a),
+          command_stack_item(lower_precedence_command, 0),
+          expression_stack_item(expression_b),
+          command_stack_item(higher_precedence_command, 1),
+          expression_stack_item(expression_c)
+        ]
+      end
+
+      let(:expression_a) { double(:expression_a) }
+      let(:higher_precedence_command) { double(:higher_precedence_command) }
+      let(:expression_b) { double(:expression_b) }
+      let(:lower_precedence_command) { double(:lower_precedence_command) }
+      let(:expression_c) { double(:expression_c) }
+
+      let(:higher_precedence_command_value) do
+        double(:higher_precedence_command_value)
+      end
+
+      let(:lower_precedence_command_value) do
+        double(:lower_precedence_command_value)
+      end
+
+      it { is_expected.to eq([expression_stack_item(lower_precedence_command_value)]) }
+    end
+
+    define_method(:command_stack_item) do |command, precedence = 0|
+      build_stack_item(:pending_command, command, precedence)
     end
 
     define_method(:expression_stack_item) do |expression|
       build_stack_item(:expression, expression)
     end
 
-    define_method(:build_stack_item) do |item_type, value|
-      { item_type:, value: }
+    define_method(:build_stack_item) do |item_type, value, precedence = 0|
+      { item_type:, value:, precedence: }
     end
   end
 end

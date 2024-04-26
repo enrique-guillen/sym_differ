@@ -6,9 +6,13 @@ module SymDiffer
     # provided stack by repeatedly evaluating the tail end of the stack and accumulating the results.
     class CommandAndExpressionStackReducer
       def reduce(command_and_expression_stack)
-        while penultimate_item_in_stack_is_command_type?(command_and_expression_stack)
+        precedence = 2
+
+        while precedence >= 0
           command_and_expression_stack =
-            shorten_tail_end_of_stack_by_executing_pending_command(command_and_expression_stack)
+            shorten_stack_by_executing_commands_of_precedence(command_and_expression_stack, precedence)
+
+          precedence -= 1
         end
 
         command_and_expression_stack
@@ -16,62 +20,105 @@ module SymDiffer
 
       private
 
-      def penultimate_item_in_stack_is_command_type?(command_and_expression_stack)
-        command_stack_item = peek_item_from_end_of_stack(command_and_expression_stack, 1)
+      def shorten_stack_by_executing_commands_of_precedence(command_and_expression_stack, precedence)
+        command_index = retrieve_next_command_index(command_and_expression_stack, precedence)
 
-        command_type_stack_item?(command_stack_item)
+        while stack_includes_command_of_given_precedence?(command_and_expression_stack, command_index)
+          command_and_expression_stack = shorten_stack_by_executing_command(command_and_expression_stack, command_index)
+          command_index = retrieve_next_command_index(command_and_expression_stack, precedence)
+        end
+
+        command_and_expression_stack
       end
 
-      def shorten_tail_end_of_stack_by_executing_pending_command(command_and_expression_stack)
-        last_argument, command, earlier_argument =
-          extract_command_and_arguments_from_tail_end_of_stack(command_and_expression_stack)
+      def retrieve_next_command_index(command_and_expression_stack, precedence)
+        index = 0
 
-        executed_command_value =
-          execute_stack_item_commands_and_arguments(command, earlier_argument, last_argument)
+        index += 1 until stack_has_command_item_followed_by_expression?(command_and_expression_stack, index, precedence)
 
-        stack_without_evaluated_tail_end =
-          drop_items_from_stack_tail_end(command_and_expression_stack, earlier_argument.nil? ? 2 : 3)
-
-        add_item_to_stack_tail_end(stack_without_evaluated_tail_end,
-                                   build_expression_stack_item(executed_command_value))
+        index
       end
 
-      def extract_command_and_arguments_from_tail_end_of_stack(command_and_expression_stack)
-        last_argument = peek_item_from_end_of_stack(command_and_expression_stack, 0)
-        command = peek_item_from_end_of_stack(command_and_expression_stack, 1)
-        earlier_argument = peek_item_from_end_of_stack(command_and_expression_stack, 2)
+      def stack_has_command_item_followed_by_expression?(command_and_expression_stack, index, precedence)
+        stack_item = peek_item_in_stack(command_and_expression_stack, index)
+        next_stack_item = peek_item_in_stack(command_and_expression_stack, index + 1)
 
-        earlier_argument = (earlier_argument if expression_type_stack_item?(earlier_argument))
-
-        [last_argument, command, earlier_argument]
-      end
-
-      def execute_stack_item_commands_and_arguments(command_stack_item,
-                                                    previous_argument_stack_item,
-                                                    last_argument_stack_item)
-        execute_command(
-          stack_item_value(command_stack_item),
-          [stack_item_value(previous_argument_stack_item), stack_item_value(last_argument_stack_item)].compact
+        peek_item_in_stack(command_and_expression_stack, index).nil? || (
+          command_type_stack_item?(stack_item) &&
+          stack_item_matches_precedence?(stack_item, precedence) &&
+          !command_type_stack_item?(next_stack_item)
         )
       end
 
-      def peek_item_from_end_of_stack(command_and_expression_stack, position_starting_from_end)
-        size = command_and_expression_stack.size
-        return unless size > position_starting_from_end
-
-        command_and_expression_stack[size - position_starting_from_end - 1]
+      def stack_includes_command_of_given_precedence?(command_and_expression_stack, command_index)
+        command_and_expression_stack[command_index] != nil
       end
 
-      def drop_items_from_stack_tail_end(stack, amount_to_drop)
-        stack[0, stack.size - amount_to_drop].to_a
+      def shorten_stack_by_executing_command(command_and_expression_stack, command_index)
+        earlier_argument, command, later_argument =
+          extract_command_and_arguments_from_stack(command_and_expression_stack, command_index)
+
+        executed_command_value = execute_stack_item_commands_and_arguments(command, earlier_argument, later_argument)
+
+        earlier_stack_partition =
+          extract_earlier_stack_partition(command_and_expression_stack, command_index, (earlier_argument ? 1 : 0))
+        executed_command_stack_partition = build_stack_partition(build_expression_stack_item(executed_command_value))
+        later_stack_partition = extract_later_stack_partition(command_and_expression_stack, command_index)
+
+        combine_partitions_into_stack(earlier_stack_partition, executed_command_stack_partition, later_stack_partition)
       end
 
-      def add_item_to_stack_tail_end(stack, item)
-        stack + [item]
+      def extract_command_and_arguments_from_stack(command_and_expression_stack, command_index)
+        earlier_argument = peek_item_in_stack(command_and_expression_stack, command_index - 1)
+        command = peek_item_in_stack(command_and_expression_stack, command_index)
+        later_argument = peek_item_in_stack(command_and_expression_stack, command_index + 1)
+
+        earlier_argument = (earlier_argument if expression_type_stack_item?(earlier_argument))
+
+        [earlier_argument, command, later_argument]
+      end
+
+      def execute_stack_item_commands_and_arguments(command, previous_argument, last_argument)
+        execute_command(
+          stack_item_value(command),
+          [stack_item_value(previous_argument), stack_item_value(last_argument)].compact
+        )
+      end
+
+      def extract_earlier_stack_partition(stack, command_index, pre_command_argument_amount)
+        extract_stack_partition(stack, 0, command_index - pre_command_argument_amount)
+      end
+
+      def extract_later_stack_partition(stack, command_index)
+        extract_stack_partition(stack, command_index + 2, stack.size)
+      end
+
+      def peek_item_in_stack(command_and_expression_stack, position)
+        command_and_expression_stack[position] unless position.negative?
+      end
+
+      def extract_stack_partition(stack, starting_index, number_of_elements)
+        stack[starting_index, number_of_elements].to_a
+      end
+
+      def build_stack_partition(*stack_items)
+        [*stack_items]
+      end
+
+      def combine_partitions_into_stack(*stack_partitions)
+        stack_partitions.sum([])
       end
 
       def execute_command(command, arguments)
         command.execute(arguments)
+      end
+
+      def stack_item_matches_precedence?(stack_item, precedence)
+        stack_item_precedence(stack_item) == precedence
+      end
+
+      def stack_item_precedence(stack_item)
+        stack_item&.fetch(:precedence, nil)
       end
 
       def command_type_stack_item?(stack_item)
@@ -90,8 +137,8 @@ module SymDiffer
         build_stack_item(:expression, expression)
       end
 
-      def build_stack_item(item_type, value)
-        { item_type:, value: }
+      def build_stack_item(item_type, value, precedence = 0)
+        { item_type:, value:, precedence: }
       end
     end
   end
