@@ -6,6 +6,7 @@ require "sym_differ/differentiation/sum_expression_deriver"
 require "sym_differ/differentiation/subtract_expression_deriver"
 require "sym_differ/differentiation/negate_expression_deriver"
 require "sym_differ/differentiation/positive_expression_deriver"
+require "sym_differ/differentiation/multiplicate_expression_deriver"
 
 module SymDiffer
   module Differentiation
@@ -40,6 +41,10 @@ module SymDiffer
         positive_expression_deriver.derive(expression)
       end
 
+      def visit_multiplicate_expression(expression)
+        multiplicate_expression_deriver.derive(expression)
+      end
+
       private
 
       def constant_expression_deriver
@@ -64,6 +69,10 @@ module SymDiffer
 
       def positive_expression_deriver
         @positive_expression_deriver ||= PositiveExpressionDeriver.new(self)
+      end
+
+      def multiplicate_expression_deriver
+        @multiplicate_expression_deriver ||= MultiplicateExpressionDeriver.new(self, @expression_factory)
       end
     end
   end

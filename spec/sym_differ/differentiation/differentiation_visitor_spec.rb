@@ -114,6 +114,27 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_multiplicate_expression" do
+    subject(:visit_multiplicate_expression) do
+      visitor.visit_multiplicate_expression(expression)
+    end
+
+    let(:expression) { multiplicate_expression(multiplicand, multiplier) }
+    let(:variable) { "x" }
+
+    let(:multiplicand) { variable_expression("x") }
+    let(:multiplier) { variable_expression("x") }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_multiplicate_expression).to have_attributes(
+        expression_a: an_object_having_attributes(multiplicand: an_object_having_attributes(value: 1),
+                                                  multiplier: an_object_having_attributes(name: "x")),
+        expression_b: an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
+                                                  multiplier: an_object_having_attributes(value: 1))
+      )
+    end
+  end
+
   define_method(:constant_expression) do |value|
     expression_factory.create_constant_expression(value)
   end
@@ -136,5 +157,9 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
 
   define_method(:positive_expression) do |summand|
     expression_factory.create_positive_expression(summand)
+  end
+
+  define_method(:multiplicate_expression) do |multiplicand, multiplier|
+    expression_factory.create_multiplicate_expression(multiplicand, multiplier)
   end
 end
