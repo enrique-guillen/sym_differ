@@ -4,11 +4,13 @@ module SymDiffer
   module InlinePrinting
     # Methods for displaying all the elements of an expression into a single inline string.
     class PrintingVisitor
-      def initialize(parenthesize_subtraction_expressions: false)
-        @parenthesize_subtraction_expressions = parenthesize_subtraction_expressions
+      def initialize(parenthesize_subtraction_expressions_recursively: false,
+                     parenthesize_infix_expressions_once: false)
+        @parenthesize_subtraction_expressions_recursively = parenthesize_subtraction_expressions_recursively
+        @parenthesize_infix_expressions_once = parenthesize_infix_expressions_once
       end
 
-      attr_reader :parenthesize_subtraction_expressions
+      attr_reader :parenthesize_subtraction_expressions_recursively, :parenthesize_infix_expressions_once
 
       def visit_constant_expression(expression)
         expression.value.to_s
@@ -25,24 +27,40 @@ module SymDiffer
       end
 
       def visit_sum_expression(expression)
-        stringified_expression_a = stringify_expression(expression.expression_a)
-        stringified_expression_b = stringify_expression(expression.expression_b)
+        nested_visitor =
+          should_parenthesize_infix_expression? ? build_visitor(parenthesize_infix_expressions_once: false) : self
 
-        join_with_plus_sign(stringified_expression_a, stringified_expression_b)
+        stringified_expression_a = stringify_expression(expression.expression_a, visitor: nested_visitor)
+        stringified_expression_b = stringify_expression(expression.expression_b, visitor: nested_visitor)
+        result = join_with_plus_sign(stringified_expression_a, stringified_expression_b)
+
+        (result = surround_in_parenthesis(result)) if should_parenthesize_infix_expression?
+
+        result
       end
 
       def visit_subtract_expression(expression)
-        nested_visitor = build_visitor(parenthesize_subtraction_expressions: true)
+        minuend_visitor =
+          should_parenthesize_infix_expression? ? build_visitor(parenthesize_infix_expressions_once: false) : self
 
-        stringified_minuend = stringify_expression(expression.minuend)
-        stringified_subtrahend = stringify_expression(expression.subtrahend, visitor: nested_visitor)
+        subtrahend_visitor = build_visitor(parenthesize_subtraction_expressions_recursively: true)
+
+        stringified_minuend = stringify_expression(expression.minuend, visitor: minuend_visitor)
+        stringified_subtrahend = stringify_expression(expression.subtrahend, visitor: subtrahend_visitor)
         result = join_with_dash(stringified_minuend, stringified_subtrahend)
 
-        @parenthesize_subtraction_expressions ? surround_in_parenthesis(result) : result
+        (result = surround_in_parenthesis(result)) if should_parenthesize_subtraction_expression?
+
+        result
       end
 
       def visit_multiplicate_expression(expression)
-        "(#{stringify_expression(expression.multiplicand)}) * (#{stringify_expression(expression.multiplier)})"
+        nested_visitor = build_visitor(parenthesize_infix_expressions_once: true)
+
+        stringified_multiplicand = stringify_expression(expression.multiplicand, visitor: nested_visitor)
+        stringified_multiplier = stringify_expression(expression.multiplier, visitor: nested_visitor)
+
+        join_with_asterisk(stringified_multiplicand, stringified_multiplier)
       end
 
       private
@@ -63,12 +81,25 @@ module SymDiffer
         "(#{expression})"
       end
 
+      def join_with_asterisk(expression_a, expression_b)
+        "#{expression_a} * #{expression_b}"
+      end
+
       def stringify_expression(expression, visitor: self)
         expression.accept(visitor)
       end
 
-      def build_visitor(parenthesize_subtraction_expressions: true)
-        self.class.new(parenthesize_subtraction_expressions:)
+      def should_parenthesize_infix_expression?
+        @parenthesize_infix_expressions_once
+      end
+
+      def should_parenthesize_subtraction_expression?
+        @parenthesize_subtraction_expressions_recursively || @parenthesize_infix_expressions_once
+      end
+
+      def build_visitor(parenthesize_subtraction_expressions_recursively: false,
+                        parenthesize_infix_expressions_once: false)
+        self.class.new(parenthesize_subtraction_expressions_recursively:, parenthesize_infix_expressions_once:)
       end
     end
   end
