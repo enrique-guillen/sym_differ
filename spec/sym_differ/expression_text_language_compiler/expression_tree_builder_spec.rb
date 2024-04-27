@@ -187,6 +187,19 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
+    context "when the tokens list is x * + x" do
+      let(:tokens) do
+        [variable_token("x"), operator_token("*"), operator_token("+"), variable_token("x")]
+      end
+
+      it "returns a MultiplicateExpression" do
+        expect(build).to have_attributes(
+          multiplicand: an_object_having_attributes(name: "x"),
+          multiplier: an_object_having_attributes(summand: an_object_having_attributes(name: "x"))
+        )
+      end
+    end
+
     define_method(:constant_token) do |value|
       SymDiffer::ExpressionTextLanguageCompiler::ConstantToken.new(value)
     end
