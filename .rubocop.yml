@@ -37,7 +37,7 @@ RSpec/NestedGroups:
 Metrics/ClassLength:
   Enabled: true
   Exclude:
-  - "lib/sym_differ/expression_text_language_compiler/expression_tree_builder.rb"
+  - "lib/sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer.rb"
   - "lib/sym_differ/expression_reducer.rb"
 
 # The compact style of the `raise` call discourages exception messages (but still allows them), and encourages
