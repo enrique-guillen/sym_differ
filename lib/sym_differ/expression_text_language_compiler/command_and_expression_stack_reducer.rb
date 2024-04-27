@@ -6,7 +6,9 @@ module SymDiffer
     # provided stack by repeatedly evaluating the tail end of the stack and accumulating the results.
     class CommandAndExpressionStackReducer
       def reduce(command_and_expression_stack)
-        precedence = 2
+        precedence = 3
+
+        command_and_expression_stack = shorten_stack_by_executing_unary_commands(command_and_expression_stack)
 
         while precedence >= 0
           command_and_expression_stack =
@@ -19,6 +21,17 @@ module SymDiffer
       end
 
       private
+
+      def shorten_stack_by_executing_unary_commands(command_and_expression_stack)
+        command_index = retrieve_next_unary_command_index(command_and_expression_stack)
+
+        while stack_includes_command_of_given_precedence?(command_and_expression_stack, command_index)
+          command_and_expression_stack = shorten_stack_by_executing_command(command_and_expression_stack, command_index)
+          command_index = retrieve_next_unary_command_index(command_and_expression_stack)
+        end
+
+        command_and_expression_stack
+      end
 
       def shorten_stack_by_executing_commands_of_precedence(command_and_expression_stack, precedence)
         command_index = retrieve_next_command_index(command_and_expression_stack, precedence)
@@ -39,14 +52,34 @@ module SymDiffer
         index
       end
 
+      def retrieve_next_unary_command_index(command_and_expression_stack)
+        index = 0
+
+        index += 1 until stack_has_unary_command_item?(command_and_expression_stack, index)
+
+        index
+      end
+
       def stack_has_command_item_followed_by_expression?(command_and_expression_stack, index, precedence)
         stack_item = peek_item_in_stack(command_and_expression_stack, index)
         next_stack_item = peek_item_in_stack(command_and_expression_stack, index + 1)
 
-        peek_item_in_stack(command_and_expression_stack, index).nil? || (
+        stack_item.nil? || (
           command_type_stack_item?(stack_item) &&
           stack_item_matches_precedence?(stack_item, precedence) &&
           !command_type_stack_item?(next_stack_item)
+        )
+      end
+
+      def stack_has_unary_command_item?(command_and_expression_stack, index)
+        previous_stack_item = peek_item_in_stack(command_and_expression_stack, index - 1)
+        stack_item = peek_item_in_stack(command_and_expression_stack, index)
+        next_stack_item = peek_item_in_stack(command_and_expression_stack, index + 1)
+
+        stack_item.nil? || (
+          !expression_type_stack_item?(previous_stack_item) &&
+          command_type_stack_item?(stack_item) &&
+          expression_type_stack_item?(next_stack_item)
         )
       end
 

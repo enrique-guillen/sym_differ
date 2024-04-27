@@ -158,6 +158,93 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       it { is_expected.to eq([expression_stack_item(lower_precedence_command_value)]) }
     end
 
+    context "when the stack = [exp, higher_precedence_command, lower_precedence_command, exp]" do
+      before do
+        allow(higher_precedence_command)
+          .to receive(:execute)
+          .with([expression_a, lower_precedence_command_value])
+          .and_return(higher_precedence_command_value)
+
+        allow(lower_precedence_command)
+          .to receive(:execute)
+          .with([expression_b])
+          .and_return(lower_precedence_command_value)
+      end
+
+      let(:command_and_expression_stack) do
+        [
+          expression_stack_item(expression_a),
+          command_stack_item(higher_precedence_command, 1),
+          command_stack_item(lower_precedence_command, 0),
+          expression_stack_item(expression_b)
+        ]
+      end
+
+      let(:expression_a) { double(:expression_a) }
+      let(:higher_precedence_command) { double(:higher_precedence_command) }
+      let(:lower_precedence_command) { double(:lower_precedence_command) }
+      let(:expression_b) { double(:expression_b) }
+
+      let(:higher_precedence_command_value) do
+        double(:higher_precedence_command_value)
+      end
+
+      let(:lower_precedence_command_value) do
+        double(:lower_precedence_command_value)
+      end
+
+      it { is_expected.to eq([expression_stack_item(higher_precedence_command_value)]) }
+    end
+
+    context "when the stack = [exp, higher_precedence_cmd, lower_precedence_cmd, lowest_precedence_cmd, exp]" do
+      before do
+        allow(higher_precedence_command)
+          .to receive(:execute)
+          .with([expression_a, lower_precedence_command_value])
+          .and_return(higher_precedence_command_value)
+
+        allow(lower_precedence_command)
+          .to receive(:execute)
+          .with([lowest_precedence_command_value])
+          .and_return(lower_precedence_command_value)
+
+        allow(lowest_precedence_command)
+          .to receive(:execute)
+          .with([expression_b])
+          .and_return(lowest_precedence_command_value)
+      end
+
+      let(:command_and_expression_stack) do
+        [
+          expression_stack_item(expression_a),
+          command_stack_item(higher_precedence_command, 3),
+          command_stack_item(lower_precedence_command, 2),
+          command_stack_item(lowest_precedence_command, 1),
+          expression_stack_item(expression_b)
+        ]
+      end
+
+      let(:expression_a) { double(:expression_a) }
+      let(:higher_precedence_command) { double(:higher_precedence_command) }
+      let(:lower_precedence_command) { double(:lower_precedence_command) }
+      let(:lowest_precedence_command) { double(:lowest_precedence_command) }
+      let(:expression_b) { double(:expression_b) }
+
+      let(:higher_precedence_command_value) do
+        double(:higher_precedence_command_value)
+      end
+
+      let(:lower_precedence_command_value) do
+        double(:lower_precedence_command_value)
+      end
+
+      let(:lowest_precedence_command_value) do
+        double(:lowest_precedence_command_value)
+      end
+
+      it { is_expected.to eq([expression_stack_item(higher_precedence_command_value)]) }
+    end
+
     define_method(:command_stack_item) do |command, precedence = 0|
       build_stack_item(:pending_command, command, precedence)
     end
