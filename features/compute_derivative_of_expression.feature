@@ -97,7 +97,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       Then the derivative expression is 1
 
-  Rule: The derivative of f(x) = a(x)b(x) is f'(x) = a'(x)b(x) + a(x)b'(x).
+  Rule: The derivative of f(x) = a(x) * b(x) is f'(x) = a'(x) * b(x) + a(x) * b'(x).
 
     Scenario: The derivative of x * x, with respect to x, is requested.
       Given the expression to differentiate is x * x
@@ -116,3 +116,21 @@ Feature: Compute the symbolic derivative of a given expression.
 
       Then the derivative expression is (1 * 2 + x * 0) * x + x * 2 * 1
       And (@wip) the derivative expression is 4x
+
+    Scenario: The derivative of x - x * x - x * x, with respect to x, is requested.
+      Given the expression to differentiate is x - x * x - x * x
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is -(1 * x + x * 1) - (1 * x + x * 1) + 1
+      And (@wip) the derivative expression is 1 - 4x
+
+    Scenario: The derivative of 2 * x - 2 * x, with respect to x, is requested.
+      Given the expression to differentiate is 2 * x - 2 * x
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 0 * x + 2 * 1 - (0 * x + 2 * 1)
+      And (@wip) the derivative expression is 1 - 4x
