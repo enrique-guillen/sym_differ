@@ -10,7 +10,7 @@ module SymDiffer
       end
 
       def derive(expression)
-        @expression_factory.create_sum_expression(
+        create_sum_expression(
           create_multiplicate_expression(
             derive_expression(expression.multiplicand),
             expression.multiplier
