@@ -32,18 +32,20 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       printing_visitor.visit_negate_expression(expression)
     end
 
-    before do
-      allow(negated_expression)
-        .to receive(:accept)
-        .with(printing_visitor)
-        .and_return("subexp")
+    context "when the expression to negate is subexp" do
+      before do
+        allow(negated_expression)
+          .to receive(:accept)
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+          .and_return("subexp")
+      end
+
+      let(:printing_visitor) { described_class.new }
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { double(:negated_expression) }
+
+      it { is_expected.to eq("-subexp") }
     end
-
-    let(:printing_visitor) { described_class.new }
-    let(:expression) { negate_expression(negated_expression) }
-    let(:negated_expression) { double(:negated_expression) }
-
-    it { is_expected.to eq("-subexp") }
   end
 
   describe "#visit_sum_expression" do
@@ -57,13 +59,13 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       before do
         allow(expression_a)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_a")
 
         allow(expression_b)
           .to receive(:accept)
           .with(printing_visitor)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_b")
       end
 
@@ -88,17 +90,17 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       before do
         allow(expression_a)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_a")
 
         allow(expression_b_1)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_b_1")
 
         allow(expression_b_2)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_b_2")
       end
 
@@ -125,12 +127,12 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       before do
         allow(minuend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("exp_a")
 
         allow(subtrahend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
           .and_return("exp_b")
       end
 
@@ -147,12 +149,12 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
 
         allow(right_minuend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("right_minuend")
 
         allow(right_subtrahend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
           .and_return("right_subtrahend")
       end
 
@@ -171,19 +173,22 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       before do
         allow(subtrahend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
           .and_return("subtrahend")
 
-        allow(left_minuend).to receive(:accept).with(printing_visitor).and_return("left_minuend")
+        allow(left_minuend)
+          .to receive(:accept)
+          .with(printing_visitor)
+          .and_return("left_minuend")
 
         allow(left_right_minuend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
           .and_return("left_right_minuend")
 
         allow(left_right_subtrahend)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_subtraction_expressions_recursively: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
           .and_return("left_right_subtrahend")
       end
 
@@ -215,7 +220,7 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
 
         allow(subtrahend_2)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
           .and_return("subtrahend_2")
       end
 
