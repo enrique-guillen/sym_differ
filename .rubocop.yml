@@ -56,6 +56,11 @@ Naming/VariableNumber:
 RSpec/IndexedLet:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Exclude:
+  # We've decided to address the complexity of #reduction_analysis in the future via the Visitor pattern or similar.
+  - "lib/sym_differ/expression_reducer.rb"
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
