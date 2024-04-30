@@ -19,8 +19,6 @@ module SymDiffer
 
         total_value = subvalue_a - subvalue_b
 
-        # total_factor_value = factor_subvalue_a * -factor_subvalue_b
-
         reduced_expression = create_reduced_expression_from_subexpressions(total_value, subexp_a, subexp_b)
 
         build_reduction_results(

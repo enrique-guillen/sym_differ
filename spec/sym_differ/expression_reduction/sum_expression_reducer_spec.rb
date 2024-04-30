@@ -4,9 +4,6 @@ require "spec_helper"
 require "sym_differ/expression_reduction/sum_expression_reducer"
 require "sym_differ/expression_factory"
 
-RSpec::Matchers.alias_matcher :an_expression_same_as, :be_same_as
-RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
-
 RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
   describe "#reduce" do
     subject(:reduce) do

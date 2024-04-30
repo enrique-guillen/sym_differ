@@ -20,4 +20,7 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  RSpec::Matchers.alias_matcher :an_expression_same_as, :be_same_as
+  RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
 end
