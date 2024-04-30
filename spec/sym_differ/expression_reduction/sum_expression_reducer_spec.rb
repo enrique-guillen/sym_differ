@@ -4,6 +4,9 @@ require "spec_helper"
 require "sym_differ/expression_reduction/sum_expression_reducer"
 require "sym_differ/expression_factory"
 
+RSpec::Matchers.alias_matcher :an_expression_same_as, :be_same_as
+RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
+
 RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
   describe "#reduce" do
     subject(:reduce) do
@@ -41,9 +44,11 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
       it "returns the reduction results 2, [2, nil]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(value: 2),
-          sum_partition: [2, nil],
-          factor_partition: [1, an_object_having_attributes(value: 2)]
+          reduction_results(
+            same_expression_as(constant_expression(2)),
+            sum_partition(2, nil),
+            factor_partition(2, nil)
+          )
         )
       end
     end
@@ -54,11 +59,13 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
       it "returns the reduction results x + 2, [2, x]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(
-            expression_a: an_object_having_attributes(name: "x"),
-            expression_b: an_object_having_attributes(value: 2)
-          ),
-          sum_partition: [2, an_object_having_attributes(name: "x")]
+          reduction_results(
+            same_expression_as(sum_expression(variable_expression("x"), constant_expression(2))),
+            sum_partition(2,
+                          same_expression_as(variable_expression("x"))),
+            factor_partition(1,
+                             same_expression_as(sum_expression(variable_expression("x"), constant_expression(2))))
+          )
         )
       end
     end
@@ -69,11 +76,13 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
       it "returns the reduction results x + 2, [2, x]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(
-            expression_a: an_object_having_attributes(name: "x"),
-            expression_b: an_object_having_attributes(value: 2)
-          ),
-          sum_partition: [2, an_object_having_attributes(name: "x")]
+          reduction_results(
+            same_expression_as(sum_expression(variable_expression("x"), constant_expression(2))),
+            sum_partition(2,
+                          same_expression_as(variable_expression("x"))),
+            factor_partition(1,
+                             same_expression_as(sum_expression(variable_expression("x"), constant_expression(2))))
+          )
         )
       end
     end
@@ -82,17 +91,24 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
       let(:sum_partition_a) { [1, variable_expression("x")] }
       let(:sum_partition_b) { [1, variable_expression("x")] }
 
+      let(:expected_reduced_expression) do
+        sum_expression(
+          sum_expression(variable_expression("x"), variable_expression("x")),
+          constant_expression(2)
+        )
+      end
+
+      let(:expected_sum_partition_subexpression) do
+        sum_expression(variable_expression("x"), variable_expression("x"))
+      end
+
       it "returns the reduction results x + 2, [2, x]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(
-            expression_a: an_object_having_attributes(expression_a: an_object_having_attributes(name: "x"),
-                                                      expression_b: an_object_having_attributes(name: "x")),
-            expression_b: an_object_having_attributes(value: 2)
-          ),
-          sum_partition: [
-            2, an_object_having_attributes(expression_a: an_object_having_attributes(name: "x"),
-                                           expression_b: an_object_having_attributes(name: "x"))
-          ]
+          reduction_results(
+            same_expression_as(expected_reduced_expression),
+            sum_partition(2, same_expression_as(expected_sum_partition_subexpression)),
+            factor_partition(1, same_expression_as(expected_reduced_expression))
+          )
         )
       end
     end
@@ -103,8 +119,11 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
       it "returns the reduction results x, [0, x]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(name: "x"),
-          sum_partition: [0, an_object_having_attributes(name: "x")]
+          reduction_results(
+            same_expression_as(variable_expression("x")),
+            sum_partition(0, same_expression_as(variable_expression("x"))),
+            factor_partition(1, same_expression_as(variable_expression("x")))
+          )
         )
       end
     end
@@ -115,10 +134,32 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
       it "returns the reduction results x, [0, x]" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(value: 0),
-          sum_partition: [0, nil]
+          reduction_results(
+            same_expression_as(constant_expression(0)),
+            sum_partition(0, nil),
+            factor_partition(0, nil)
+          )
         )
       end
+    end
+
+    context "when the expression is 1 + 2" do
+      let(:sum_partition_a) { [1, nil] }
+      let(:sum_partition_b) { [2, nil] }
+
+      it "returns the reduction results 3, [3, nil]" do
+        expect(reduce).to include(
+          reduction_results(
+            same_expression_as(constant_expression(3)),
+            sum_partition(3, nil),
+            factor_partition(3, nil)
+          )
+        )
+      end
+    end
+
+    define_method(:constant_expression) do |value|
+      expression_factory.create_constant_expression(value)
     end
 
     define_method(:variable_expression) do |name|
@@ -127,6 +168,18 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
 
     define_method(:sum_expression) do |expression_a, expression_b|
       expression_factory.create_sum_expression(expression_a, expression_b)
+    end
+
+    define_method(:reduction_results) do |reduced_expression, sum_partition, factor_partition|
+      { reduced_expression:, sum_partition:, factor_partition: }
+    end
+
+    define_method(:sum_partition) do |constant, subexpression|
+      [constant, subexpression]
+    end
+
+    define_method(:factor_partition) do |constant, subexpression|
+      [constant, subexpression]
     end
   end
 end

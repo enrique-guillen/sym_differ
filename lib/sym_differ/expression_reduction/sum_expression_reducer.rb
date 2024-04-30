@@ -18,46 +18,49 @@ module SymDiffer
         subvalue_b, subexp_b = expression_reduction_sum_partition(reduce_expression_b_results)
 
         total_value = subvalue_a + subvalue_b
-        sum_partition = create_sum_partition(total_value, subexp_a, subexp_b)
-        reduced_expression = remove_null_terms_of_reduced_expression(sum_partition, total_value, subexp_a, subexp_b)
-        factor_partition = [1, reduced_expression]
+
+        nested_expression = create_reduced_expression_from_sum_subexpressions(subexp_a, subexp_b)
+
+        reduced_expression = remove_null_terms_of_reduced_expression(total_value, nested_expression)
+        sum_partition = create_sum_partition(total_value, nested_expression)
+        factor_partition = create_factors_partition(reduced_expression)
 
         build_reduction_results(reduced_expression, sum_partition, factor_partition)
       end
 
       private
 
-      def remove_null_terms_of_reduced_expression(sum_partition, total_value, subexp_a, subexp_b)
-        if sum_partition_subexpression(sum_partition).nil? && sum_partition_constant(sum_partition).zero?
-          create_constant_expression(0)
-        elsif sum_partition_constant(sum_partition).zero?
-          sum_partition_subexpression(sum_partition)
-        else
-          create_reduced_expression_from_subexpressions(total_value, subexp_a, subexp_b)
-        end
+      def create_reduced_expression_from_sum_subexpressions(subexp_a, subexp_b)
+        return if subexp_a.nil? && subexp_b.nil?
+        return subexp_b if subexp_a.nil?
+        return subexp_a if subexp_b.nil?
+
+        create_sum_expression(subexp_a, subexp_b)
       end
 
-      def create_reduced_expression_from_subexpressions(total_value, subexp_a, subexp_b)
-        return create_constant_expression(total_value) if subexp_a.nil? && subexp_b.nil?
-        return create_sum_expression(subexp_b, create_constant_expression(total_value)) if subexp_a.nil?
-        return create_sum_expression(subexp_a, create_constant_expression(total_value)) if subexp_b.nil?
+      def remove_null_terms_of_reduced_expression(total_value, nested_expression)
+        return create_constant_expression(total_value) if nested_expression.nil?
+        return nested_expression if total_value.zero?
 
-        create_sum_expression(
-          create_sum_expression(subexp_a, subexp_b),
-          create_constant_expression(total_value)
-        )
+        create_sum_expression(nested_expression, create_constant_expression(total_value))
       end
 
-      def create_sum_partition(total_value, subexp_a, subexp_b)
-        return build_sum_partition(total_value, nil) if subexp_a.nil? && subexp_b.nil?
-        return build_sum_partition(total_value, subexp_b) if subexp_a.nil?
-        return build_sum_partition(total_value, subexp_a) if subexp_b.nil?
+      def create_sum_partition(total_value, nested_expression)
+        build_sum_partition(total_value, nested_expression)
+      end
 
-        build_sum_partition(total_value, create_sum_expression(subexp_a, subexp_b))
+      def create_factors_partition(reduced_expression)
+        return build_factors_partition(reduced_expression.value, nil) if constant_expression?(reduced_expression)
+
+        build_factors_partition(1, reduced_expression)
       end
 
       def reduce_expression(expression)
         @reducer.reduction_analysis(expression)
+      end
+
+      def constant_expression?(expression)
+        expression.is_a?(Expressions::ConstantExpression)
       end
 
       def create_constant_expression(value)
@@ -85,6 +88,10 @@ module SymDiffer
       end
 
       def build_sum_partition(constant, subexpression)
+        [constant, subexpression]
+      end
+
+      def build_factors_partition(constant, subexpression)
         [constant, subexpression]
       end
     end
