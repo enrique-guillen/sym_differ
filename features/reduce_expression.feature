@@ -37,3 +37,42 @@ Feature: Compute a reduction for the expression.
     Given the expression to reduce is ++2 + ++1 + ++x
     When the expression is reduced
     Then the result is x + 3
+
+  Scenario: The reduction of x * 2 is requested
+    Given the expression to reduce is x * 2
+    When the expression is reduced
+    Then the result is x * 2
+
+  Scenario: The reduction of x * 2 is requested
+    Given the expression to reduce is x * 2
+    When the expression is reduced
+    Then the result is x * 2
+
+  Scenario: The reduction of x * -1 is requested
+    Given the expression to reduce is x * -1
+    When the expression is reduced
+    Then the result is x * -1
+    Then (@wip) the result is -x
+
+  Scenario: The reduction of -1 * -1 is requested
+    Given the expression to reduce is -1 * -1
+    When the expression is reduced
+    Then the result is -1 * -1
+    Then (@wip) the result is 1
+
+  Scenario: The reduction of x * x is requested
+    Given the expression to reduce is x * x
+    When the expression is reduced
+    Then the result is x * x
+    Then (@wip) the result is x ^ 2
+
+  Scenario: The reduction of 0 * x is requested
+    Given the expression to reduce is 0 * x
+    When the expression is reduced
+    Then the result is 0
+
+  Scenario: The reduction of +1 * x is requested
+    Given the expression to reduce is --1 * x
+    When the expression is reduced
+    Then (@wip) the result is --1 * x
+    Then the result is x
