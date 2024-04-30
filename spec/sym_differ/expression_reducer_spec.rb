@@ -213,10 +213,10 @@ RSpec.describe SymDiffer::ExpressionReducer do
     context "when the expression is 1- x" do
       let(:expression) { subtract_expression(constant_expression(1), variable_expression("x")) }
 
-      it "returns an expression representing 2" do
+      it "returns an expression representing 1 - x" do
         expect(reduce).to have_attributes(
-          minuend: an_object_having_attributes(value: 1),
-          subtrahend: an_object_having_attributes(name: "x")
+          expression_a: an_object_having_attributes(negated_expression: an_object_having_attributes(name: "x")),
+          expression_b: an_object_having_attributes(value: 1)
         )
       end
     end
@@ -312,10 +312,8 @@ RSpec.describe SymDiffer::ExpressionReducer do
 
       it "returns 1 * 1" do
         expect(reduce).to have_attributes(
-          expression_a: an_object_having_attributes(multiplicand: an_object_having_attributes(value: 1),
-                                                    multiplier: an_object_having_attributes(name: "x")),
-          expression_b: an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
-                                                    multiplier: an_object_having_attributes(value: 1))
+          expression_a: an_object_having_attributes(name: "x"),
+          expression_b: an_object_having_attributes(name: "x")
         )
       end
     end
