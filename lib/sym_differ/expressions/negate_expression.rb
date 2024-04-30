@@ -13,6 +13,11 @@ module SymDiffer
       def accept(visitor)
         visitor.visit_negate_expression(self)
       end
+
+      def same_as?(other_expression)
+        other_expression.is_a?(NegateExpression) &&
+          negated_expression.same_as?(other_expression.negated_expression)
+      end
     end
   end
 end

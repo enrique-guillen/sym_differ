@@ -8,11 +8,15 @@ module SymDiffer
         @name = name
       end
 
+      attr_reader :name
+
       def accept(visitor)
         visitor.visit_variable_expression(self)
       end
 
-      attr_reader :name
+      def same_as?(other_expression)
+        other_expression.is_a?(VariableExpression) && name == other_expression.name
+      end
     end
   end
 end

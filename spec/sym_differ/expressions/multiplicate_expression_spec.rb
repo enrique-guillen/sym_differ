@@ -28,4 +28,30 @@ RSpec.describe SymDiffer::Expressions::MultiplicateExpression do
       expect(visitor).to have_received(:visit_multiplicate_expression).with(expression)
     end
   end
+
+  describe "#same_as?" do
+    subject(:same_as?) { expression.same_as?(other_expression) }
+
+    let(:expression) { described_class.new(expression_a, expression_b) }
+    let(:expression_a) { double(:expression_a) }
+    let(:expression_b) { double(:expression_b) }
+
+    context "when the other expression is a * b" do
+      before do
+        allow(expression_a)
+          .to receive(:same_as?)
+          .with(expression_a)
+          .and_return(true)
+
+        allow(expression_b)
+          .to receive(:same_as?)
+          .with(expression_b)
+          .and_return(true)
+      end
+
+      let(:other_expression) { described_class.new(expression_a, expression_b) }
+
+      it { is_expected.to be(true) }
+    end
+  end
 end
