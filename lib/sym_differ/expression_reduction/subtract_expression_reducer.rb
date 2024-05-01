@@ -20,11 +20,10 @@ module SymDiffer
         total_value = subvalue_a - subvalue_b
 
         reduced_expression = create_reduced_expression_from_subexpressions(total_value, subexp_a, subexp_b)
+        sum_partition = create_sum_partition(total_value, subexp_a, subexp_b)
+        factor_partition = create_factor_partition(reduced_expression)
 
-        build_reduction_results(
-          reduced_expression,
-          create_sum_partition(total_value, subexp_a, subexp_b)
-        )
+        build_reduction_results(reduced_expression, sum_partition, factor_partition)
       end
 
       private
@@ -45,6 +44,14 @@ module SymDiffer
       def create_sum_partition(total_value, subexp_a, subexp_b)
         nested_expression = create_reduced_expression_from_subtraction_expression(subexp_a, subexp_b)
         build_sum_partition(total_value, nested_expression)
+      end
+
+      def create_factor_partition(reduced_expression)
+        if reduced_expression.is_a?(Expressions::SubtractExpression)
+          return build_factors_partition(1, reduced_expression)
+        end
+
+        @reducer.reduction_analysis(reduced_expression)[:factor_partition]
       end
 
       def create_reduced_expression_from_subtraction_expression(minuend, subtrahend)
@@ -109,11 +116,15 @@ module SymDiffer
         reduction_results[:sum_partition]
       end
 
-      def build_reduction_results(reduced_expression, sum_partition)
-        { reduced_expression:, sum_partition: }
+      def build_reduction_results(reduced_expression, sum_partition, factor_partition)
+        { reduced_expression:, sum_partition:, factor_partition: }
       end
 
       def build_sum_partition(constant, subexpression)
+        [constant, subexpression]
+      end
+
+      def build_factors_partition(constant, subexpression)
         [constant, subexpression]
       end
     end
