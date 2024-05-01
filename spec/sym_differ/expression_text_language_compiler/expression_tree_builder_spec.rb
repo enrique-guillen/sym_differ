@@ -10,15 +10,17 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
   describe "#build" do
     subject(:build) do
       described_class
-        .new(SymDiffer::ExpressionFactory.new)
+        .new(expression_factory)
         .build(tokens)
     end
+
+    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     context "when the tokens list is 1" do
       let(:tokens) { [constant_token(1)] }
 
       it "returns a Constant Expression 1" do
-        expect(build).to have_attributes(value: 1)
+        expect(build).to be_same_as(constant_expression(1))
       end
     end
 
@@ -26,7 +28,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x")] }
 
       it "returns a Variable Expression x" do
-        expect(build).to have_attributes(name: "x")
+        expect(build).to be_same_as(variable_expression("x"))
       end
     end
 
@@ -50,9 +52,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x"), operator_token("+"), variable_token("x")] }
 
       it "returns a Sum Expression x + x" do
-        expect(build).to have_attributes(
-          expression_a: an_object_having_attributes(name: "x"),
-          expression_b: an_object_having_attributes(name: "x")
+        expect(build).to be_same_as(
+          sum_expression(variable_expression("x"), variable_expression("x"))
         )
       end
     end
@@ -77,9 +78,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x"), operator_token("-"), constant_token(1)] }
 
       it "returns a Sum Expression x + x" do
-        expect(build).to have_attributes(
-          minuend: an_object_having_attributes(name: "x"),
-          subtrahend: an_object_having_attributes(value: 1)
+        expect(build).to be_same_as(
+          subtract_expression(variable_expression("x"), constant_expression(1))
         )
       end
     end
@@ -88,12 +88,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [operator_token("-"), operator_token("-"), constant_token(1)] }
 
       it "returns a NegateExpression --1" do
-        expect(build).to have_attributes(
-          negated_expression: an_object_having_attributes(
-            negated_expression: an_object_having_attributes(
-              value: 1
-            )
-          )
+        expect(build).to be_same_as(
+          negate_expression(negate_expression(constant_expression(1)))
         )
       end
     end
@@ -104,14 +100,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
 
       it "returns a SumExpression x, --1" do
-        expect(build).to have_attributes(
-          expression_a: an_object_having_attributes(name: "x"),
-          expression_b: an_object_having_attributes(
-            negated_expression: an_object_having_attributes(
-              negated_expression: an_object_having_attributes(
-                value: 1
-              )
-            )
+        expect(build).to be_same_as(
+          sum_expression(
+            variable_expression("x"),
+            negate_expression(negate_expression(constant_expression(1)))
           )
         )
       end
@@ -131,7 +123,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [operator_token("+"), variable_token("x")] }
 
       it "returns a PositiveExpression" do
-        expect(build).to have_attributes(summand: an_object_having_attributes(name: "x"))
+        expect(build).to be_same_as(positive_expression(variable_expression("x")))
       end
     end
 
@@ -139,9 +131,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [variable_token("x"), operator_token("*"), variable_token("x")] }
 
       it "returns a MultiplicateExpression" do
-        expect(build).to have_attributes(
-          multiplicand: an_object_having_attributes(name: "x"),
-          multiplier: an_object_having_attributes(name: "x")
+        expect(build).to be_same_as(
+          multiplicate_expression(variable_expression("x"), variable_expression("x"))
         )
       end
     end
@@ -152,11 +143,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
 
       it "returns a SumExpression" do
-        expect(build).to have_attributes(
-          expression_a: an_object_having_attributes(value: 1),
-          expression_b: an_object_having_attributes(
-            multiplicand: an_object_having_attributes(name: "x"),
-            multiplier: an_object_having_attributes(name: "x")
+        expect(build).to be_same_as(
+          sum_expression(
+            constant_expression(1),
+            multiplicate_expression(variable_expression("x"), variable_expression("x"))
           )
         )
       end
@@ -174,15 +164,12 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
 
       it "returns a SumExpression" do
-        expect(build).to have_attributes(
-          expression_a: an_object_having_attributes(
-            expression_a: an_object_having_attributes(value: 1),
-            expression_b: an_object_having_attributes(
-              multiplicand: an_object_having_attributes(name: "x"),
-              multiplier: an_object_having_attributes(name: "x")
-            )
-          ),
-          expression_b: an_object_having_attributes(value: 1)
+        expect(build).to be_same_as(
+          sum_expression(
+            sum_expression(constant_expression(1),
+                           multiplicate_expression(variable_expression("x"), variable_expression("x"))),
+            constant_expression(1)
+          )
         )
       end
     end
@@ -193,9 +180,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
 
       it "returns a MultiplicateExpression" do
-        expect(build).to have_attributes(
-          multiplicand: an_object_having_attributes(name: "x"),
-          multiplier: an_object_having_attributes(summand: an_object_having_attributes(name: "x"))
+        expect(build).to be_same_as(
+          multiplicate_expression(
+            variable_expression("x"),
+            positive_expression(variable_expression("x"))
+          )
         )
       end
     end
@@ -210,6 +199,34 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     define_method(:operator_token) do |symbol|
       SymDiffer::ExpressionTextLanguageCompiler::OperatorToken.new(symbol)
+    end
+
+    define_method(:constant_expression) do |value|
+      expression_factory.create_constant_expression(value)
+    end
+
+    define_method(:variable_expression) do |name|
+      expression_factory.create_variable_expression(name)
+    end
+
+    define_method(:sum_expression) do |expression_a, expression_b|
+      expression_factory.create_sum_expression(expression_a, expression_b)
+    end
+
+    define_method(:subtract_expression) do |expression_a, expression_b|
+      expression_factory.create_subtract_expression(expression_a, expression_b)
+    end
+
+    define_method(:negate_expression) do |negated_expression|
+      expression_factory.create_negate_expression(negated_expression)
+    end
+
+    define_method(:positive_expression) do |summand|
+      expression_factory.create_positive_expression(summand)
+    end
+
+    define_method(:multiplicate_expression) do |multiplicand, multiplier|
+      expression_factory.create_multiplicate_expression(multiplicand, multiplier)
     end
   end
 end

@@ -2,10 +2,14 @@
 
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/parser"
+
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
+require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
-  let(:parser) { described_class.new(SymDiffer::ExpressionFactory.new) }
+  let(:parser) { described_class.new(expression_factory) }
+
+  let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
   describe "#parse" do
     subject(:parse) do
@@ -18,9 +22,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       it "has the expected structure" do
         expression = parse
 
-        expect(expression).to have_attributes(
-          expression_a: an_object_having_attributes(name: "x"),
-          expression_b: an_object_having_attributes(name: "x")
+        expect(expression).to be_same_as(
+          sum_expression(
+            variable_expression("x"),
+            variable_expression("x")
+          )
         )
       end
     end
@@ -100,5 +106,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         expect { validate_variable }.to raise_error(a_kind_of(SymDiffer::InvalidVariableGivenToExpressionParserError))
       end
     end
+  end
+
+  define_method(:variable_expression) do |name|
+    expression_factory.create_variable_expression(name)
+  end
+
+  define_method(:sum_expression) do |expression_a, expression_b|
+    expression_factory.create_sum_expression(expression_a, expression_b)
   end
 end
