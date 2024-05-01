@@ -21,6 +21,5 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
-  RSpec::Matchers.alias_matcher :an_expression_same_as, :be_same_as
   RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
 end
