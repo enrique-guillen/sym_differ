@@ -13,57 +13,60 @@ module SymDiffer
       end
 
       def reduce(expression)
-        multiplicand_reduction_results = @reducer.reduction_analysis(expression.multiplicand)
-        multiplier_reduction_results = @reducer.reduction_analysis(expression.multiplier)
+        multiplicand_reduction_results = make_reduction_analysis(expression.multiplicand)
+        multiplier_reduction_results = make_reduction_analysis(expression.multiplier)
 
-        multiplicand_subexpression = multiplicand_reduction_results[:reduced_expression]
-        multiplier_subexpression = multiplier_reduction_results[:reduced_expression]
+        multiplicand_factor, multiplicand_subexpression = multiplicand_reduction_results[:factor_partition]
+        multiplier_factor, multiplier_subexpression = multiplier_reduction_results[:factor_partition]
+        total_factor = multiplicand_factor * multiplier_factor
 
-        expression = create_reduced_expression(multiplicand_subexpression, multiplier_subexpression)
-        sum_partition = create_sum_partition(expression, multiplicand_subexpression, multiplier_subexpression)
+        reduced_expression =
+          create_reduced_expression(total_factor, multiplicand_subexpression, multiplier_subexpression)
+        factor_partition = create_factor_partition(total_factor, multiplicand_subexpression, multiplier_subexpression)
+        sum_partition = create_sum_partition(reduced_expression)
 
-        build_reduction_results(expression, sum_partition)
+        build_reduction_results(reduced_expression, sum_partition, factor_partition)
       end
 
       private
 
-      def create_reduced_expression(multiplicand_subexpression, multiplier_subexpression)
-        if constant_zero?(multiplicand_subexpression) || constant_zero?(multiplier_subexpression)
-          return create_constant_expression(0)
-        end
+      def create_reduced_expression(total_factor, multiplicand_subexpression, multiplier_subexpression)
+        return create_constant_expression(0) if total_factor.zero?
 
-        return multiplicand_subexpression if constant_one?(multiplier_subexpression)
-        return multiplier_subexpression if constant_one?(multiplicand_subexpression)
+        nested_expression =
+          create_reduced_expression_from_subexpressions(multiplicand_subexpression, multiplier_subexpression)
 
-        if constant_expression?(multiplicand_subexpression) && constant_expression?(multiplier_subexpression)
-          return create_constant_expression(multiplicand_subexpression.value * multiplier_subexpression.value)
-        end
+        return create_constant_expression(total_factor) if nested_expression.nil?
+        return nested_expression if total_factor == 1
+
+        create_multiplicate_expression(create_constant_expression(total_factor), nested_expression)
+      end
+
+      def create_sum_partition(expression)
+        return build_sum_partition(0, expression) if expression.is_a?(Expressions::MultiplicateExpression)
+
+        make_reduction_analysis(expression)[:sum_partition]
+      end
+
+      def create_factor_partition(total_factor, multiplicand_subexpression, multiplier_subexpression)
+        nested_expression =
+          if total_factor.negative? || total_factor.positive?
+            create_reduced_expression_from_subexpressions(multiplicand_subexpression, multiplier_subexpression)
+          end
+
+        build_factor_partition(total_factor, nested_expression)
+      end
+
+      def create_reduced_expression_from_subexpressions(multiplicand_subexpression, multiplier_subexpression)
+        return if multiplicand_subexpression.nil? && multiplier_subexpression.nil?
+        return multiplicand_subexpression if multiplier_subexpression.nil?
+        return multiplier_subexpression if multiplicand_subexpression.nil?
 
         create_multiplicate_expression(multiplicand_subexpression, multiplier_subexpression)
       end
 
-      def create_sum_partition(expression, multiplicand_subexpression, multiplier_subexpression)
-        if constant_zero?(multiplicand_subexpression) || constant_zero?(multiplier_subexpression)
-          return build_sum_partition(0, nil)
-        end
-
-        if constant_expression?(multiplicand_subexpression) && constant_expression?(multiplier_subexpression)
-          return build_sum_partition(multiplicand_subexpression.value * multiplier_subexpression.value, nil)
-        end
-
-        build_sum_partition(0, expression)
-      end
-
-      def constant_zero?(expression)
-        expression.is_a?(Expressions::ConstantExpression) && expression.value.zero?
-      end
-
-      def constant_one?(expression)
-        expression.is_a?(Expressions::ConstantExpression) && expression.value == 1
-      end
-
-      def constant_expression?(expression)
-        expression.is_a?(Expressions::ConstantExpression)
+      def make_reduction_analysis(expression)
+        @reducer.reduction_analysis(expression)
       end
 
       def create_constant_expression(value)
@@ -74,11 +77,15 @@ module SymDiffer
         @expression_factory.create_multiplicate_expression(multiplicand, multiplier)
       end
 
-      def build_reduction_results(reduced_expression, sum_partition)
-        { reduced_expression:, sum_partition: }
+      def build_reduction_results(reduced_expression, sum_partition, factor_partition)
+        { reduced_expression:, sum_partition:, factor_partition: }
       end
 
       def build_sum_partition(constant, subexpression)
+        [constant, subexpression]
+      end
+
+      def build_factor_partition(constant, subexpression)
         [constant, subexpression]
       end
     end

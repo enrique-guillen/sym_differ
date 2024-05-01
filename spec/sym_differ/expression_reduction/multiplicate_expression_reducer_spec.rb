@@ -12,23 +12,40 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
     let(:reducer) { double(:reducer) }
 
+    before do
+      map_reduction_analysis(
+        from: same_expression_as(constant_expression(0)),
+        to: reduction_results(constant_expression(0), sum_partition(0, nil), factor_partition(0, nil))
+      )
+
+      map_reduction_analysis(
+        from: same_expression_as(constant_expression(4)),
+        to: reduction_results(constant_expression(4), sum_partition(4, nil), factor_partition(4, nil))
+      )
+
+      map_reduction_analysis(
+        from: same_expression_as(variable_expression("x")),
+        to: reduction_results(variable_expression("x"),
+                              sum_partition(0, variable_expression("x")),
+                              factor_partition(1, variable_expression("x")))
+      )
+    end
+
     context "when the expression is x*x" do
       before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
 
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
       end
 
       let(:expression) do
@@ -39,15 +56,50 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       let(:multiplier) { double(:multiplier) }
 
       it "returns the reduction results x * x, [0, x * x]" do
+        expected_reduced_expression = multiplicate_expression(variable_expression("x"), variable_expression("x"))
+
+        expected_sum_partition_subexpression =
+          multiplicate_expression(variable_expression("x"), variable_expression("x"))
+
+        expected_factor_partition_subexpression =
+          multiplicate_expression(variable_expression("x"), variable_expression("x"))
+
         expect(reduce).to include(
           reduction_results(
-            an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
-                                        multiplier: an_object_having_attributes(name: "x")),
-            sum_partition(
-              0,
-              an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
-                                          multiplier: an_object_having_attributes(name: "x"))
-            )
+            same_expression_as(expected_reduced_expression),
+            sum_partition(0, same_expression_as(expected_sum_partition_subexpression)),
+            factor_partition(1, same_expression_as(expected_factor_partition_subexpression))
+          )
+        )
+      end
+    end
+
+    context "when the expression is 2*2" do
+      before do
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(constant_expression(2), sum_partition(2, nil), factor_partition(2, nil))
+        )
+
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(constant_expression(2), sum_partition(2, nil), factor_partition(2, nil))
+        )
+      end
+
+      let(:expression) do
+        multiplicate_expression(multiplicand, multiplier)
+      end
+
+      let(:multiplicand) { double(:multiplicand) }
+      let(:multiplier) { double(:multiplier) }
+
+      it "returns the reduction results 4, [4, nil], [4, nil]" do
+        expect(reduce).to include(
+          reduction_results(
+            same_expression_as(constant_expression(4)),
+            sum_partition(4, nil),
+            factor_partition(4, nil)
           )
         )
       end
@@ -55,21 +107,19 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
 
     context "when the expression is x * 1" do
       before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
 
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(constant_expression(1),
-                              sum_partition(1, nil))
-          )
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(constant_expression(1),
+                                sum_partition(1, nil),
+                                factor_partition(1, nil))
+        )
       end
 
       let(:expression) do
@@ -82,8 +132,9 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       it "returns the reduction results x, [0, x]" do
         expect(reduce).to include(
           reduction_results(
-            an_object_having_attributes(name: "x"),
-            sum_partition(0, an_object_having_attributes(name: "x"))
+            same_expression_as(variable_expression("x")),
+            sum_partition(0, same_expression_as(variable_expression("x"))),
+            factor_partition(1, same_expression_as(variable_expression("x")))
           )
         )
       end
@@ -91,21 +142,19 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
 
     context "when the expression is 1 * x" do
       before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(constant_expression(1),
-                              sum_partition(1, nil))
-          )
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(constant_expression(1),
+                                sum_partition(1, nil),
+                                factor_partition(1, nil))
+        )
 
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
       end
 
       let(:expression) do
@@ -118,8 +167,9 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       it "returns the reduction results x, [0, x]" do
         expect(reduce).to include(
           reduction_results(
-            an_object_having_attributes(name: "x"),
-            sum_partition(0, an_object_having_attributes(name: "x"))
+            same_expression_as(variable_expression("x")),
+            sum_partition(0, same_expression_as(variable_expression("x"))),
+            factor_partition(1, same_expression_as(variable_expression("x")))
           )
         )
       end
@@ -127,21 +177,17 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
 
     context "when the expression is x * 0" do
       before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
 
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(constant_expression(0),
-                              sum_partition(0, nil))
-          )
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(constant_expression(0), sum_partition(0, nil), factor_partition(0, nil))
+        )
       end
 
       let(:expression) do
@@ -154,30 +200,29 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       it "returns the reduction results 0, [0, 0]" do
         expect(reduce).to include(
           reduction_results(
-            an_object_having_attributes(value: 0),
-            sum_partition(0, nil)
+            same_expression_as(constant_expression(0)),
+            sum_partition(0, nil),
+            factor_partition(0, nil)
           )
         )
       end
     end
 
-    context "when the expression is 0 * x" do
+    context "when the expression is 3x * 3" do
       before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(constant_expression(0),
-                              sum_partition(0, nil))
-          )
+        map_reduction_analysis(
+          from: multiplicand,
+          to: reduction_results(multiplicate_expression(constant_expression(3), variable_expression("x")),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(3, variable_expression("x")))
+        )
 
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(variable_expression("x"),
-                              sum_partition(0, variable_expression("x")))
-          )
+        map_reduction_analysis(
+          from: multiplier,
+          to: reduction_results(constant_expression(3),
+                                sum_partition(3, nil),
+                                factor_partition(3, nil))
+        )
       end
 
       let(:expression) do
@@ -187,50 +232,26 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       let(:multiplicand) { double(:multiplicand) }
       let(:multiplier) { double(:multiplier) }
 
-      it "returns the reduction results 0, [0, 0]" do
+      it "returns the reduction results 9x, [0, 9x], [9, x]" do
+        expected_reduced_expression = multiplicate_expression(constant_expression(9), variable_expression("x"))
+        expected_sum_partition_subexpression = multiplicate_expression(constant_expression(9), variable_expression("x"))
+        expected_factor_partition_subexpression = variable_expression("x")
+
         expect(reduce).to include(
           reduction_results(
-            an_object_having_attributes(value: 0),
-            sum_partition(0, nil)
+            same_expression_as(expected_reduced_expression),
+            sum_partition(0, same_expression_as(expected_sum_partition_subexpression)),
+            factor_partition(9, same_expression_as(expected_factor_partition_subexpression))
           )
         )
       end
     end
 
-    context "when the expression is 2 * 3" do
-      before do
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplicand)
-          .and_return(
-            reduction_results(constant_expression(2),
-                              sum_partition(2, nil))
-          )
-
-        allow(reducer)
-          .to receive(:reduction_analysis)
-          .with(multiplier)
-          .and_return(
-            reduction_results(constant_expression(3),
-                              sum_partition(3, nil))
-          )
-      end
-
-      let(:expression) do
-        multiplicate_expression(multiplicand, multiplier)
-      end
-
-      let(:multiplicand) { double(:multiplicand) }
-      let(:multiplier) { double(:multiplier) }
-
-      it "returns the reduction results 6, [6, nil]" do
-        expect(reduce).to include(
-          reduction_results(
-            an_object_having_attributes(value: 6),
-            sum_partition(6, nil)
-          )
-        )
-      end
+    define_method(:map_reduction_analysis) do |from:, to:, input: from, output: to|
+      allow(reducer)
+        .to receive(:reduction_analysis)
+        .with(input)
+        .and_return(output)
     end
 
     define_method(:multiplicate_expression) do |expression_a, expression_b|
@@ -245,11 +266,15 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReducer do
       expression_factory.create_variable_expression(name)
     end
 
-    define_method(:reduction_results) do |reduced_expression, sum_partition|
-      { reduced_expression:, sum_partition: }
+    define_method(:reduction_results) do |reduced_expression, sum_partition, factor_partition|
+      { reduced_expression:, sum_partition:, factor_partition: }
     end
 
     define_method(:sum_partition) do |constant, subexpression|
+      [constant, subexpression]
+    end
+
+    define_method(:factor_partition) do |constant, subexpression|
       [constant, subexpression]
     end
   end
