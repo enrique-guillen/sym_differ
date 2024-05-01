@@ -36,6 +36,13 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
     let(:reduced_expression_b) { double(:reduced_expression_b) }
 
     context "when the expression is 1 + 1" do
+      before do
+        allow(reducer)
+          .to receive(:reduction_analysis)
+          .with(same_expression_as(constant_expression(2)))
+          .and_return(factor_partition: [2, nil])
+      end
+
       let(:sum_partition_a) { [1, nil] }
       let(:sum_partition_b) { [1, nil] }
 
@@ -111,6 +118,13 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
     end
 
     context "when the expression is x+0" do
+      before do
+        allow(reducer)
+          .to receive(:reduction_analysis)
+          .with(same_expression_as(variable_expression("x")))
+          .and_return(factor_partition: [1, variable_expression("x")])
+      end
+
       let(:sum_partition_a) { [0, variable_expression("x")] }
       let(:sum_partition_b) { [0, nil] }
 
@@ -125,7 +139,14 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
       end
     end
 
-    context "when the expression is 1+1" do
+    context "when the expression is 0+0" do
+      before do
+        allow(reducer)
+          .to receive(:reduction_analysis)
+          .with(same_expression_as(constant_expression(0)))
+          .and_return(factor_partition: [0, nil])
+      end
+
       let(:sum_partition_a) { [0, nil] }
       let(:sum_partition_b) { [0, nil] }
 
@@ -141,6 +162,13 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
     end
 
     context "when the expression is 1 + 2" do
+      before do
+        allow(reducer)
+          .to receive(:reduction_analysis)
+          .with(same_expression_as(constant_expression(3)))
+          .and_return(factor_partition: [3, nil])
+      end
+
       let(:sum_partition_a) { [1, nil] }
       let(:sum_partition_b) { [2, nil] }
 

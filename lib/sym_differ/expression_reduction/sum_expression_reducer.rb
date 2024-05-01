@@ -50,17 +50,13 @@ module SymDiffer
       end
 
       def create_factors_partition(reduced_expression)
-        return build_factors_partition(reduced_expression.value, nil) if constant_expression?(reduced_expression)
+        return build_factors_partition(1, reduced_expression) if reduced_expression.is_a?(Expressions::SumExpression)
 
-        build_factors_partition(1, reduced_expression)
+        @reducer.reduction_analysis(reduced_expression)[:factor_partition]
       end
 
       def reduce_expression(expression)
         @reducer.reduction_analysis(expression)
-      end
-
-      def constant_expression?(expression)
-        expression.is_a?(Expressions::ConstantExpression)
       end
 
       def create_constant_expression(value)
@@ -73,14 +69,6 @@ module SymDiffer
 
       def expression_reduction_sum_partition(reduction_results)
         reduction_results[:sum_partition]
-      end
-
-      def sum_partition_constant(sum_partition)
-        sum_partition[0]
-      end
-
-      def sum_partition_subexpression(sum_partition)
-        sum_partition[1]
       end
 
       def build_reduction_results(reduced_expression, sum_partition, factor_partition)
