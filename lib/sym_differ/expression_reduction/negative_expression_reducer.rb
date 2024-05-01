@@ -12,52 +12,56 @@ module SymDiffer
 
       def reduce(expression)
         negated_expression_reduction_results = @reducer.reduction_analysis(expression.negated_expression)
-        value, subexpression = negated_expression_reduction_results[:sum_partition]
+        total_factor, subexpression = negated_expression_reduction_results[:factor_partition]
+        total_value, sum_subexpression = negated_expression_reduction_results[:sum_partition]
 
-        reduced_expression_from_subexpression = create_reduced_expression_from_subexpression(value, subexpression)
-        sum_partition = create_sum_partition(value, subexpression)
-        factor_partition = create_factor_partition(expression)
+        reduced_expression = create_reduced_expression_from_subexpression(total_factor, subexpression)
+        factor_partition = create_factor_partition(total_factor, subexpression)
+        sum_partition = create_sum_partition(total_value, sum_subexpression)
 
-        build_reduction_results(reduced_expression_from_subexpression, sum_partition, factor_partition)
+        build_reduction_results(reduced_expression, sum_partition, factor_partition)
       end
 
       private
 
-      def create_reduced_expression_from_subexpression(value, subexpression)
-        return build_integer_expression(value) if subexpression.nil? && value.zero?
-        return build_negate_expression(build_integer_expression(value)) if subexpression.nil?
-        return subexpression.negated_expression if negate_expression?(subexpression)
+      def create_reduced_expression_from_subexpression(factor, expression)
+        return create_negate_expression(create_constant_expression(factor)) if expression.nil? && factor.positive?
 
-        build_negate_expression(subexpression)
+        return create_constant_expression(-factor) if expression.nil?
+        return create_negate_expression(expression) if factor == 1
+        return expression if factor == -1
+        return create_multiplicate_expression(create_constant_expression(-factor), expression) if factor.negative?
+
+        create_negate_expression(
+          create_multiplicate_expression(create_constant_expression(factor), expression)
+        )
       end
 
-      def create_sum_partition(value, subexpression)
-        return build_sum_partition(-value, nil) if subexpression.nil?
-        return build_sum_partition(-value, subexpression.negated_expression) if negate_expression?(subexpression)
+      def create_sum_partition(total_value, expression)
+        return build_sum_partition(-total_value, nil) if expression.nil?
+        return build_sum_partition(-total_value, expression.negated_expression) if negate_expression?(expression)
 
-        build_sum_partition(-value, build_negate_expression(subexpression))
+        build_sum_partition(-total_value, create_negate_expression(expression))
       end
 
-      def create_factor_partition(expression)
-        [-1, expression.negated_expression]
+      def create_factor_partition(total_factor, expression)
+        build_factor_partition(-total_factor, expression)
       end
 
-      def build_integer_expression(total_value)
-        return create_constant_expression(total_value) if total_value.positive? || total_value.zero?
-
-        build_negate_expression(create_constant_expression(-total_value))
+      def create_constant_expression(total_factor)
+        @expression_factory.create_constant_expression(total_factor)
       end
 
-      def create_constant_expression(value)
-        @expression_factory.create_constant_expression(value)
+      def create_negate_expression(negated_expression)
+        @expression_factory.create_negate_expression(negated_expression)
+      end
+
+      def create_multiplicate_expression(multiplicand, multiplier)
+        @expression_factory.create_multiplicate_expression(multiplicand, multiplier)
       end
 
       def negate_expression?(expression)
         expression.is_a?(Expressions::NegateExpression)
-      end
-
-      def build_negate_expression(negated_expression)
-        @expression_factory.create_negate_expression(negated_expression)
       end
 
       def build_reduction_results(reduced_expression, sum_partition, factor_partition)
@@ -65,6 +69,10 @@ module SymDiffer
       end
 
       def build_sum_partition(constant, subexpression)
+        [constant, subexpression]
+      end
+
+      def build_factor_partition(constant, subexpression)
         [constant, subexpression]
       end
     end

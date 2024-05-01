@@ -13,107 +13,230 @@ RSpec.describe SymDiffer::ExpressionReduction::NegativeExpressionReducer do
         .reduce(expression)
     end
 
-    before do
-      allow(reducer)
-        .to receive(:reduction_analysis)
-        .with(negated_expression)
-        .and_return(reduced_expression: reduced_negated_expression, sum_partition: negated_expression_sum_partition)
-    end
-
     let(:reducer) { double(:reducer) }
-
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
-    let(:reduced_negated_expression) { double(:reduced_negated_expression) }
-
-    let(:expression) { negate_expression(negated_expression) }
-
     context "when the expression is -1" do
-      let(:negated_expression_sum_partition) { [1, nil] }
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(constant_expression(1), sum_partition(1, nil), factor_partition(1, nil))
+        )
+      end
 
+      let(:expression) { negate_expression(negated_expression) }
       let(:negated_expression) { double(:negated_expression) }
 
       it "returns the reductions of the negated expression" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(negated_expression: an_object_having_attributes(value: 1)),
-          sum_partition: [-1, nil]
+          reduction_results(
+            same_expression_as(negate_expression(constant_expression(1))),
+            sum_partition(-1, nil),
+            factor_partition(-1, nil)
+          )
         )
       end
     end
 
     context "when the expression is --1" do
-      let(:negated_expression_sum_partition) { [-1, nil] }
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(negate_expression(constant_expression(1)),
+                                sum_partition(-1, nil),
+                                factor_partition(-1, nil))
+        )
+      end
 
+      let(:expression) { negate_expression(negated_expression) }
       let(:negated_expression) { double(:negated_expression) }
 
       it "returns the reductions of the negated expression" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(
-            negated_expression: an_object_having_attributes(
-              negated_expression: an_object_having_attributes(value: 1)
-            )
-          ),
-          sum_partition: [1, nil],
-          factor_partition: [-1, negated_expression]
+          reduction_results(
+            same_expression_as(constant_expression(1)),
+            sum_partition(1, nil),
+            factor_partition(1, nil)
+          )
         )
       end
     end
 
     context "when the expression is -x" do
-      let(:negated_expression_sum_partition) { [0, reduced_negated_expression_sum_partition_subexpression] }
-
-      let(:negated_expression) { double(:negated_expression) }
-
-      let(:reduced_negated_expression_sum_partition_subexpression) do
-        double(:reduced_negated_expression_sum_partition_subexpression)
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(variable_expression("x"),
+                                sum_partition(0, variable_expression("x")),
+                                factor_partition(1, variable_expression("x")))
+        )
       end
+
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { double(:negated_expression) }
 
       it "returns the reductions of the negated expression" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(
-            negated_expression: reduced_negated_expression_sum_partition_subexpression
-          ),
-          sum_partition: [
-            0, an_object_having_attributes(negated_expression: reduced_negated_expression_sum_partition_subexpression)
-          ]
+          reduction_results(
+            same_expression_as(negate_expression(variable_expression("x"))),
+            sum_partition(
+              0, same_expression_as(negate_expression(variable_expression("x")))
+            ),
+            factor_partition(
+              -1, same_expression_as(variable_expression("x"))
+            )
+          )
         )
       end
     end
 
     context "when the expression is --x" do
-      let(:negated_expression_sum_partition) do
-        [0, negate_expression(reduced_negated_expression_sum_partition_subexpression)]
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(negate_expression(variable_expression("x")),
+                                sum_partition(0, negate_expression(variable_expression("x"))),
+                                factor_partition(-1, variable_expression("x")))
+        )
       end
 
+      let(:expression) { negate_expression(negated_expression) }
       let(:negated_expression) { double(:negated_expression) }
-
-      let(:reduced_negated_expression_sum_partition_subexpression) do
-        double(:reduced_negated_expression_sum_partition_subexpression)
-      end
 
       it "returns the reductions of the negated expression" do
         expect(reduce).to include(
-          reduced_expression: reduced_negated_expression_sum_partition_subexpression,
-          sum_partition: [0, reduced_negated_expression_sum_partition_subexpression]
+          reduction_results(
+            same_expression_as(variable_expression("x")),
+            sum_partition(0, same_expression_as(variable_expression("x"))),
+            factor_partition(1, same_expression_as(variable_expression("x")))
+          )
         )
       end
     end
 
-    context "when the expression is -0" do
-      let(:negated_expression_sum_partition) { [0, nil] }
+    context "when the expression is -0 (clarify)" do
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(constant_expression(0),
+                                sum_partition(0, nil),
+                                factor_partition(0, nil))
+        )
+      end
 
+      let(:expression) { negate_expression(negated_expression) }
       let(:negated_expression) { double(:negated_expression) }
 
       it "returns the reductions of the negated expression" do
         expect(reduce).to include(
-          reduced_expression: an_object_having_attributes(value: 0),
-          sum_partition: [0, nil]
+          reduction_results(
+            same_expression_as(constant_expression(0)),
+            sum_partition(0, nil),
+            factor_partition(0, nil)
+          )
+        )
+      end
+    end
+
+    context "when the expression is -(2 * x)" do
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(
+            multiplicate_expression(constant_expression(2), variable_expression("x")),
+            sum_partition(0, multiplicate_expression(constant_expression(2), variable_expression("x"))),
+            factor_partition(2, variable_expression("x"))
+          )
+        )
+      end
+
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { double(:negated_expression) }
+
+      it "returns the reductions of the negated expression" do
+        expected_reduced_expression =
+          expected_sum_partition_subexpression =
+            negate_expression(multiplicate_expression(constant_expression(2), variable_expression("x")))
+
+        expected_factor_partition_subexpression = variable_expression("x")
+
+        expect(reduce).to include(
+          reduction_results(
+            same_expression_as(expected_reduced_expression),
+            sum_partition(0, same_expression_as(expected_sum_partition_subexpression)),
+            factor_partition(-2, same_expression_as(expected_factor_partition_subexpression))
+          )
+        )
+      end
+    end
+
+    context "when the expression is --(2 * x)" do
+      before do
+        map_reduction_analysis(
+          from: negated_expression,
+          to: reduction_results(
+            negate_expression(multiplicate_expression(constant_expression(2), variable_expression("x"))),
+            sum_partition(0,
+                          negate_expression(multiplicate_expression(constant_expression(2), variable_expression("x")))),
+            factor_partition(-2,
+                             variable_expression("x"))
+          )
+        )
+      end
+
+      let(:expression) { negate_expression(negated_expression) }
+      let(:negated_expression) { double(:negated_expression) }
+
+      it "returns the reductions of the negated expression" do
+        expected_reduced_expression =
+          expected_sum_partition_subexpression =
+            multiplicate_expression(constant_expression(2), variable_expression("x"))
+
+        expected_factor_partition_subexpression = variable_expression("x")
+
+        expect(reduce).to include(
+          reduction_results(
+            same_expression_as(expected_reduced_expression),
+            sum_partition(0, same_expression_as(expected_sum_partition_subexpression)),
+            factor_partition(2, same_expression_as(expected_factor_partition_subexpression))
+          )
         )
       end
     end
 
     define_method(:negate_expression) do |negated_expression|
       expression_factory.create_negate_expression(negated_expression)
+    end
+
+    define_method(:multiplicate_expression) do |multiplicand, multiplier|
+      expression_factory.create_multiplicate_expression(multiplicand, multiplier)
+    end
+
+    define_method(:constant_expression) do |value|
+      expression_factory.create_constant_expression(value)
+    end
+
+    define_method(:variable_expression) do |name|
+      expression_factory.create_variable_expression(name)
+    end
+
+    define_method(:map_reduction_analysis) do |from:, to:, input: from, output: to|
+      allow(reducer)
+        .to receive(:reduction_analysis)
+        .with(input)
+        .and_return(output)
+    end
+
+    define_method(:reduction_results) do |reduced_expression, sum_partition, factor_partition = nil|
+      { reduced_expression:, sum_partition:, factor_partition: }.compact
+    end
+
+    define_method(:sum_partition) do |constant, subexpression|
+      [constant, subexpression]
+    end
+
+    define_method(:factor_partition) do |constant, subexpression|
+      [constant, subexpression]
     end
   end
 end
