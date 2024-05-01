@@ -114,7 +114,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is 2 * x + x * 2
+      Then the derivative expression is 2 * x + 2 * x
       And (@wip) the derivative expression is 4x
 
     Scenario: The derivative of x - x * x - x * x, with respect to x, is requested.
