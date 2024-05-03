@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
 
 require "sym_differ/expression_text_language_compiler/commands/build_multiplicate_expression_command"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::MultiplicationTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker do
   describe "#check" do
     subject(:check) { described_class.new(expression_factory).check(token) }
 

@@ -11,7 +11,7 @@ require "sym_differ/expression_text_language_compiler/checkers/constant_token_ch
 require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
-require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -126,7 +126,7 @@ module SymDiffer
       end
 
       def multiplicate_token_checker
-        @multiplicate_token_checker ||= MultiplicationTokenChecker.new(@expression_factory)
+        @multiplicate_token_checker ||= Checkers::MultiplicationTokenChecker.new(@expression_factory)
       end
 
       def sum_token_checker
