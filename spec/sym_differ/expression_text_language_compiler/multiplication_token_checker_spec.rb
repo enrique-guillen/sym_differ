@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
 
-require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_multiplicate_expression_command"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::MultiplicationTokenChecker do
@@ -22,7 +22,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::MultiplicationTokenChe
           stack_item: {
             item_type: :pending_command,
             precedence: 2,
-            value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildMultiplicateExpressionCommand)
+            value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildMultiplicateExpressionCommand)
           }
         )
       end

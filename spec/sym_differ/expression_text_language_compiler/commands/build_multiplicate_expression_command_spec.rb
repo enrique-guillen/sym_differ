@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_multiplicate_expression_command"
 
 require "sym_differ/expression_factory"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildMultiplicateExpressionCommand do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildMultiplicateExpressionCommand do
   describe "#execute" do
     subject(:execute) { described_class.new(expression_factory).execute(arguments) }
 

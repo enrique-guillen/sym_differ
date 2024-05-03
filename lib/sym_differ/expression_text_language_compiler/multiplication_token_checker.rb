@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_multiplicate_expression_command"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 module SymDiffer
@@ -40,7 +40,7 @@ module SymDiffer
       end
 
       def build_multiplicate_expression_command
-        BuildMultiplicateExpressionCommand.new(@expression_factory)
+        Commands::BuildMultiplicateExpressionCommand.new(@expression_factory)
       end
     end
   end
