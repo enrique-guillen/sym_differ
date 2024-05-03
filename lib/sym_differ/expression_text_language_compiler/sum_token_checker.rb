@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/build_sum_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_sum_expression_command"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 module SymDiffer
@@ -37,7 +37,7 @@ module SymDiffer
       end
 
       def build_sum_expression_command
-        @build_sum_expression_command ||= BuildSumExpressionCommand.new(@expression_factory)
+        @build_sum_expression_command ||= Commands::BuildSumExpressionCommand.new(@expression_factory)
       end
     end
   end

@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/sum_token_checker"
 
-require "sym_differ/expression_text_language_compiler/build_sum_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_sum_expression_command"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
@@ -19,9 +19,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SumTokenChecker do
         expect(check).to include(
           handled: true,
           expression_location: :leftmost_or_infix,
-          stack_item: { item_type: :pending_command,
-                        precedence: 0,
-                        value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSumExpressionCommand) }
+          stack_item: {
+            item_type: :pending_command,
+            precedence: 0,
+            value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSumExpressionCommand)
+          }
         )
       end
     end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/build_sum_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_sum_expression_command"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::BuildSumExpressionCommand do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSumExpressionCommand do
   describe "#execute" do
     subject(:execute) { described_class.new(expression_factory).execute(arguments) }
 
