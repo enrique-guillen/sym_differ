@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/commands/build_subtract_expression_command"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker do
   describe "#check" do
     subject(:check) do
       described_class.new(expression_factory).check(token)
