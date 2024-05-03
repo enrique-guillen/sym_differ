@@ -99,4 +99,3 @@ module SymDiffer
     end
   end
 end
-
