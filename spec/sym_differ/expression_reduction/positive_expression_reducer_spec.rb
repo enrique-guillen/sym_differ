@@ -20,7 +20,7 @@ RSpec.describe SymDiffer::ExpressionReduction::PositiveExpressionReducer do
 
     let(:reducer) { double(:reducer) }
 
-    let(:expression) { expression_factory.create_positive_expression(summand) }
+    let(:expression) { positive_expression(summand) }
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     let(:summand) { double(:summand) }

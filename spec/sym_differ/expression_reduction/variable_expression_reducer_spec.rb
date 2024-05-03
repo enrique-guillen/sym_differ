@@ -20,9 +20,5 @@ RSpec.describe SymDiffer::ExpressionReduction::VariableExpressionReducer do
         factor_partition: [1, expression]
       )
     end
-
-    define_method(:variable_expression) do |name|
-      expression_factory.create_variable_expression(name)
-    end
   end
 end

@@ -183,18 +183,6 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReducer do
       end
     end
 
-    define_method(:constant_expression) do |value|
-      expression_factory.create_constant_expression(value)
-    end
-
-    define_method(:variable_expression) do |name|
-      expression_factory.create_variable_expression(name)
-    end
-
-    define_method(:sum_expression) do |expression_a, expression_b|
-      expression_factory.create_sum_expression(expression_a, expression_b)
-    end
-
     define_method(:reduction_results) do |reduced_expression, sum_partition, factor_partition|
       { reduced_expression:, sum_partition:, factor_partition: }
     end
