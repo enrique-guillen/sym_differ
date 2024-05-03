@@ -2,7 +2,7 @@
 
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
+require "sym_differ/expression_text_language_compiler/commands/build_subtract_expression_command"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecker do
   describe "#check" do
@@ -19,9 +19,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecke
         expect(check).to include(
           handled: true,
           expression_location: :leftmost_or_infix,
-          stack_item: { item_type: :pending_command,
-                        precedence: 1,
-                        value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::BuildSubtractExpressionCommand) }
+          stack_item: {
+            item_type: :pending_command,
+            precedence: 1,
+            value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSubtractExpressionCommand)
+          }
         )
       end
     end
