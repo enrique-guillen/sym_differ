@@ -263,28 +263,4 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       it { is_expected.to eq("multiplicand * multiplier") }
     end
   end
-
-  define_method(:constant_expression) do |value|
-    expression_factory.create_constant_expression(value)
-  end
-
-  define_method(:variable_expression) do |name|
-    expression_factory.create_variable_expression(name)
-  end
-
-  define_method(:sum_expression) do |expression_a, expression_b|
-    expression_factory.create_sum_expression(expression_a, expression_b)
-  end
-
-  define_method(:subtract_expression) do |expression_a, expression_b|
-    expression_factory.create_subtract_expression(expression_a, expression_b)
-  end
-
-  define_method(:negate_expression) do |negated_expression|
-    expression_factory.create_negate_expression(negated_expression)
-  end
-
-  define_method(:multiplicate_expression) do |multiplicand, multiplier|
-    expression_factory.create_multiplicate_expression(multiplicand, multiplier)
-  end
 end
