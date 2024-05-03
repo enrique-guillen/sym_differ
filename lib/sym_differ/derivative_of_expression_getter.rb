@@ -6,6 +6,7 @@ require "sym_differ/unparseable_expression_text_error"
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
   class DerivativeOfExpressionGetter
+    # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:derivative_expression)
 
     def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_textifier)
