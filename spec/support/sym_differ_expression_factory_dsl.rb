@@ -3,6 +3,8 @@
 require "sym_differ/expression_factory"
 
 module Support
+  # Defines DSL methods that create objects via the ExpressionFactory protocol/interface. Allows redefining what the
+  # concrete factory is that responds to the methods.
   module SymDifferExpressionFactoryDsl
     def sym_differ_expression_factory
       SymDiffer::ExpressionFactory.new

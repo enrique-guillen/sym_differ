@@ -127,7 +127,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       expect(visit_multiplicate_expression).to be_same_as(
         sum_expression(
           multiplicate_expression(constant_expression(1), variable_expression("x")),
-          multiplicate_expression(variable_expression("x"), constant_expression(1)),
+          multiplicate_expression(variable_expression("x"), constant_expression(1))
         )
       )
     end

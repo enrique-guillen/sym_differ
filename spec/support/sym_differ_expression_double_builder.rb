@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Support
+  # Creates test doubles that are "interchangeable" with normal members of the SymDiffer::Expressions class hierarchy.
   module SymDifferDoubleBuilder
     def expression_test_double(name)
       test_double = double(name)
