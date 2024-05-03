@@ -3,7 +3,7 @@
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
-require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/variable_token"
 require "sym_differ/expression_text_language_compiler/operator_token"
 

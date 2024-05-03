@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expression_text_language_compiler/variable_token"
-require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/operator_token"
 
 require "sym_differ/expression_text_language_compiler/expression_text"

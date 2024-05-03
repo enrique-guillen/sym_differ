@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -54,7 +54,7 @@ module SymDiffer
       end
 
       def build_constant_token(value)
-        ConstantToken.new(value)
+        Tokens::ConstantToken.new(value)
       end
     end
   end

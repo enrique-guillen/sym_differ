@@ -4,7 +4,7 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/token_extractor"
 
 require "sym_differ/expression_text_language_compiler/variable_token"
-require "sym_differ/expression_text_language_compiler/constant_token"
+require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/operator_token"
 
 require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
@@ -15,7 +15,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
     subject(:parse) { described_class.new.parse(expression_text) }
 
     let(:variable_token_class) { SymDiffer::ExpressionTextLanguageCompiler::VariableToken }
-    let(:constant_token_class) { SymDiffer::ExpressionTextLanguageCompiler::ConstantToken }
+    let(:constant_token_class) { SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken }
     let(:operator_token_class) { SymDiffer::ExpressionTextLanguageCompiler::OperatorToken }
 
     context "when the expression text to parse is ''" do

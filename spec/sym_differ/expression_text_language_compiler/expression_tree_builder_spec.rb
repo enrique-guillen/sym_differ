@@ -190,7 +190,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     define_method(:constant_token) do |value|
-      SymDiffer::ExpressionTextLanguageCompiler::ConstantToken.new(value)
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken.new(value)
     end
 
     define_method(:variable_token) do |name|
