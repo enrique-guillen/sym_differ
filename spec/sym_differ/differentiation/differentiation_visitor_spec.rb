@@ -8,7 +8,7 @@ require "sym_differ/expression_factory"
 RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
   let(:visitor) { described_class.new(variable, expression_factory) }
 
-  let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+  let(:expression_factory) { sym_differ_expression_factory }
 
   describe "#visit_constant_expression" do
     subject(:visit_constant_expression) do
@@ -19,7 +19,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:variable) { "x" }
 
     it "returns the result of deriving the constant expression" do
-      expect(visit_constant_expression).to have_attributes(value: 0)
+      expect(visit_constant_expression).to be_same_as(constant_expression(0))
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:expression) { variable_expression("x") }
 
     it "returns the result of deriving the variable expression" do
-      expect(visit_variable_expression).to have_attributes(value: 1)
+      expect(visit_variable_expression).to be_same_as(constant_expression(1))
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       let(:negated_expression) { variable_expression("x") }
 
       it "returns the result of deriving the negate expression" do
-        expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 1))
+        expect(visit_negate_expression).to be_same_as(negate_expression(constant_expression(1)))
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       let(:negated_expression) { constant_expression(2) }
 
       it "returns the result of deriving the negate expression" do
-        expect(visit_negate_expression).to have_attributes(negated_expression: an_object_having_attributes(value: 0))
+        expect(visit_negate_expression).to be_same_as(negate_expression(constant_expression(0)))
       end
     end
   end
@@ -74,9 +74,8 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:expression_b) { variable_expression("x") }
 
     it "returns the result of deriving the sum expression" do
-      expect(visit_sum_expression).to have_attributes(
-        expression_a: an_object_having_attributes(value: 0),
-        expression_b: an_object_having_attributes(value: 1)
+      expect(visit_sum_expression).to be_same_as(
+        sum_expression(constant_expression(0), constant_expression(1))
       )
     end
   end
@@ -93,9 +92,8 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:subtrahend) { constant_expression(1) }
 
     it "returns the result of deriving the expression" do
-      expect(visit_subtract_expression).to have_attributes(
-        minuend: an_object_having_attributes(value: 1),
-        subtrahend: an_object_having_attributes(value: 0)
+      expect(visit_subtract_expression).to be_same_as(
+        subtract_expression(constant_expression(1), constant_expression(0))
       )
     end
   end
@@ -110,7 +108,7 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:summand) { variable_expression("x") }
 
     it "returns the result of deriving the expression" do
-      expect(visit_positive_expression).to have_attributes(value: 1)
+      expect(visit_positive_expression).to be_same_as(constant_expression(1))
     end
   end
 
@@ -126,40 +124,12 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     let(:multiplier) { variable_expression("x") }
 
     it "returns the result of deriving the expression" do
-      expect(visit_multiplicate_expression).to have_attributes(
-        expression_a: an_object_having_attributes(multiplicand: an_object_having_attributes(value: 1),
-                                                  multiplier: an_object_having_attributes(name: "x")),
-        expression_b: an_object_having_attributes(multiplicand: an_object_having_attributes(name: "x"),
-                                                  multiplier: an_object_having_attributes(value: 1))
+      expect(visit_multiplicate_expression).to be_same_as(
+        sum_expression(
+          multiplicate_expression(constant_expression(1), variable_expression("x")),
+          multiplicate_expression(variable_expression("x"), constant_expression(1)),
+        )
       )
     end
-  end
-
-  define_method(:constant_expression) do |value|
-    expression_factory.create_constant_expression(value)
-  end
-
-  define_method(:variable_expression) do |name|
-    expression_factory.create_variable_expression(name)
-  end
-
-  define_method(:sum_expression) do |expression_a, expression_b|
-    expression_factory.create_sum_expression(expression_a, expression_b)
-  end
-
-  define_method(:subtract_expression) do |expression_a, expression_b|
-    expression_factory.create_subtract_expression(expression_a, expression_b)
-  end
-
-  define_method(:negate_expression) do |negated_expression|
-    expression_factory.create_negate_expression(negated_expression)
-  end
-
-  define_method(:positive_expression) do |summand|
-    expression_factory.create_positive_expression(summand)
-  end
-
-  define_method(:multiplicate_expression) do |multiplicand, multiplier|
-    expression_factory.create_multiplicate_expression(multiplicand, multiplier)
   end
 end

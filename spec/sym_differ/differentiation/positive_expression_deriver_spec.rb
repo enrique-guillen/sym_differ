@@ -15,9 +15,10 @@ RSpec.describe SymDiffer::Differentiation::PositiveExpressionDeriver do
         .and_return(summand_derivative)
     end
 
-    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+    let(:expression_factory) { sym_differ_expression_factory }
     let(:deriver) { double(:deriver) }
-    let(:expression) { expression_factory.create_positive_expression(summand) }
+    let(:expression) { positive_expression(summand) }
+
     let(:summand) { double(:summand) }
     let(:summand_derivative) { double(:summand_derivative) }
 

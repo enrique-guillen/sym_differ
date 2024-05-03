@@ -14,15 +14,15 @@ RSpec.describe SymDiffer::Differentiation::SumExpressionDeriver do
       allow(expression_b).to receive(:accept).with(deriver).and_return(expression_b_derivative)
     end
 
-    let(:expression) { expression_factory.create_sum_expression(expression_a, expression_b) }
+    let(:expression) { sum_expression(expression_a, expression_b) }
     let(:deriver) { double(:deriver) }
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
-    let(:expression_a) { double(:expression_a) }
-    let(:expression_b) { double(:expression_b) }
-    let(:expression_a_derivative) { double(:expression_a_derivative) }
-    let(:expression_b_derivative) { double(:expression_b_derivative) }
+    let(:expression_a) { expression_test_double(:expression_a) }
+    let(:expression_b) { expression_test_double(:expression_b) }
+    let(:expression_a_derivative) { expression_test_double(:expression_a_derivative) }
+    let(:expression_b_derivative) { expression_test_double(:expression_b_derivative) }
 
-    it { is_expected.to have_attributes(expression_a: expression_a_derivative, expression_b: expression_b_derivative) }
+    it { is_expected.to be_same_as(sum_expression(expression_a_derivative, expression_b_derivative)) }
   end
 end

@@ -16,18 +16,14 @@ RSpec.describe SymDiffer::Differentiation::VariableExpressionDeriver do
       context "when the provided expression is VariableExpression(var)" do
         let(:expression) { variable_expression("var") }
 
-        it { expect(derive).to have_attributes(value: 1) }
+        it { is_expected.to be_same_as(constant_expression(1)) }
       end
 
       context "when the provided expression is VariableExpression(x)" do
         let(:expression) { variable_expression("x") }
 
-        it { expect(derive).to have_attributes(value: 0) }
+        it { is_expected.to be_same_as(constant_expression(0)) }
       end
-    end
-
-    define_method(:variable_expression) do |name|
-      expression_factory.create_variable_expression(name)
     end
   end
 end

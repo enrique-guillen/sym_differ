@@ -14,9 +14,5 @@ RSpec.describe SymDiffer::Differentiation::ConstantExpressionDeriver do
     let(:variable) { "x" }
 
     it { is_expected.to be_same_as(constant_expression(0)) }
-
-    define_method(:constant_expression) do |value|
-      expression_factory.create_constant_expression(value)
-    end
   end
 end

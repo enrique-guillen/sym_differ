@@ -16,25 +16,21 @@ RSpec.describe SymDiffer::Differentiation::MultiplicateExpressionDeriver do
       allow(multiplier).to receive(:accept).with(differentiation_visitor).and_return(multiplier_derivative)
     end
 
-    let(:expression) { expression_factory.create_multiplicate_expression(multiplicand, multiplier) }
+    let(:expression) { multiplicate_expression(multiplicand, multiplier) }
     let(:differentiation_visitor) { double(:differentiation_visitor) }
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
-    let(:multiplicand) { double(:multiplicand) }
-    let(:multiplier) { double(:multiplier) }
+    let(:multiplicand) { expression_test_double(:multiplicand) }
+    let(:multiplier) { expression_test_double(:multiplier) }
 
-    let(:multiplicand_derivative) { double(:multiplicand_derivative) }
-    let(:multiplier_derivative) { double(:multiplier_derivative) }
+    let(:multiplicand_derivative) { expression_test_double(:multiplicand_derivative) }
+    let(:multiplier_derivative) { expression_test_double(:multiplier_derivative) }
 
     it "returns the expected derivative" do
-      expect(derive).to have_attributes(
-        expression_a: an_object_having_attributes(
-          multiplicand: multiplicand_derivative,
-          multiplier:
-        ),
-        expression_b: an_object_having_attributes(
-          multiplicand:,
-          multiplier: multiplier_derivative
+      expect(derive).to be_same_as(
+        sum_expression(
+          multiplicate_expression(multiplicand_derivative, multiplier),
+          multiplicate_expression(multiplicand, multiplier_derivative)
         )
       )
     end

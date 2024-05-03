@@ -12,18 +12,14 @@ RSpec.describe SymDiffer::Differentiation::NegateExpressionDeriver do
       allow(negated_expression).to receive(:accept).with(deriver).and_return(negated_expression_derivative)
     end
 
-    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+    let(:expression_factory) { sym_differ_expression_factory }
 
     let(:expression) { negate_expression(negated_expression) }
     let(:deriver) { double(:deriver) }
 
-    let(:negated_expression) { double(:negated_expression) }
-    let(:negated_expression_derivative) { double(:negated_expression_derivative) }
+    let(:negated_expression) { expression_test_double(:negated_expression) }
+    let(:negated_expression_derivative) { expression_test_double(:negated_expression_derivative) }
 
-    it { is_expected.to have_attributes(negated_expression: negated_expression_derivative) }
-
-    define_method(:negate_expression) do |negated_expression|
-      expression_factory.create_negate_expression(negated_expression)
-    end
+    it { is_expected.to be_same_as(negate_expression(negated_expression_derivative)) }
   end
 end

@@ -8,16 +8,15 @@ RSpec.describe SymDiffer::Differentiation::SubtractExpressionDeriver do
   describe "#derive" do
     subject(:derive) { described_class.new(differentiation_visitor, expression_factory).derive(expression) }
 
-    let(:expression) { expression_factory.create_subtract_expression(minuend_expression, subtrahend_expression) }
-
-    let(:minuend_expression) { double(:minuend_expression) }
-    let(:subtrahend_expression) { double(:subtrahend_expression) }
+    let(:expression) { subtract_expression(minuend_expression, subtrahend_expression) }
 
     let(:differentiation_visitor) { double(:differentiation_visitor) }
-    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+    let(:expression_factory) { sym_differ_expression_factory }
 
-    let(:minuend_expression_derivative) { double(:minuend_expression_derivative) }
-    let(:subtrahend_expression_derivative) { double(:subtrahend_expression_derivative) }
+    let(:minuend_expression) { expression_test_double(:minuend_expression) }
+    let(:subtrahend_expression) { expression_test_double(:subtrahend_expression) }
+    let(:minuend_expression_derivative) { expression_test_double(:minuend_expression_derivative) }
+    let(:subtrahend_expression_derivative) { expression_test_double(:subtrahend_expression_derivative) }
 
     before do
       allow(minuend_expression)
@@ -33,7 +32,7 @@ RSpec.describe SymDiffer::Differentiation::SubtractExpressionDeriver do
 
     it "returns the subtraction of the derivative of each subexpression" do
       expect(derive)
-        .to have_attributes(minuend: minuend_expression_derivative, subtrahend: subtrahend_expression_derivative)
+        .to be_same_as(subtract_expression(minuend_expression_derivative, subtrahend_expression_derivative))
     end
   end
 end
