@@ -40,3 +40,35 @@ detectors:
     # Use of Nil and nil checks can be justified, although avoiding it is an improvement. Adding a justification for
     # each usage is not necessary.
     enabled: false
+
+  DataClump:
+    exclude:
+      # We decided to take on the tech debt incurred by the data clump ['expression_text', 'variable'] and it should be
+      # refactored.
+      - "SymDiffer::DerivativeOfExpressionGetter"
+      # We decided to take on the tech debt incurred by the data clump ['minuend', 'subtrahend'] and it should be
+      # refactored.
+      - "SymDiffer::ExpressionReduction::SubtractExpressionReducer"
+      # We decided to take on the tech debt incurred by the data clump ['command_and_expresion_stack', 'index'] and it
+      # should be refactored.
+      - "SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer"
+
+  Attribute:
+    exclude:
+      # A desirable alternative would be to create new ExpressionTexts with the new inner text value, if it didn't
+      # imply unnecessary object allocations. #text= is offered as an alternative that doesn't involve additional
+      # allocations.
+      - "SymDiffer::ExpressionTextLanguageCompiler::ExpressionText#text"
+
+  BooleanParameter:
+    exclude:
+      # We pass some parameters to the initializer to slightly customize the behavior of a PrintingVisitor. References
+      # to those parameters only happen internally of PrintingVisitor, so for the time being this is a fairly innocuous
+      # usage of boolean parameters.
+      - "SymDiffer::InlinePrinting::PrintingVisitor#initialize"
+      - "SymDiffer::InlinePrinting::PrintingVisitor#build_visitor"
+
+  RepeatedConditional:
+    # We decided to take on the tech debt incurred by repeated conditionals across this call for the time being.
+    exclude:
+      - "SymDiffer::InlinePrinting::PrintingVisitor"
