@@ -107,12 +107,4 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
   end
-
-  define_method(:variable_expression) do |name|
-    expression_factory.create_variable_expression(name)
-  end
-
-  define_method(:sum_expression) do |expression_a, expression_b|
-    expression_factory.create_sum_expression(expression_a, expression_b)
-  end
 end
