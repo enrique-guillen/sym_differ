@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/constant_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
 require "sym_differ/expression_text_language_compiler/expression_text"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ConstantTokenExtractor do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor do
   describe "#extract" do
     subject(:extract) { described_class.new.extract(expression_text) }
 
