@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expression_text_language_compiler/build_subtract_expression_command"
-require "sym_differ/expression_text_language_compiler/operator_token"
+require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -41,7 +41,7 @@ module SymDiffer
       end
 
       def operator_token?(token)
-        token.is_a?(OperatorToken)
+        token.is_a?(Tokens::OperatorToken)
       end
 
       def token_symbol_is_dash?(token)

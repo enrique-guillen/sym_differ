@@ -5,7 +5,7 @@ require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/tokens/variable_token"
-require "sym_differ/expression_text_language_compiler/operator_token"
+require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/variable_token_checker"

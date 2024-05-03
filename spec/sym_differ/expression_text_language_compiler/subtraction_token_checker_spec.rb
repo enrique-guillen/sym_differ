@@ -33,7 +33,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::SubtractionTokenChecke
     end
 
     define_method(:operator_token) do |symbol|
-      SymDiffer::ExpressionTextLanguageCompiler::OperatorToken.new(symbol)
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::OperatorToken.new(symbol)
     end
   end
 end

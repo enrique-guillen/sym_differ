@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expression_text_language_compiler/build_multiplicate_expression_command"
-require "sym_differ/expression_text_language_compiler/operator_token"
+require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -36,7 +36,7 @@ module SymDiffer
       end
 
       def multiplicate_token?(token)
-        token.is_a?(OperatorToken) && token.symbol == "*"
+        token.is_a?(Tokens::OperatorToken) && token.symbol == "*"
       end
 
       def build_multiplicate_expression_command
