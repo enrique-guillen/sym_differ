@@ -8,7 +8,7 @@ require "sym_differ/expression_text_language_compiler/tokens/variable_token"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
 require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
@@ -122,7 +122,7 @@ module SymDiffer
       end
 
       def variable_token_checker
-        @variable_token_checker ||= VariableTokenChecker.new(@expression_factory)
+        @variable_token_checker ||= Checkers::VariableTokenChecker.new(@expression_factory)
       end
 
       def multiplicate_token_checker
