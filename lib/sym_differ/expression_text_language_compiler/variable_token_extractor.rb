@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/variable_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -54,7 +54,7 @@ module SymDiffer
       end
 
       def build_variable_token(name)
-        VariableToken.new(name)
+        Tokens::VariableToken.new(name)
       end
     end
   end

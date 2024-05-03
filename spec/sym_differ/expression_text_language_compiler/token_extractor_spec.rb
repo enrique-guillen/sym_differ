@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/token_extractor"
 
-require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/variable_token"
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/operator_token"
 
@@ -14,7 +14,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
   describe "#parse" do
     subject(:parse) { described_class.new.parse(expression_text) }
 
-    let(:variable_token_class) { SymDiffer::ExpressionTextLanguageCompiler::VariableToken }
+    let(:variable_token_class) { SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken }
     let(:constant_token_class) { SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken }
     let(:operator_token_class) { SymDiffer::ExpressionTextLanguageCompiler::OperatorToken }
 

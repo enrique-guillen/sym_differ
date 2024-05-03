@@ -4,7 +4,7 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
 
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
-require "sym_differ/expression_text_language_compiler/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/variable_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ConstantTokenChecker do
   describe "#check" do
@@ -46,7 +46,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ConstantTokenChecker d
     end
 
     define_method(:variable_token) do |name|
-      SymDiffer::ExpressionTextLanguageCompiler::VariableToken.new(name)
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken.new(name)
     end
   end
 end

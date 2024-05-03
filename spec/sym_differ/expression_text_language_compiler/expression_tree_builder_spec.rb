@@ -194,7 +194,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     define_method(:variable_token) do |name|
-      SymDiffer::ExpressionTextLanguageCompiler::VariableToken.new(name)
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken.new(name)
     end
 
     define_method(:operator_token) do |symbol|
