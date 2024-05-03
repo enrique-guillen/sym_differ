@@ -25,7 +25,6 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
-
   config.include Support::SymDifferDoubleBuilder
   config.include Support::SymDifferExpressionFactoryDsl
 end

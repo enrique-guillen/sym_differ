@@ -33,13 +33,9 @@ RSpec.describe SymDiffer::Expressions::NegateExpression do
     subject(:same_as?) { expression.same_as?(other_expression) }
 
     let(:expression) { described_class.new(negated_expression) }
-    let(:negated_expression) { double(:negated_expression) }
+    let(:negated_expression) { expression_test_double(:negated_expression) }
 
     context "when the provided expression has the same summand" do
-      before do
-        allow(negated_expression).to receive(:same_as?).with(negated_expression).and_return(true)
-      end
-
       let(:other_expression) { described_class.new(negated_expression) }
 
       it { is_expected.to be(true) }

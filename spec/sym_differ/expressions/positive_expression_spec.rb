@@ -32,13 +32,9 @@ RSpec.describe SymDiffer::Expressions::PositiveExpression do
     subject(:same_as?) { expression.same_as?(other_expression) }
 
     let(:expression) { described_class.new(summand) }
-    let(:summand) { double(:summand) }
+    let(:summand) { expression_test_double(:summand) }
 
     context "when the provided expression has the same summand" do
-      before do
-        allow(summand).to receive(:same_as?).with(summand).and_return(true)
-      end
-
       let(:other_expression) { described_class.new(summand) }
 
       it { is_expected.to be(true) }
