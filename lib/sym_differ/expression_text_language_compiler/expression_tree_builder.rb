@@ -10,7 +10,7 @@ require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 require "sym_differ/expression_text_language_compiler/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
 require "sym_differ/expression_text_language_compiler/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/multiplication_token_checker"
 
 module SymDiffer
@@ -130,7 +130,7 @@ module SymDiffer
       end
 
       def sum_token_checker
-        @sum_token_checker ||= SumTokenChecker.new(@expression_factory)
+        @sum_token_checker ||= Checkers::SumTokenChecker.new(@expression_factory)
       end
 
       def subtraction_token_checker
