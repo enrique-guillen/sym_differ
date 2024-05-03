@@ -3,6 +3,9 @@
 require "simplecov"
 SimpleCov.start
 
+require "support/sym_differ_expression_double_builder"
+require "support/sym_differ_expression_factory_dsl"
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -22,4 +25,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
+
+  config.include Support::SymDifferDoubleBuilder
+  config.include Support::SymDifferExpressionFactoryDsl
 end
