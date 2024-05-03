@@ -1,0 +1,42 @@
+# We want to execute Reek for CICD verification step purposes. Not all instances of a smell are offenses; in the case of
+# smells like FeatureEnvy, sometimes it's the opposite. We only enable detectors if we think almost all instances of a
+# smell mean that the code can be refactored to be better, and that checking in the offending code requires a
+# justification in those cases. If you want to detect code that offends the disabled detectors, edit the file
+# temporarily.
+
+detectors:
+  UncommunicativeParameterName:
+    # Delegate this check to rubocop.
+    enabled: false
+  TooManyStatements:
+    # Delegate this check to rubocop.
+    enabled: false
+  TooManyMethods:
+    # Delegate this check to rubocop's measuring cops.
+    enabled: false
+  UncommunicativeVariableName:
+    # (1) Delegate this check to rubocop.
+    # (2) Names can be terser if the scope of the name is short.
+    enabled: false
+
+  FeatureEnvy:
+    # Supressing this smell is less important than upholding other principles.
+    enabled: false
+  UtilityFunction:
+    # Supressing this smell is less important than upholding other principles.
+    enabled: false
+  DuplicateMethodCall:
+    # Instances of this smell don't necessarily indicate code we are not confident in.
+    enabled: false
+  ControlParameter:
+    # From documentation at time of writing this:
+    # > Control Coupling is a kind of duplication, because the calling method already knows which path should be taken.
+    #
+    # For behavior impacted by external factors such as user input, the best place to decide the code path to take might
+    # not be the calling method.
+    enabled: false
+
+  NilCheck:
+    # Use of Nil and nil checks can be justified, although avoiding it is an improvement. Adding a justification for
+    # each usage is not necessary.
+    enabled: false
