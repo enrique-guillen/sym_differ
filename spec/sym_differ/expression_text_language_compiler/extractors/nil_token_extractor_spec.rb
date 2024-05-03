@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/nil_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/nil_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/expression_text"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::NilTokenExtractor do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor do
   describe "#extract" do
     subject(:extract) { described_class.new.extract(expression_text) }
 
