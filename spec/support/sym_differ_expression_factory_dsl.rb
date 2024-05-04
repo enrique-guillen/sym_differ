@@ -37,5 +37,9 @@ module Support
     def multiplicate_expression(multiplicand, multiplier)
       expression_factory.create_multiplicate_expression(multiplicand, multiplier)
     end
+
+    def sine_expression(angle_expression)
+      expression_factory.create_sine_expression(angle_expression)
+    end
   end
 end
