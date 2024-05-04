@@ -12,7 +12,16 @@ require "sym_differ/expression_text_language_compiler/empty_expression_text_erro
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
   describe "#parse" do
-    subject(:parse) { described_class.new.parse(expression_text) }
+    subject(:parse) { described_class.new(token_extractors).parse(expression_text) }
+
+    let(:token_extractors) do
+      [
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new,
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new,
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new,
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
+      ]
+    end
 
     let(:variable_token_class) { SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken }
     let(:constant_token_class) { SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken }

@@ -3,6 +3,15 @@
 require "sym_differ/expression_text_language_compiler/token_extractor"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
+require "sym_differ/expression_text_language_compiler/tokens/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/constant_token"
+require "sym_differ/expression_text_language_compiler/tokens/operator_token"
+
+require "sym_differ/expression_text_language_compiler/extractors/nil_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/operator_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/variable_token_extractor"
+
 require "sym_differ/expression_factory"
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
@@ -46,7 +55,8 @@ module SymDiffer
       end
 
       def token_extractor
-        TokenExtractor.new
+        subextractors = token_type_specific_extractors
+        TokenExtractor.new(subextractors)
       end
 
       def expression_tree_builder
@@ -55,6 +65,15 @@ module SymDiffer
 
       def command_and_expression_stack_reducer
         CommandAndExpressionStackReducer.new
+      end
+
+      def token_type_specific_extractors
+        @token_type_specific_extractors ||= [
+          SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new,
+          SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new,
+          SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new,
+          SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
+        ]
       end
 
       def raise_unparseable_expression_error

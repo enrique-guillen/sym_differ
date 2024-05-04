@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
-require "sym_differ/expression_text_language_compiler/tokens/constant_token"
-require "sym_differ/expression_text_language_compiler/tokens/operator_token"
-
 require "sym_differ/expression_text_language_compiler/expression_text"
-require "sym_differ/expression_text_language_compiler/extractors/nil_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/operator_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/variable_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
 require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
@@ -18,6 +10,10 @@ module SymDiffer
     # Parses an expression written down as text, allowing the user to include as much whitespace as they'd like between
     # tokens of the expression, and returns a list of Free Form Expression Text Tokens.
     class TokenExtractor
+      def initialize(token_extractors)
+        @token_extractors = token_extractors
+      end
+
       def parse(expression_text)
         expression_text = ExpressionText.new(expression_text)
         raise_error_if_expression_text_is_empty(expression_text)
@@ -51,7 +47,7 @@ module SymDiffer
       def get_next_token_and_expression_text_pair(expression_text)
         extract_token_response = nil
 
-        token_extractors.detect do |extractor|
+        @token_extractors.detect do |extractor|
           extract_token_response = extract_token_and_next_expression_text(extractor, expression_text)
           !extract_token_response.nil?
         end
@@ -66,15 +62,6 @@ module SymDiffer
         return unless extract_token_response[:handled]
 
         extract_token_response
-      end
-
-      def token_extractors
-        @token_extractors ||= [
-          Extractors::NilTokenExtractor.new,
-          Extractors::OperatorTokenExtractor.new,
-          Extractors::VariableTokenExtractor.new,
-          Extractors::ConstantTokenExtractor.new
-        ]
       end
 
       def raise_error_if_expression_text_is_empty(expression_text)
