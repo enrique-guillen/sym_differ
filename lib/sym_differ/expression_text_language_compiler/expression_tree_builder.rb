@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
-
-require "sym_differ/expression_text_language_compiler/tokens/constant_token"
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
-require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
@@ -18,8 +13,9 @@ module SymDiffer
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
-      def initialize(expression_factory)
+      def initialize(expression_factory, command_and_expression_stack_reducer)
         @expression_factory = expression_factory
+        @command_and_expression_stack_reducer = command_and_expression_stack_reducer
       end
 
       def build(tokens)
@@ -85,15 +81,11 @@ module SymDiffer
       end
 
       def reduce_tail_end_of_stack_while_evaluatable(current_stack)
-        command_and_expression_stack_reducer.reduce(current_stack)
+        @command_and_expression_stack_reducer.reduce(current_stack)
       end
 
       def get_checkers_for_currently_expected_token_type(currently_expected_token_type)
         checkers_by_role[currently_expected_token_type]
-      end
-
-      def command_and_expression_stack_reducer
-        @command_and_expression_stack_reducer ||= CommandAndExpressionStackReducer.new
       end
 
       def checkers_by_role

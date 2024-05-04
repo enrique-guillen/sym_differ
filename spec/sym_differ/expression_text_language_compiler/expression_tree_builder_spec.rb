@@ -5,16 +5,21 @@ require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
 require "sym_differ/expression_factory"
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
+require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
     subject(:build) do
       described_class
-        .new(expression_factory)
+        .new(expression_factory, command_and_expression_stack_reducer)
         .build(tokens)
     end
 
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+
+    let(:command_and_expression_stack_reducer) do
+      SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new
+    end
 
     context "when the tokens list is 1" do
       let(:tokens) { [constant_token(1)] }

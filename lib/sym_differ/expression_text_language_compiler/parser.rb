@@ -4,6 +4,7 @@ require "sym_differ/expression_text_language_compiler/token_extractor"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
 require "sym_differ/expression_factory"
+require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
 require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
@@ -18,9 +19,9 @@ module SymDiffer
         @expression_factory = expression_factory
       end
 
-      def parse(expression)
-        expression_tree_builder
-          .build(token_extractor.parse(expression))
+      def parse(expression_text)
+        tokens = extract_tokens_from_expression(expression_text)
+        convert_tokens_into_expression(tokens)
       rescue EmptyExpressionTextError, UnrecognizedTokenError, InvalidSyntaxError
         raise_unparseable_expression_error
       end
@@ -36,12 +37,24 @@ module SymDiffer
       VARIABLE_NAME_MATCHER = /\A[a-zA-Z]+\z/
       private_constant :VARIABLE_NAME_MATCHER
 
-      def expression_tree_builder
-        ExpressionTreeBuilder.new(@expression_factory)
+      def extract_tokens_from_expression(expression_text)
+        token_extractor.parse(expression_text)
+      end
+
+      def convert_tokens_into_expression(tokens)
+        expression_tree_builder.build(tokens)
       end
 
       def token_extractor
         TokenExtractor.new
+      end
+
+      def expression_tree_builder
+        ExpressionTreeBuilder.new(@expression_factory, command_and_expression_stack_reducer)
+      end
+
+      def command_and_expression_stack_reducer
+        CommandAndExpressionStackReducer.new
       end
 
       def raise_unparseable_expression_error
