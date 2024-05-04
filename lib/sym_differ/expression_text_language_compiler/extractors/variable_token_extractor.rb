@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -14,7 +14,7 @@ module SymDiffer
 
           variable_name, tail_end_of_text = extract_variable_name_and_tail_end_of_text(expression_text)
 
-          token = build_variable_token(variable_name)
+          token = build_identifier_token(variable_name)
           build_handled_response(token, tail_end_of_text)
         end
 
@@ -54,8 +54,8 @@ module SymDiffer
           text.tail_end_of_text
         end
 
-        def build_variable_token(name)
-          Tokens::VariableToken.new(name)
+        def build_identifier_token(name)
+          Tokens::IdentifierToken.new(name)
         end
       end
     end

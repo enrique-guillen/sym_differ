@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
 
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::VariableTokenChecker do
@@ -13,7 +13,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::VariableToke
     let(:expression_factory) { sym_differ_expression_factory }
 
     context "when the provided token is x" do
-      let(:token) { variable_token("x") }
+      let(:token) { identifier_token("x") }
 
       it "returns an expression and sets expression location as rightmost" do
         expect(check).to include(
@@ -36,8 +36,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::VariableToke
       SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken.new(value)
     end
 
-    define_method(:variable_token) do |name|
-      SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken.new(name)
+    define_method(:identifier_token) do |name|
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::IdentifierToken.new(name)
     end
   end
 end

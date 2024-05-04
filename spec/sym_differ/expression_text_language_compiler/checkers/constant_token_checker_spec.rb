@@ -4,7 +4,7 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
 
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker do
   describe "#check" do
@@ -27,7 +27,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantToke
     end
 
     context "when the provided token is x" do
-      let(:token) { variable_token("x") }
+      let(:token) { identifier_token("x") }
 
       it { is_expected.to eq(handled: false) }
     end
@@ -36,8 +36,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantToke
       SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken.new(value)
     end
 
-    define_method(:variable_token) do |name|
-      SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken.new(name)
+    define_method(:identifier_token) do |name|
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::IdentifierToken.new(name)
     end
   end
 end

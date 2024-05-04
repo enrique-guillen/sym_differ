@@ -3,7 +3,7 @@
 require "sym_differ/expression_text_language_compiler/token_extractor"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
-require "sym_differ/expression_text_language_compiler/tokens/variable_token"
+require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 

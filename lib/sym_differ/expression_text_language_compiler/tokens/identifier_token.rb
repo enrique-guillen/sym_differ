@@ -6,7 +6,7 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     module Tokens
       # Token representing a variable name in an expression in text form.
-      class VariableToken
+      class IdentifierToken
         def initialize(name)
           @name = name
         end

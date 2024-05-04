@@ -52,7 +52,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x" do
-      let(:tokens) { [variable_token("x")] }
+      let(:tokens) { [identifier_token("x")] }
 
       it "returns a Variable Expression x" do
         expect(build).to be_same_as(variable_expression("x"))
@@ -76,7 +76,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x + x" do
-      let(:tokens) { [variable_token("x"), operator_token("+"), variable_token("x")] }
+      let(:tokens) { [identifier_token("x"), operator_token("+"), identifier_token("x")] }
 
       it "returns a Sum Expression x + x" do
         expect(build).to be_same_as(
@@ -86,7 +86,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x +" do
-      let(:tokens) { [variable_token("x"), operator_token("+")] }
+      let(:tokens) { [identifier_token("x"), operator_token("+")] }
 
       it "raises an invalid syntax error" do
         expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
@@ -94,7 +94,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x x" do
-      let(:tokens) { [variable_token("x"), variable_token("x")] }
+      let(:tokens) { [identifier_token("x"), identifier_token("x")] }
 
       it "raises an invalid syntax error" do
         expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
@@ -102,7 +102,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x - 1" do
-      let(:tokens) { [variable_token("x"), operator_token("-"), constant_token(1)] }
+      let(:tokens) { [identifier_token("x"), operator_token("-"), constant_token(1)] }
 
       it "returns a Sum Expression x + x" do
         expect(build).to be_same_as(
@@ -123,7 +123,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     context "when the tokens list is x + --1 (clarification)" do
       let(:tokens) do
-        [variable_token("x"), operator_token("+"), operator_token("-"), operator_token("-"), constant_token(1)]
+        [identifier_token("x"), operator_token("+"), operator_token("-"), operator_token("-"), constant_token(1)]
       end
 
       it "returns a SumExpression x, --1" do
@@ -147,7 +147,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is +x" do
-      let(:tokens) { [operator_token("+"), variable_token("x")] }
+      let(:tokens) { [operator_token("+"), identifier_token("x")] }
 
       it "returns a PositiveExpression" do
         expect(build).to be_same_as(positive_expression(variable_expression("x")))
@@ -155,7 +155,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     context "when the tokens list is x * x" do
-      let(:tokens) { [variable_token("x"), operator_token("*"), variable_token("x")] }
+      let(:tokens) { [identifier_token("x"), operator_token("*"), identifier_token("x")] }
 
       it "returns a MultiplicateExpression" do
         expect(build).to be_same_as(
@@ -166,7 +166,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     context "when the tokens list is 1 + x * x" do
       let(:tokens) do
-        [constant_token(1), operator_token("+"), variable_token("x"), operator_token("*"), variable_token("x")]
+        [constant_token(1), operator_token("+"), identifier_token("x"), operator_token("*"), identifier_token("x")]
       end
 
       it "returns a SumExpression" do
@@ -183,9 +183,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) do
         [constant_token(1),
          operator_token("+"),
-         variable_token("x"),
+         identifier_token("x"),
          operator_token("*"),
-         variable_token("x"),
+         identifier_token("x"),
          operator_token("+"),
          constant_token(1)]
       end
@@ -203,7 +203,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     context "when the tokens list is x * + x" do
       let(:tokens) do
-        [variable_token("x"), operator_token("*"), operator_token("+"), variable_token("x")]
+        [identifier_token("x"), operator_token("*"), operator_token("+"), identifier_token("x")]
       end
 
       it "returns a MultiplicateExpression" do
@@ -216,12 +216,49 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
+    xcontext "when the tokens list is sine(x)" do
+      let(:tokens) do
+        [sine_token, open_parens_token, identifier_token("x"), close_parens_token]
+      end
+
+      it "returns a SineExpression" do
+        expect(build).to be_same_as(
+          sine_expression(variable_expression("x"))
+        )
+      end
+    end
+
+    xcontext "when the tokens list is sine(1 + sine(x))" do
+      let(:tokens) do
+        [
+          identifier_token("sine"), # 1
+          open_parens_token, # 1
+          constant_token(1), # 2
+          operator_token("+"), # 2
+          identifier_token("sine"), # 2
+          open_parens_token, # 2
+          variable_expression("x"), # 3
+          close_parens_token, # 2
+          close_parens_token # 1
+        ]
+      end
+
+      it "returns a SineExpression" do
+        expect(build).to be_same_as(
+          sine_expression(
+            sum_expression(constant_expression(1), sine_expression(variable_expression("x"))),
+            variable_expression("x")
+          )
+        )
+      end
+    end
+
     define_method(:constant_token) do |value|
       SymDiffer::ExpressionTextLanguageCompiler::Tokens::ConstantToken.new(value)
     end
 
-    define_method(:variable_token) do |name|
-      SymDiffer::ExpressionTextLanguageCompiler::Tokens::VariableToken.new(name)
+    define_method(:identifier_token) do |name|
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::IdentifierToken.new(name)
     end
 
     define_method(:operator_token) do |symbol|
