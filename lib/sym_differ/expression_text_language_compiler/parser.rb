@@ -13,7 +13,7 @@ require "sym_differ/expression_text_language_compiler/extractors/constant_token_
 require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
@@ -82,7 +82,7 @@ module SymDiffer
       def token_type_specific_checkers
         @token_type_specific_checkers = {
           prefix_token_checkers: [
-            constant_token_checker, variable_token_checker, subtraction_token_checker, sum_token_checker
+            constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker
           ],
           infix_token_checkers: [multiplication_token_checker, sum_token_checker, subtraction_token_checker]
         }.freeze
@@ -108,8 +108,8 @@ module SymDiffer
         @constant_token_checker ||= Checkers::ConstantTokenChecker.new(@expression_factory)
       end
 
-      def variable_token_checker
-        @variable_token_checker ||= Checkers::VariableTokenChecker.new(@expression_factory)
+      def identifier_token_checker
+        @identifier_token_checker ||= Checkers::IdentifierTokenChecker.new(@expression_factory)
       end
 
       def subtraction_token_checker

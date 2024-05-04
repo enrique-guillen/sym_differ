@@ -8,7 +8,7 @@ require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
@@ -29,7 +29,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       {
         prefix_token_checkers: [
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::VariableTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory)
         ],

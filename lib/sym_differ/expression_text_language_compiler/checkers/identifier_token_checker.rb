@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require "sym_differ/expressions/variable_expression"
 require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
     module Checkers
       # Checks the provided token and pushes a BuildVariableExpressionCommand into the commands stack if applicable.
-      class VariableTokenChecker
+      class IdentifierTokenChecker
         def initialize(expression_factory)
           @expression_factory = expression_factory
         end
