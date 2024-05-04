@@ -12,7 +12,12 @@ require "sym_differ/expression_text_language_compiler/extractors/operator_token_
 require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/variable_token_extractor"
 
-require "sym_differ/expression_factory"
+require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
+
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
@@ -60,7 +65,8 @@ module SymDiffer
       end
 
       def expression_tree_builder
-        ExpressionTreeBuilder.new(@expression_factory, command_and_expression_stack_reducer)
+        checkers = token_type_specific_checkers
+        ExpressionTreeBuilder.new(command_and_expression_stack_reducer, checkers)
       end
 
       def command_and_expression_stack_reducer
@@ -69,11 +75,53 @@ module SymDiffer
 
       def token_type_specific_extractors
         @token_type_specific_extractors ||= [
-          SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new,
-          SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new,
-          SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new,
-          SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
-        ]
+          nil_token_extractor, operator_token_extractor, variable_token_extractor, constant_token_extractor
+        ].freeze
+      end
+
+      def token_type_specific_checkers
+        @token_type_specific_checkers = {
+          prefix_token_checkers: [
+            constant_token_checker, variable_token_checker, subtraction_token_checker, sum_token_checker
+          ],
+          infix_token_checkers: [multiplication_token_checker, sum_token_checker, subtraction_token_checker]
+        }.freeze
+      end
+
+      def nil_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new
+      end
+
+      def operator_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new
+      end
+
+      def variable_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new
+      end
+
+      def constant_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
+      end
+
+      def constant_token_checker
+        @constant_token_checker ||= Checkers::ConstantTokenChecker.new(@expression_factory)
+      end
+
+      def variable_token_checker
+        @variable_token_checker ||= Checkers::VariableTokenChecker.new(@expression_factory)
+      end
+
+      def subtraction_token_checker
+        @subtraction_token_checker ||= Checkers::SubtractionTokenChecker.new(@expression_factory)
+      end
+
+      def sum_token_checker
+        @sum_token_checker ||= Checkers::SumTokenChecker.new(@expression_factory)
+      end
+
+      def multiplication_token_checker
+        @multiplication_token_checker ||= Checkers::MultiplicationTokenChecker.new(@expression_factory)
       end
 
       def raise_unparseable_expression_error

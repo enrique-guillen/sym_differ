@@ -2,20 +2,14 @@
 
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
-require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
-
 module SymDiffer
   module ExpressionTextLanguageCompiler
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
-      def initialize(expression_factory, command_and_expression_stack_reducer)
-        @expression_factory = expression_factory
+      def initialize(command_and_expression_stack_reducer, checkers_by_role)
         @command_and_expression_stack_reducer = command_and_expression_stack_reducer
+        @checkers_by_role = checkers_by_role
       end
 
       def build(tokens)
@@ -85,16 +79,7 @@ module SymDiffer
       end
 
       def get_checkers_for_currently_expected_token_type(currently_expected_token_type)
-        checkers_by_role[currently_expected_token_type]
-      end
-
-      def checkers_by_role
-        @checkers_by_role ||= {
-          prefix_token_checkers: [
-            constant_token_checker, variable_token_checker, subtraction_token_checker, sum_token_checker
-          ],
-          infix_token_checkers: [multiplicate_token_checker, sum_token_checker, subtraction_token_checker]
-        }.freeze
+        @checkers_by_role[currently_expected_token_type]
       end
 
       def raise_invalid_syntax_error
@@ -107,26 +92,6 @@ module SymDiffer
 
       def last_item_in_stack(stack)
         stack.last
-      end
-
-      def constant_token_checker
-        @constant_token_checker ||= Checkers::ConstantTokenChecker.new(@expression_factory)
-      end
-
-      def variable_token_checker
-        @variable_token_checker ||= Checkers::VariableTokenChecker.new(@expression_factory)
-      end
-
-      def multiplicate_token_checker
-        @multiplicate_token_checker ||= Checkers::MultiplicationTokenChecker.new(@expression_factory)
-      end
-
-      def sum_token_checker
-        @sum_token_checker ||= Checkers::SumTokenChecker.new(@expression_factory)
-      end
-
-      def subtraction_token_checker
-        @subtraction_token_checker ||= Checkers::SubtractionTokenChecker.new(@expression_factory)
       end
 
       def stack_item_value(stack_item)

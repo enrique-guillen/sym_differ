@@ -7,19 +7,41 @@ require "sym_differ/expression_factory"
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
+require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
+
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
     subject(:build) do
       described_class
-        .new(expression_factory, command_and_expression_stack_reducer)
+        .new(command_and_expression_stack_reducer, checkers_by_role)
         .build(tokens)
     end
-
-    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     let(:command_and_expression_stack_reducer) do
       SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new
     end
+
+    let(:checkers_by_role) do
+      {
+        prefix_token_checkers: [
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::VariableTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory)
+        ],
+        infix_token_checkers: [
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory)
+        ]
+      }.freeze
+    end
+
+    let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
     context "when the tokens list is 1" do
       let(:tokens) { [constant_token(1)] }
