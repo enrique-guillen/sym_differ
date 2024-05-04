@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::TokenExtractor do
       [
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new,
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new,
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new,
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::IdentifierTokenExtractor.new,
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
       ]
     end

@@ -7,7 +7,7 @@ module SymDiffer
     module Extractors
       # Scans the head of the expression text and extracts the token at the head of the expression text if it's a
       # variable name.
-      class VariableTokenExtractor
+      class IdentifierTokenExtractor
         def extract(expression_text)
           first_character_in_text = first_character_in_text(expression_text)
           return build_not_handled_response unless valid_variable_character?(first_character_in_text)

@@ -10,7 +10,7 @@ require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 require "sym_differ/expression_text_language_compiler/extractors/nil_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/operator_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/variable_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/variable_token_checker"
@@ -75,7 +75,7 @@ module SymDiffer
 
       def token_type_specific_extractors
         @token_type_specific_extractors ||= [
-          nil_token_extractor, operator_token_extractor, variable_token_extractor, constant_token_extractor
+          nil_token_extractor, operator_token_extractor, identifier_token_extractor, constant_token_extractor
         ].freeze
       end
 
@@ -96,8 +96,8 @@ module SymDiffer
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new
       end
 
-      def variable_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::VariableTokenExtractor.new
+      def identifier_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::IdentifierTokenExtractor.new
       end
 
       def constant_token_extractor
