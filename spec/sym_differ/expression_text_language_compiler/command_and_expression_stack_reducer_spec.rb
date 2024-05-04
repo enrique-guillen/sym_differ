@@ -6,7 +6,7 @@ require "sym_differ/expression_text_language_compiler/command_and_expression_sta
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer do
   describe "#reduce" do
     subject(:reduce) do
-      described_class.new.reduce(command_and_expression_stack)
+      described_class.new(3).reduce(command_and_expression_stack)
     end
 
     context "when the stack = [expression]" do

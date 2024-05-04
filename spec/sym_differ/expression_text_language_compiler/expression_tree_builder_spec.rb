@@ -22,7 +22,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     let(:command_and_expression_stack_reducer) do
-      SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new
+      SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new(3)
     end
 
     let(:checkers_by_role) do

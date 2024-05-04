@@ -5,8 +5,12 @@ module SymDiffer
     # Evaluates the unevaluated expression tree (represented as a series of commands that return subexpressions) in the
     # provided stack by repeatedly evaluating the tail end of the stack and accumulating the results.
     class CommandAndExpressionStackReducer
+      def initialize(highest_expression_precedence)
+        @highest_expression_precedence = highest_expression_precedence
+      end
+
       def reduce(command_and_expression_stack)
-        precedence = 3
+        precedence = @highest_expression_precedence
 
         command_and_expression_stack = shorten_stack_by_executing_unary_commands(command_and_expression_stack)
 

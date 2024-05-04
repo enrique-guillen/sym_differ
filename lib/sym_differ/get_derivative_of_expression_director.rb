@@ -5,6 +5,7 @@ require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/differentiation/differentiation_visitor"
 require "sym_differ/expression_reducer"
 require "sym_differ/inline_printing/printing_visitor"
+require "sym_differ/expression_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.

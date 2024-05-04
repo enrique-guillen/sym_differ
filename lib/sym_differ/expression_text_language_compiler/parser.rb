@@ -70,7 +70,7 @@ module SymDiffer
       end
 
       def command_and_expression_stack_reducer
-        CommandAndExpressionStackReducer.new
+        CommandAndExpressionStackReducer.new(3)
       end
 
       def token_type_specific_extractors
