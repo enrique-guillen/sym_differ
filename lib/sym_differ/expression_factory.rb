@@ -7,6 +7,7 @@ require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
 require "sym_differ/expressions/multiplicate_expression"
+require "sym_differ/expressions/sine_expression"
 
 module SymDiffer
   # Implements an interface that allows the Factory users instantiate expressions regardless of the implementation
@@ -38,6 +39,10 @@ module SymDiffer
 
     def create_multiplicate_expression(multiplicand, multiplier)
       Expressions::MultiplicateExpression.new(multiplicand, multiplier)
+    end
+
+    def create_sine_expression(angle_expression)
+      Expressions::SineExpression.new(angle_expression)
     end
   end
 end

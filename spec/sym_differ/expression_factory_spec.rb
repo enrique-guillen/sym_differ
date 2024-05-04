@@ -9,6 +9,7 @@ require "sym_differ/expressions/sum_expression"
 require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
+require "sym_differ/expressions/sine_expression"
 
 RSpec.describe SymDiffer::ExpressionFactory do
   describe "#create_constant_expression" do
@@ -90,6 +91,20 @@ RSpec.describe SymDiffer::ExpressionFactory do
       expect(create_multiplicate_expression)
         .to be_a_kind_of(SymDiffer::Expressions::MultiplicateExpression)
         .and have_attributes(multiplicand:, multiplier:)
+    end
+  end
+
+  describe "#create_sine_expression" do
+    subject(:create_sine_expression) do
+      described_class.new.create_sine_expression(angle_expression)
+    end
+
+    let(:angle_expression) { double(:angle_expression) }
+
+    it "returns a SineExpression" do
+      expect(create_sine_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::SineExpression)
+        .and have_attributes(angle_expression:)
     end
   end
 end
