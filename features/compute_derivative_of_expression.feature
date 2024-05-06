@@ -142,7 +142,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is derivative(sine(x))
+      Then the derivative expression is derivative(sine(x), x)
       Then (@wip) the derivative expression is cos(x)
 
     Scenario: The derivative of sine(2 * x), with respect to x, is requested.
