@@ -35,6 +35,8 @@ module SymDiffer
 
       def token_type_specific_checkers
         @token_type_specific_checkers = {
+          initial_token_checkers: [parens_token_checker, constant_token_checker, identifier_token_checker,
+                                   subtraction_token_checker, sum_token_checker],
           prefix_token_checkers: [parens_token_checker, constant_token_checker, identifier_token_checker,
                                   subtraction_token_checker, sum_token_checker],
           infix_token_checkers: [parens_token_checker, multiplication_token_checker, sum_token_checker,

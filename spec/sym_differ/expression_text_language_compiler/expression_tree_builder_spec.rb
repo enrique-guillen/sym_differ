@@ -30,6 +30,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     let(:checkers_by_role) do
       {
+        initial_token_checkers: [
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
+        ],
         prefix_token_checkers: [
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),

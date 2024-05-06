@@ -28,7 +28,7 @@ module SymDiffer
       end
 
       def calculate_evaluation_stack(tokens)
-        expected_token_type = :prefix_token_checkers
+        expected_token_type = :initial_token_checkers
         evaluation_stack = []
         base_precedence_value = 0
 
