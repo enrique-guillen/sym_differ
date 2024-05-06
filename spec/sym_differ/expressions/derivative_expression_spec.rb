@@ -53,4 +53,26 @@ RSpec.describe SymDiffer::Expressions::DerivativeExpression do
       it { is_expected.to be(false) }
     end
   end
+
+  describe "#accept" do
+    subject(:accept) { expression.accept(visitor) }
+
+    before do
+      allow(visitor).to receive(:visit_derivative_expression).with(expression).and_return(visited_expression)
+    end
+
+    let(:expression) { described_class.new(underived_expression, variable) }
+    let(:underived_expression) { double(:underived_expression) }
+    let(:variable) { double(:variable) }
+
+    let(:visitor) { double(:visitor) }
+    let(:visited_expression) { double(:visited_expression) }
+
+    it { is_expected.to eq(visited_expression) }
+
+    it "emits the corresponding call to the visitor" do
+      accept
+      expect(visitor).to have_received(:visit_derivative_expression).with(expression)
+    end
+  end
 end
