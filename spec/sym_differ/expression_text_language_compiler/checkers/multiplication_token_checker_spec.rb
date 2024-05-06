@@ -22,6 +22,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::Multiplicati
           stack_item: {
             item_type: :pending_command,
             precedence: 2,
+            min_argument_amount: 2,
+            max_argument_amount: 2,
             value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildMultiplicateExpressionCommand)
           }
         )

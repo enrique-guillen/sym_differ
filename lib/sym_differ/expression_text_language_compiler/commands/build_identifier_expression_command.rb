@@ -17,6 +17,8 @@ module SymDiffer
           create_sine_expression(angle_expression)
         end
 
+        attr_reader :identifier_name
+
         private
 
         def create_variable_expression(name)

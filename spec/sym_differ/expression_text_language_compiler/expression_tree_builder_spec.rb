@@ -12,6 +12,9 @@ require "sym_differ/expression_text_language_compiler/checkers/identifier_token_
 require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/parens_token_checker"
+
+require "sym_differ/expression_text_language_compiler/tokens/parens_token"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
@@ -22,7 +25,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     end
 
     let(:command_and_expression_stack_reducer) do
-      SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new(3)
+      SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer.new
     end
 
     let(:checkers_by_role) do
@@ -31,9 +34,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory)
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
         ],
         infix_token_checkers: [
+          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new,
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
           SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory)
@@ -216,9 +221,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
-    xcontext "when the tokens list is sine(x)" do
+    context "when the tokens list is sine(x)" do
       let(:tokens) do
-        [sine_token, open_parens_token, identifier_token("x"), close_parens_token]
+        [identifier_token("sine"), parens_token(:opening), identifier_token("x"), parens_token(:closing)]
       end
 
       it "returns a SineExpression" do
@@ -228,26 +233,25 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
-    xcontext "when the tokens list is sine(1 + sine(x))" do
+    context "when the tokens list is sine(1 + sine(x))" do
       let(:tokens) do
         [
           identifier_token("sine"), # 1
-          open_parens_token, # 1
+          parens_token(:opening), # 1
           constant_token(1), # 2
           operator_token("+"), # 2
           identifier_token("sine"), # 2
-          open_parens_token, # 2
-          variable_expression("x"), # 3
-          close_parens_token, # 2
-          close_parens_token # 1
+          parens_token(:opening), # 2
+          identifier_token("x"), # 3
+          parens_token(:closing), # 2
+          parens_token(:closing) # 1
         ]
       end
 
       it "returns a SineExpression" do
         expect(build).to be_same_as(
           sine_expression(
-            sum_expression(constant_expression(1), sine_expression(variable_expression("x"))),
-            variable_expression("x")
+            sum_expression(constant_expression(1), sine_expression(variable_expression("x")))
           )
         )
       end
@@ -263,6 +267,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     define_method(:operator_token) do |symbol|
       SymDiffer::ExpressionTextLanguageCompiler::Tokens::OperatorToken.new(symbol)
+    end
+
+    define_method(:parens_token) do |type|
+      SymDiffer::ExpressionTextLanguageCompiler::Tokens::ParensToken.new(type)
     end
   end
 end

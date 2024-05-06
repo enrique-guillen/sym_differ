@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
+require "sym_differ/expression_text_language_compiler/commands/build_identifier_expression_command"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -14,9 +15,9 @@ module SymDiffer
         def check(token)
           return not_handled_response unless variable_token?(token)
 
-          variable_expression_stack_item = build_expression_type_stack_item(build_variable_expression_from_token(token))
+          command_stack_item = build_command_type_stack_item(9, 0, 1, build_identifier_command(token))
 
-          handled_response(variable_expression_stack_item)
+          handled_response(command_stack_item)
         end
 
         private
@@ -29,16 +30,21 @@ module SymDiffer
           { handled: true, expression_location: :rightmost, stack_item: }
         end
 
-        def build_expression_type_stack_item(expression)
-          { item_type: :expression, precedence: 1, value: expression }
+        def build_command_type_stack_item(precedence, min_argument_amount, max_argument_amount, command)
+          { item_type: :pending_command,
+            precedence:,
+            min_argument_amount:,
+            max_argument_amount:,
+            value: command }
         end
 
         def variable_token?(token)
           token.is_a?(Tokens::IdentifierToken)
         end
 
-        def build_variable_expression_from_token(token)
-          @expression_factory.create_variable_expression(token.name)
+        def build_identifier_command(token)
+          SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildIdentifierExpressionCommand
+            .new(@expression_factory, token.name)
         end
       end
     end

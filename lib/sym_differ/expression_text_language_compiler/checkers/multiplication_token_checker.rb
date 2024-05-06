@@ -15,11 +15,12 @@ module SymDiffer
         def check(token)
           return build_not_handled_response unless multiplicate_token?(token)
 
-          multiplicate_expression_command = build_command_type_stack_item(
-            build_multiplicate_expression_command
-          )
+          multiplicate_expression_command = build_multiplicate_expression_command
 
-          build_handled_response(:infix, multiplicate_expression_command)
+          multiplicate_expression_command_stack_item =
+            build_command_type_stack_item(2, 2, 2, multiplicate_expression_command)
+
+          build_handled_response(:infix, multiplicate_expression_command_stack_item)
         end
 
         private
@@ -32,8 +33,8 @@ module SymDiffer
           { handled: true, expression_location:, stack_item: }
         end
 
-        def build_command_type_stack_item(value)
-          { item_type: :pending_command, precedence: 2, value: }
+        def build_command_type_stack_item(precedence, min_argument_amount, max_argument_amount, value)
+          { item_type: :pending_command, precedence:, min_argument_amount:, max_argument_amount:, value: }
         end
 
         def multiplicate_token?(token)

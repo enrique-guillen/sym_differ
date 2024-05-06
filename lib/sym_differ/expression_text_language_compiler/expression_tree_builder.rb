@@ -7,8 +7,8 @@ module SymDiffer
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
-      def initialize(command_and_expression_stack_reducer, checkers_by_role)
-        @command_and_expression_stack_reducer = command_and_expression_stack_reducer
+      def initialize(evaluation_stack_reducer, checkers_by_role)
+        @evaluation_stack_reducer = evaluation_stack_reducer
         @checkers_by_role = checkers_by_role
       end
 
@@ -20,41 +20,72 @@ module SymDiffer
       private
 
       def convert_tokens_into_expression(tokens)
-        command_and_expression_stack = calculate_command_and_expression_stack_plus_token_type_for_tokens(tokens)
+        evaluation_stack = calculate_evaluation_stack(tokens)
 
-        command_and_expression_stack = reduce_tail_end_of_stack_while_evaluatable(command_and_expression_stack)
+        evaluation_stack = reduce_tail_end_of_stack_while_evaluatable(evaluation_stack)
 
-        value_of_last_stack_item(command_and_expression_stack)
+        value_of_last_stack_item(evaluation_stack)
       end
 
-      def calculate_command_and_expression_stack_plus_token_type_for_tokens(tokens)
+      def calculate_evaluation_stack(tokens)
         expected_token_type = :prefix_token_checkers
-        command_and_expression_stack = []
+        evaluation_stack = []
+        base_precedence_value = 0
 
         tokens.each do |t|
-          command_and_expression_stack, expected_token_type =
-            update_command_and_expression_stack_based_on_token(t, command_and_expression_stack, expected_token_type)
+          evaluation_stack, expected_token_type, base_precedence_value =
+            update_evaluation_stack_based_on_token(t, evaluation_stack, expected_token_type, base_precedence_value)
         end
 
         raise_invalid_syntax_error if expected_token_type == :prefix_token_checkers
 
-        command_and_expression_stack
+        evaluation_stack
       end
 
-      def update_command_and_expression_stack_based_on_token(token, command_and_expression_stack, expected_token_type)
+      def update_evaluation_stack_based_on_token(token, evaluation_stack, expected_token_type, base_precedence_value)
         stack_item_for_token = check_token_stack_item(token, expected_token_type)
 
-        command_and_expression_stack =
-          push_item_into_stack(stack_item_for_token[:stack_item], command_and_expression_stack)
+        new_evaluation_stack =
+          calculate_new_evaluation_stack_from_stack_item(stack_item_for_token, evaluation_stack, base_precedence_value)
 
-        expected_token_type =
-          stack_item_for_token[:expression_location] == :rightmost ? :infix_token_checkers : :prefix_token_checkers
+        new_expected_token_type = calculate_new_expected_token_type_from_stack_item(stack_item_for_token)
 
-        [command_and_expression_stack, expected_token_type]
+        new_base_precedence_value =
+          calculate_new_base_precedence_value_from_stack_item(stack_item_for_token, base_precedence_value)
+
+        [new_evaluation_stack, new_expected_token_type, new_base_precedence_value]
       end
 
-      def value_of_last_stack_item(command_and_expression_stack)
-        stack_item_value(last_item_in_stack(command_and_expression_stack))
+      def calculate_new_evaluation_stack_from_stack_item(stack_item, evaluation_stack, base_precedence_value)
+        return evaluation_stack if stack_item[:stack_item][:item_type] == :precedence_change
+
+        current_precedence_value = base_precedence_value + stack_item[:stack_item][:precedence]
+
+        push_item_into_stack(stack_item[:stack_item].merge(precedence: current_precedence_value), evaluation_stack)
+      end
+
+      def calculate_new_expected_token_type_from_stack_item(stack_item)
+        if stack_item[:stack_item][:item_type] == :precedence_change &&
+           stack_item[:stack_item][:new_precedence_change].negative?
+          return :infix_token_checkers
+        end
+
+        return :prefix_token_checkers if stack_item[:stack_item][:item_type] == :precedence_change
+
+        stack_item[:expression_location] == :rightmost ? :infix_token_checkers : :prefix_token_checkers
+      end
+
+      def calculate_new_base_precedence_value_from_stack_item(stack_item, base_precedence_value)
+        if stack_item[:stack_item][:item_type] == :precedence_change
+          base_precedence_value += stack_item[:stack_item][:new_precedence_change]
+          return base_precedence_value
+        end
+
+        base_precedence_value
+      end
+
+      def value_of_last_stack_item(evaluation_stack)
+        stack_item_value(last_item_in_stack(evaluation_stack))
       end
 
       def check_token_stack_item(token, currently_expected_token_type)
@@ -75,7 +106,7 @@ module SymDiffer
       end
 
       def reduce_tail_end_of_stack_while_evaluatable(current_stack)
-        @command_and_expression_stack_reducer.reduce(current_stack)
+        @evaluation_stack_reducer.reduce(current_stack)
       end
 
       def get_checkers_for_currently_expected_token_type(currently_expected_token_type)

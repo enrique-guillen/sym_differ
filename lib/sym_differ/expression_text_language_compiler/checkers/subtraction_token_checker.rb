@@ -15,7 +15,8 @@ module SymDiffer
         def check(token)
           return not_handled_response unless subtraction_token?(token)
 
-          subtract_expression_command = build_command_type_stack_item(build_subtract_expression_command)
+          command = build_subtract_expression_command
+          subtract_expression_command = build_command_type_stack_item(1, 1, 2, command)
           handled_response(subtract_expression_command)
         end
 
@@ -29,8 +30,8 @@ module SymDiffer
           { handled: true, expression_location: :leftmost_or_infix, stack_item: }
         end
 
-        def build_command_type_stack_item(command)
-          { item_type: :pending_command, precedence: 1, value: command }
+        def build_command_type_stack_item(precedence, min_argument_amount, max_argument_amount, command)
+          { item_type: :pending_command, precedence:, min_argument_amount:, max_argument_amount:, value: command }
         end
 
         def subtraction_token?(token)

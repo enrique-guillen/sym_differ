@@ -14,7 +14,9 @@ module SymDiffer
         def check(token)
           return not_handled_response unless constant_token?(token)
 
-          constant_expression_stack_item = build_expression_type_stack_item(build_constant_expression_from_token(token))
+          constant_expression = build_constant_expression_from_token(token)
+          constant_expression_stack_item = build_expression_type_stack_item(constant_expression)
+
           handled_response(constant_expression_stack_item)
         end
 
