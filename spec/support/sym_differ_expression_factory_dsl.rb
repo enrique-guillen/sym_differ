@@ -42,6 +42,10 @@ module Support
       expression_factory.create_sine_expression(angle_expression)
     end
 
+    def cosine_expression(angle_expression)
+      expression_factory.create_cosine_expression(angle_expression)
+    end
+
     def derivative_expression(underived_expression, variable)
       expression_factory.create_derivative_expression(underived_expression, variable)
     end
