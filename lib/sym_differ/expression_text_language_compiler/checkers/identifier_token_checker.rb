@@ -18,7 +18,7 @@ module SymDiffer
           identifier_command = build_identifier_command(token)
           command_stack_item = build_command_type_stack_item(4, 0, 1, identifier_command)
 
-          handled_response(:infix_token_checkers, command_stack_item)
+          handled_response(:post_identifier_token_checkers, command_stack_item)
         end
 
         private

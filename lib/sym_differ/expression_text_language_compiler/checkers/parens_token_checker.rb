@@ -14,7 +14,7 @@ module SymDiffer
 
           stack_item = build_precedence_change_stack_item(new_precedence_change)
 
-          new_next_expected_token_type = token.type == :opening ? :prefix_token_checkers : :infix_token_checkers
+          new_next_expected_token_type = token.type == :opening ? :post_opening_parenthesis : :post_closing_parenthesis
 
           build_handled_response(new_next_expected_token_type, stack_item)
         end

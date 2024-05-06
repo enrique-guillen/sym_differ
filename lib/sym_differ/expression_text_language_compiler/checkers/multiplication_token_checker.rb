@@ -20,7 +20,7 @@ module SymDiffer
           multiplicate_expression_command_stack_item =
             build_command_type_stack_item(3, 2, 2, multiplicate_expression_command)
 
-          build_handled_response(:prefix_token_checkers, multiplicate_expression_command_stack_item)
+          build_handled_response(:post_multiplication_token_checkers, multiplicate_expression_command_stack_item)
         end
 
         private

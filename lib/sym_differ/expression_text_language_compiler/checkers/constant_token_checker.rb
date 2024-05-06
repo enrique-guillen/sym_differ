@@ -17,7 +17,7 @@ module SymDiffer
           constant_expression = build_constant_expression_from_token(token)
           constant_expression_stack_item = build_expression_type_stack_item(constant_expression)
 
-          handled_response(:infix_token_checkers, constant_expression_stack_item)
+          handled_response(:post_constant_token_checkers, constant_expression_stack_item)
         end
 
         private

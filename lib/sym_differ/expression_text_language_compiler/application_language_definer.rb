@@ -35,12 +35,54 @@ module SymDiffer
 
       def token_type_specific_checkers
         @token_type_specific_checkers = {
-          initial_token_checkers: [parens_token_checker, constant_token_checker, identifier_token_checker,
-                                   subtraction_token_checker, sum_token_checker],
-          prefix_token_checkers: [parens_token_checker, constant_token_checker, identifier_token_checker,
-                                  subtraction_token_checker, sum_token_checker],
-          infix_token_checkers: [parens_token_checker, multiplication_token_checker, sum_token_checker,
-                                 subtraction_token_checker]
+          initial_token_checkers: [
+            constant_token_checker,
+            identifier_token_checker,
+            subtraction_token_checker,
+            sum_token_checker
+          ],
+          post_constant_token_checkers: [
+            subtraction_token_checker,
+            sum_token_checker,
+            multiplication_token_checker,
+            parens_token_checker
+          ],
+          post_identifier_token_checkers: [
+            subtraction_token_checker,
+            sum_token_checker,
+            multiplication_token_checker,
+            parens_token_checker
+          ],
+          post_multiplication_token_checkers: [
+            constant_token_checker,
+            identifier_token_checker,
+            sum_token_checker,
+            subtraction_token_checker
+          ],
+          post_sum_token_checkers: [
+            constant_token_checker,
+            identifier_token_checker,
+            subtraction_token_checker,
+            sum_token_checker
+          ],
+          post_subtraction_token_checkers: [
+            constant_token_checker,
+            identifier_token_checker,
+            subtraction_token_checker,
+            sum_token_checker
+          ],
+          post_opening_parenthesis: [
+            identifier_token_checker,
+            constant_token_checker,
+            subtraction_token_checker,
+            sum_token_checker
+          ],
+          post_closing_parenthesis: [
+            subtraction_token_checker,
+            sum_token_checker,
+            multiplication_token_checker,
+            parens_token_checker
+          ]
         }.freeze
       end
 

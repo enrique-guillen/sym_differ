@@ -18,7 +18,7 @@ module SymDiffer
           command = build_sum_expression_command
           sum_expression_command = build_command_type_stack_item(1, 1, 2, command)
 
-          handled_response(:prefix_token_checkers, sum_expression_command)
+          handled_response(:post_sum_token_checkers, sum_expression_command)
         end
 
         private

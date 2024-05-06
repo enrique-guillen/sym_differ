@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTo
       it "returns an expression and sets expression location as rightmost" do
         expect(check).to include(
           successfully_handled_response(
-            :infix_token_checkers,
+            :post_identifier_token_checkers,
             command_stack_item(
               4,
               (0..1),

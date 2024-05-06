@@ -37,7 +37,8 @@ module SymDiffer
             update_evaluation_stack_based_on_token(t, evaluation_stack, expected_token_type, base_precedence_value)
         end
 
-        raise_invalid_syntax_error if expected_token_type == :prefix_token_checkers
+        raise_invalid_syntax_error if %i[post_sum_token_checkers post_subtraction_token_checkers post_opening_parenthesis].include?(expected_token_type)
+        raise_invalid_syntax_error unless base_precedence_value.zero?
 
         evaluation_stack
       end

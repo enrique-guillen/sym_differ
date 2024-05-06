@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChec
       it "returns an expression and sets expression location as leftmost_or_infix" do
         expect(check).to include(
           successfully_handled_response(
-            :prefix_token_checkers,
+            :post_sum_token_checkers,
             command_stack_item(
               1, (1..2), a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSumExpressionCommand)
             )

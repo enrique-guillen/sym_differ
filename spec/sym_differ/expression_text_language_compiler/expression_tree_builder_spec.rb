@@ -31,29 +31,81 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
     let(:checkers_by_role) do
       {
         initial_token_checkers: [
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
+          constant_token_checker,
+          identifier_token_checker,
+          subtraction_token_checker,
+          sum_token_checker
         ],
-        prefix_token_checkers: [
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
+        post_constant_token_checkers: [
+          subtraction_token_checker,
+          sum_token_checker,
+          multiplication_token_checker,
+          parens_token_checker
         ],
-        infix_token_checkers: [
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new,
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory),
-          SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory)
+        post_identifier_token_checkers: [
+          subtraction_token_checker,
+          sum_token_checker,
+          multiplication_token_checker,
+          parens_token_checker
+        ],
+        post_multiplication_token_checkers: [
+          constant_token_checker,
+          identifier_token_checker,
+          sum_token_checker,
+          subtraction_token_checker
+        ],
+        post_sum_token_checkers: [
+          constant_token_checker,
+          identifier_token_checker,
+          subtraction_token_checker,
+          sum_token_checker
+        ],
+        post_subtraction_token_checkers: [
+          constant_token_checker,
+          identifier_token_checker,
+          subtraction_token_checker,
+          sum_token_checker
+        ],
+        post_opening_parenthesis: [
+          identifier_token_checker,
+          constant_token_checker,
+          subtraction_token_checker,
+          sum_token_checker
+        ],
+        post_closing_parenthesis: [
+          subtraction_token_checker,
+          sum_token_checker,
+          multiplication_token_checker,
+          parens_token_checker
         ]
       }.freeze
     end
 
     let(:expression_factory) { SymDiffer::ExpressionFactory.new }
+
+    let(:constant_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantTokenChecker.new(expression_factory)
+    end
+
+    let(:identifier_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker.new(expression_factory)
+    end
+
+    let(:sum_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory)
+    end
+
+    let(:subtraction_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory)
+    end
+
+    let(:multiplication_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker.new(expression_factory)
+    end
+
+    let(:parens_token_checker) do
+      SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
+    end
 
     context "when the tokens list is 1" do
       let(:tokens) { [constant_token(1)] }
@@ -261,6 +313,16 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
             sum_expression(constant_expression(1), sine_expression(variable_expression("x")))
           )
         )
+      end
+    end
+
+    context "when the tokens list is sine)" do
+      let(:tokens) do
+        [identifier_token("sine"), parens_token(:closing)]
+      end
+
+      it "raises an invalid syntax error" do
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
       end
     end
 

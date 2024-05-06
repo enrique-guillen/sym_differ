@@ -95,7 +95,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
 
-    xcontext "when the expression text to parse is ')'" do
+    context "when the expression text to parse is ')'" do
       let(:expression_text) { ")" }
 
       it "raises an error mentioning the syntax error" do
@@ -106,7 +106,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
 
-    xcontext "when the expression text to parse is 'sine)'" do
+    context "when the expression text to parse is 'sine)'" do
       let(:expression_text) { "sine)" }
 
       it "raises an error mentioning the syntax error" do

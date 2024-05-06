@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantToke
       it "returns an expression and sets expression location as rightmost" do
         expect(check).to include(
           successfully_handled_response(
-            :infix_token_checkers,
+            :post_constant_token_checkers,
             expression_stack_item(1, same_expression_as(constant_expression(1)))
           )
         )

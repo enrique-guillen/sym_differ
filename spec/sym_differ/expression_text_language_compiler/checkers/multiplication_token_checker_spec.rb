@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::Multiplicati
       it "returns an expression and sets expression location as infix" do
         expect(check).to include(
           successfully_handled_response(
-            :prefix_token_checkers,
+            :post_multiplication_token_checkers,
             command_stack_item(
               3,
               (2..2),
