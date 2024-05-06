@@ -36,6 +36,18 @@ detectors:
     # not be the calling method.
     enabled: false
 
+  LongParameterList:
+    exclude:
+      # We decided to take on the tech debt incurred by the 4 parameters of update_evaluation_stack_based_on_token and
+      # it should be refactored.
+      - "SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder#update_evaluation_stack_based_on_token"
+      # We decided to take on the tech debt incurred by the 4 parameters of build_command_type_stack_item and it should
+      # be refactored.
+      - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker#build_command_type_stack_item"
+      - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker#build_command_type_stack_item"
+      - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker#build_command_type_stack_item"
+      - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker#build_command_type_stack_item"
+
   NilCheck:
     # Use of Nil and nil checks can be justified, although avoiding it is an improvement. Adding a justification for
     # each usage is not necessary.
