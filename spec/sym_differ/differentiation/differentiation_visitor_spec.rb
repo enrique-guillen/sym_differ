@@ -132,4 +132,19 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
       )
     end
   end
+
+  describe "#visit_abstract_expression" do
+    subject(:visit_abstract_expression) do
+      visitor.visit_abstract_expression(expression)
+    end
+
+    let(:expression) { variable_expression("x") }
+    let(:variable) { "x" }
+
+    it "returns the result wrapped in an unevaluated derivative expression" do
+      expect(visit_abstract_expression).to be_same_as(
+        derivative_expression(expression, variable_expression(variable))
+      )
+    end
+  end
 end

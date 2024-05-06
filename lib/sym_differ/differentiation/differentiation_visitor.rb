@@ -45,6 +45,10 @@ module SymDiffer
         multiplicate_expression_deriver.derive(expression)
       end
 
+      def visit_abstract_expression(expression)
+        create_derivative_expression(expression, create_variable_expression(@variable))
+      end
+
       private
 
       def constant_expression_deriver
@@ -73,6 +77,14 @@ module SymDiffer
 
       def multiplicate_expression_deriver
         @multiplicate_expression_deriver ||= MultiplicateExpressionDeriver.new(self, @expression_factory)
+      end
+
+      def create_derivative_expression(expression, variable)
+        @expression_factory.create_derivative_expression(expression, variable)
+      end
+
+      def create_variable_expression(variable)
+        @expression_factory.create_variable_expression(variable)
       end
     end
   end
