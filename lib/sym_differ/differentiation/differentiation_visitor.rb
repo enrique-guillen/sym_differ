@@ -45,6 +45,10 @@ module SymDiffer
         multiplicate_expression_deriver.derive(expression)
       end
 
+      def visit_sine_expression(expression)
+        visit_abstract_expression(expression)
+      end
+
       def visit_abstract_expression(expression)
         create_derivative_expression(expression, create_variable_expression(@variable))
       end
