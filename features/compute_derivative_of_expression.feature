@@ -133,3 +133,30 @@ Feature: Compute the symbolic derivative of a given expression.
       When the expression is computed
 
       Then the derivative expression is 0
+
+  Rule: The derivative of f(x) = sin(x) is f'(x) = cos(x), and the chain rule is applied as well.
+
+    Scenario: The derivative of sin(x), with respect to x, is requested.
+      Given the expression to differentiate is sine(x)
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then (@wip) the derivative expression is derivative(sine(x))
+      Then (@wip) the derivative expression is cos(x)
+
+    Scenario: The derivative of sine(2 * x), with respect to x, is requested.
+      Given the expression to differentiate is sine(2 * x)
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then (@wip) the derivative expression is 2 * sine(2 * x)
+
+    Scenario: The derivative of sine(x * x), with respect to x, is requested.
+      Given the expression to differentiate is sine(x * x)
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then (@wip) the derivative expression is (cos(x * x)) * (x + x)
