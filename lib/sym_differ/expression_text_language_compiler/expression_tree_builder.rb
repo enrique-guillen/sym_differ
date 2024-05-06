@@ -77,11 +77,10 @@ module SymDiffer
 
       def calculate_new_base_precedence_value_from_stack_item(stack_item, base_precedence_value)
         if stack_item[:stack_item][:item_type] == :precedence_change
-          base_precedence_value += stack_item[:stack_item][:new_precedence_change]
-          return base_precedence_value
+          base_precedence_value + stack_item[:stack_item][:new_precedence_change]
+        else
+          base_precedence_value
         end
-
-        base_precedence_value
       end
 
       def value_of_last_stack_item(evaluation_stack)

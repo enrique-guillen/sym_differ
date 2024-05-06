@@ -18,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensToke
         expect(extract).to include(
           handled: true,
           token: an_object_having_attributes(type: :opening),
-          expression_text: an_object_having_attributes(text: "")
+          next_expression_text: an_object_having_attributes(text: "")
         )
       end
     end
@@ -30,7 +30,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensToke
         expect(extract).to include(
           handled: true,
           token: an_object_having_attributes(type: :closing),
-          expression_text: an_object_having_attributes(text: "")
+          next_expression_text: an_object_having_attributes(text: "")
         )
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensToke
         expect(extract).to include(
           handled: true,
           token: an_object_having_attributes(type: :opening),
-          expression_text: an_object_having_attributes(text: "x")
+          next_expression_text: an_object_having_attributes(text: "x")
         )
       end
     end

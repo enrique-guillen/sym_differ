@@ -68,6 +68,21 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is '1 + sin(x)'" do
+      let(:expression_text) { "1 + sin(x)" }
+
+      it "has the expected structure" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          sum_expression(
+            constant_expression(1),
+            sine_expression(variable_expression("x"))
+          )
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do

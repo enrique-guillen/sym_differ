@@ -36,11 +36,11 @@ module SymDiffer
           { handled: false }
         end
 
-        def build_handled_response(token, expression_text)
+        def build_handled_response(token, next_expression_text)
           {
             handled: true,
             token:,
-            expression_text:
+            next_expression_text:
           }
         end
 

@@ -75,17 +75,31 @@ module SymDiffer
 
       def token_type_specific_extractors
         @token_type_specific_extractors ||= [
-          nil_token_extractor, operator_token_extractor, identifier_token_extractor, constant_token_extractor
+          nil_token_extractor, operator_token_extractor, identifier_token_extractor, constant_token_extractor,
+          parens_token_extractor
         ].freeze
       end
 
       def token_type_specific_checkers
         @token_type_specific_checkers = {
           prefix_token_checkers: [
-            constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker
+            parens_token_checker,
+            constant_token_checker,
+            identifier_token_checker,
+            subtraction_token_checker,
+            sum_token_checker
           ],
-          infix_token_checkers: [multiplication_token_checker, sum_token_checker, subtraction_token_checker]
+          infix_token_checkers: [
+            parens_token_checker,
+            multiplication_token_checker,
+            sum_token_checker,
+            subtraction_token_checker
+          ]
         }.freeze
+      end
+
+      def parens_token_extractor
+        SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensTokenExtractor.new
       end
 
       def nil_token_extractor
@@ -102,6 +116,10 @@ module SymDiffer
 
       def constant_token_extractor
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
+      end
+
+      def parens_token_checker
+        @parens_token_checker ||= SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
       end
 
       def constant_token_checker
