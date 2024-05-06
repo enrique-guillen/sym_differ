@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents the subtraction of two nested expressions.
-    class SubtractExpression
+    class SubtractExpression < Expression
       def initialize(minuend, subtrahend)
         @minuend = minuend
         @subtrahend = subtrahend
+        super()
       end
 
       attr_reader :minuend, :subtrahend

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression representing the trigonometrical Sine function applied to the nested angle expression.
-    class SineExpression
+    class SineExpression < Expression
       def initialize(angle_expression)
         @angle_expression = angle_expression
+        super()
       end
 
       attr_reader :angle_expression

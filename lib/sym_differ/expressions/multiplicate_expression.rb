@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression representing the multiplication of the two sub expressions.
-    class MultiplicateExpression
+    class MultiplicateExpression < Expression
       def initialize(multiplicand, multiplier)
         @multiplicand = multiplicand
         @multiplier = multiplier
+        super()
       end
 
       attr_reader :multiplicand, :multiplier

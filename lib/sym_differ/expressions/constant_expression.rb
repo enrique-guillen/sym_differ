@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression representing a fixed value.
-    class ConstantExpression
+    class ConstantExpression < Expression
       def initialize(value)
         @value = value
+        super()
       end
 
       attr_reader :value

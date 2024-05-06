@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression whose value is the negative value of the nested expression.
-    class NegateExpression
+    class NegateExpression < Expression
       def initialize(negated_expression)
         @negated_expression = negated_expression
+        super()
       end
 
       attr_reader :negated_expression

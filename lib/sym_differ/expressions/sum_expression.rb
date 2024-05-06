@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents the sum of two nested expressions.
-    class SumExpression
+    class SumExpression < Expression
       def initialize(expression_a, expression_b)
         @expression_a = expression_a
         @expression_b = expression_b
+        super()
       end
 
       attr_reader :expression_a, :expression_b

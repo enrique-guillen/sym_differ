@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression with a variable value.
-    class VariableExpression
+    class VariableExpression < Expression
       def initialize(name)
         @name = name
+        super()
       end
 
       attr_reader :name

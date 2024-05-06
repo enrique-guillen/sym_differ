@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "sym_differ/expressions/expression"
+
 module SymDiffer
   module Expressions
     # Represents an expression whose value is the nested expression (summand).
-    class PositiveExpression
+    class PositiveExpression < Expression
       def initialize(summand)
         @summand = summand
+        super()
       end
 
       attr_reader :summand
