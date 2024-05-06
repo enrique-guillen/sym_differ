@@ -35,54 +35,14 @@ module SymDiffer
 
       def token_type_specific_checkers
         @token_type_specific_checkers = {
-          initial_token_checkers: [
-            constant_token_checker,
-            identifier_token_checker,
-            subtraction_token_checker,
-            sum_token_checker
-          ],
-          post_constant_token_checkers: [
-            subtraction_token_checker,
-            sum_token_checker,
-            multiplication_token_checker,
-            parens_token_checker
-          ],
-          post_identifier_token_checkers: [
-            subtraction_token_checker,
-            sum_token_checker,
-            multiplication_token_checker,
-            parens_token_checker
-          ],
-          post_multiplication_token_checkers: [
-            constant_token_checker,
-            identifier_token_checker,
-            sum_token_checker,
-            subtraction_token_checker
-          ],
-          post_sum_token_checkers: [
-            constant_token_checker,
-            identifier_token_checker,
-            subtraction_token_checker,
-            sum_token_checker
-          ],
-          post_subtraction_token_checkers: [
-            constant_token_checker,
-            identifier_token_checker,
-            subtraction_token_checker,
-            sum_token_checker
-          ],
-          post_opening_parenthesis: [
-            identifier_token_checker,
-            constant_token_checker,
-            subtraction_token_checker,
-            sum_token_checker
-          ],
-          post_closing_parenthesis: [
-            subtraction_token_checker,
-            sum_token_checker,
-            multiplication_token_checker,
-            parens_token_checker
-          ]
+          initial_token_checkers:,
+          post_constant_token_checkers:,
+          post_identifier_token_checkers:,
+          post_multiplication_token_checkers:,
+          post_sum_token_checkers:,
+          post_subtraction_token_checkers:,
+          post_opening_parenthesis: post_opening_parenthesis_checkers,
+          post_closing_parenthesis: post_closing_parenthesis_checkers
         }.freeze
       end
 
@@ -91,6 +51,38 @@ module SymDiffer
       end
 
       private
+
+      def initial_token_checkers
+        [constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker]
+      end
+
+      def post_constant_token_checkers
+        [subtraction_token_checker, sum_token_checker, multiplication_token_checker, parens_token_checker]
+      end
+
+      def post_identifier_token_checkers
+        [subtraction_token_checker, sum_token_checker, multiplication_token_checker, parens_token_checker]
+      end
+
+      def post_multiplication_token_checkers
+        [constant_token_checker, identifier_token_checker, sum_token_checker, subtraction_token_checker]
+      end
+
+      def post_sum_token_checkers
+        [constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker]
+      end
+
+      def post_subtraction_token_checkers
+        [constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker]
+      end
+
+      def post_opening_parenthesis_checkers
+        [identifier_token_checker, constant_token_checker, subtraction_token_checker, sum_token_checker]
+      end
+
+      def post_closing_parenthesis_checkers
+        [subtraction_token_checker, sum_token_checker, multiplication_token_checker, parens_token_checker]
+      end
 
       def parens_token_extractor
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensTokenExtractor.new
