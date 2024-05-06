@@ -7,9 +7,10 @@ module SymDiffer
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
-      def initialize(evaluation_stack_reducer, checkers_by_role)
+      def initialize(evaluation_stack_reducer, checkers_by_role, invalid_expected_token_type_end_states)
         @evaluation_stack_reducer = evaluation_stack_reducer
         @checkers_by_role = checkers_by_role
+        @invalid_expected_token_type_end_states = invalid_expected_token_type_end_states
       end
 
       def build(tokens)
@@ -37,7 +38,7 @@ module SymDiffer
             update_evaluation_stack_based_on_token(t, evaluation_stack, expected_token_type, base_precedence_value)
         end
 
-        raise_invalid_syntax_error if %i[post_sum_token_checkers post_subtraction_token_checkers post_opening_parenthesis].include?(expected_token_type)
+        raise_invalid_syntax_error if @invalid_expected_token_type_end_states.include?(expected_token_type)
         raise_invalid_syntax_error unless base_precedence_value.zero?
 
         evaluation_stack

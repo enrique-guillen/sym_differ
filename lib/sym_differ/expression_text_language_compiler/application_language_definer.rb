@@ -86,6 +86,10 @@ module SymDiffer
         }.freeze
       end
 
+      def invalid_expected_token_type_end_states
+        %i[post_sum_token_checkers post_subtraction_token_checkers post_opening_parenthesis]
+      end
+
       private
 
       def parens_token_extractor

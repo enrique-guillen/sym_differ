@@ -20,7 +20,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
   describe "#build" do
     subject(:build) do
       described_class
-        .new(command_and_expression_stack_reducer, checkers_by_role)
+        .new(command_and_expression_stack_reducer,
+             checkers_by_role,
+             %i[post_sum_token_checkers post_subtraction_token_checkers post_opening_parenthesis])
         .build(tokens)
     end
 
