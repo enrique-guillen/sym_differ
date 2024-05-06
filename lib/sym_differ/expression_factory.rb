@@ -8,6 +8,7 @@ require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
 require "sym_differ/expressions/multiplicate_expression"
 require "sym_differ/expressions/sine_expression"
+require "sym_differ/expressions/cosine_expression"
 require "sym_differ/expressions/derivative_expression"
 
 module SymDiffer
@@ -44,6 +45,10 @@ module SymDiffer
 
     def create_sine_expression(angle_expression)
       Expressions::SineExpression.new(angle_expression)
+    end
+
+    def create_cosine_expression(angle_expression)
+      Expressions::CosineExpression.new(angle_expression)
     end
 
     def create_derivative_expression(underived_expression, variable)

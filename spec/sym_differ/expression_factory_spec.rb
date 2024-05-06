@@ -10,6 +10,7 @@ require "sym_differ/expressions/subtract_expression"
 require "sym_differ/expressions/negate_expression"
 require "sym_differ/expressions/positive_expression"
 require "sym_differ/expressions/sine_expression"
+require "sym_differ/expressions/cosine_expression"
 require "sym_differ/expressions/derivative_expression"
 
 RSpec.describe SymDiffer::ExpressionFactory do
@@ -105,6 +106,20 @@ RSpec.describe SymDiffer::ExpressionFactory do
     it "returns a SineExpression" do
       expect(create_sine_expression)
         .to be_a_kind_of(SymDiffer::Expressions::SineExpression)
+        .and have_attributes(angle_expression:)
+    end
+  end
+
+  describe "#create_cosine_expression" do
+    subject(:create_cosine_expression) do
+      described_class.new.create_cosine_expression(angle_expression)
+    end
+
+    let(:angle_expression) { double(:angle_expression) }
+
+    it "returns a SineExpression" do
+      expect(create_cosine_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::CosineExpression)
         .and have_attributes(angle_expression:)
     end
   end
