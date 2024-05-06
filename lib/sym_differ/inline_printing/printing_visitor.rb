@@ -63,6 +63,19 @@ module SymDiffer
         join_with_asterisk(stringified_multiplicand, stringified_multiplier)
       end
 
+      def visit_derivative_expression(expression)
+        stringified_underived_expression = stringify_expression(expression.underived_expression)
+        stringified_variable_expression = stringify_expression(expression.variable)
+
+        join_function_name_and_arguments(
+          "derivative", join_with_commas(stringified_underived_expression, stringified_variable_expression)
+        )
+      end
+
+      def visit_sine_expression(expression)
+        join_function_name_and_arguments("sine", stringify_expression(expression.angle_expression))
+      end
+
       private
 
       def prefix_with_dash(expression)
@@ -83,6 +96,14 @@ module SymDiffer
 
       def join_with_asterisk(expression_a, expression_b)
         "#{expression_a} * #{expression_b}"
+      end
+
+      def join_function_name_and_arguments(function_name, arguments)
+        "#{function_name}(#{arguments})"
+      end
+
+      def join_with_commas(*argument_list)
+        argument_list.join(", ")
       end
 
       def stringify_expression(expression, visitor: self)

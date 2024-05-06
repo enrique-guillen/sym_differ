@@ -263,4 +263,35 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
       it { is_expected.to eq("multiplicand * multiplier") }
     end
   end
+
+  describe "#visit_derivative_expression" do
+    subject(:visit_derivative_expression) do
+      printing_visitor.visit_derivative_expression(expression)
+    end
+
+    before { allow(underived_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+
+    let(:printing_visitor) { described_class.new }
+    let(:expression) { derivative_expression(underived_expression, variable) }
+
+    let(:underived_expression) { double(:underived_expression) }
+    let(:variable) { variable_expression("var") }
+
+    it { is_expected.to eq("derivative(exp, var)") }
+  end
+
+  describe "#visit_sine_expression" do
+    subject(:visit_sine_expression) do
+      printing_visitor.visit_sine_expression(expression)
+    end
+
+    before { allow(angle_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+
+    let(:printing_visitor) { described_class.new }
+    let(:expression) { sine_expression(angle_expression) }
+
+    let(:angle_expression) { double(:underived_expression) }
+
+    it { is_expected.to eq("sine(exp)") }
+  end
 end
