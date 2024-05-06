@@ -294,4 +294,19 @@ RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
 
     it { is_expected.to eq("sine(exp)") }
   end
+
+  describe "#visit_cosine_expression" do
+    subject(:visit_cosine_expression) do
+      printing_visitor.visit_cosine_expression(expression)
+    end
+
+    before { allow(angle_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+
+    let(:printing_visitor) { described_class.new }
+    let(:expression) { cosine_expression(angle_expression) }
+
+    let(:angle_expression) { double(:underived_expression) }
+
+    it { is_expected.to eq("cosine(exp)") }
+  end
 end

@@ -76,6 +76,10 @@ module SymDiffer
         join_function_name_and_arguments("sine", stringify_expression(expression.angle_expression))
       end
 
+      def visit_cosine_expression(expression)
+        join_function_name_and_arguments("cosine", stringify_expression(expression.angle_expression))
+      end
+
       private
 
       def prefix_with_dash(expression)
