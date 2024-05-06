@@ -7,6 +7,7 @@ require "sym_differ/differentiation/subtract_expression_deriver"
 require "sym_differ/differentiation/negate_expression_deriver"
 require "sym_differ/differentiation/positive_expression_deriver"
 require "sym_differ/differentiation/multiplicate_expression_deriver"
+require "sym_differ/differentiation/sine_expression_deriver"
 
 module SymDiffer
   module Differentiation
@@ -46,7 +47,7 @@ module SymDiffer
       end
 
       def visit_sine_expression(expression)
-        visit_abstract_expression(expression)
+        sine_expression_deriver.derive(expression)
       end
 
       def visit_abstract_expression(expression)
@@ -81,6 +82,10 @@ module SymDiffer
 
       def multiplicate_expression_deriver
         @multiplicate_expression_deriver ||= MultiplicateExpressionDeriver.new(self, @expression_factory)
+      end
+
+      def sine_expression_deriver
+        @sine_expression_deriver ||= SineExpressionDeriver.new(@expression_factory, self)
       end
 
       def create_derivative_expression(expression, variable)
