@@ -69,7 +69,7 @@ module SymDiffer
     end
 
     def default_reduction_analysis(expression)
-      { reduced_expression: expression, sum_partition: [0, expression] }
+      { reduced_expression: expression, sum_partition: [0, expression], factor_partition: [1, expression] }
     end
 
     def reduction_analysis_of_negate(expression)
