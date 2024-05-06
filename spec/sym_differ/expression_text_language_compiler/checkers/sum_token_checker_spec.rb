@@ -17,15 +17,12 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChec
 
       it "returns an expression and sets expression location as leftmost_or_infix" do
         expect(check).to include(
-          handled: true,
-          expression_location: :leftmost_or_infix,
-          stack_item: {
-            item_type: :pending_command,
-            precedence: 1,
-            min_argument_amount: 1,
-            max_argument_amount: 2,
-            value: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSumExpressionCommand)
-          }
+          successfully_handled_response(
+            :prefix_token_checkers,
+            command_stack_item(
+              1, (1..2), a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSumExpressionCommand)
+            )
+          )
         )
       end
     end
@@ -34,6 +31,20 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChec
       let(:token) { subtract_token }
 
       it { is_expected.to eq(handled: false) }
+    end
+
+    define_method(:successfully_handled_response) do |next_expected_token_type, stack_item|
+      { handled: true, next_expected_token_type:, stack_item: }
+    end
+
+    define_method(:command_stack_item) do |precedence, argument_amount_range, value|
+      {
+        item_type: :pending_command,
+        precedence:,
+        min_argument_amount: argument_amount_range.min,
+        max_argument_amount: argument_amount_range.max,
+        value:
+      }
     end
 
     define_method(:sum_token) { operator_token("+") }

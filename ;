@@ -65,7 +65,15 @@ module SymDiffer
       end
 
       def calculate_new_expected_token_type_from_stack_item(stack_item)
-        stack_item[:next_expected_token_type]
+        return stack_item[:next_expected_token_type]
+        if stack_item[:stack_item][:item_type] == :precedence_change &&
+           stack_item[:stack_item][:new_precedence_change].negative?
+          return :infix_token_checkers
+        end
+
+        return :prefix_token_checkers if stack_item[:stack_item][:item_type] == :precedence_change
+
+        stack_item[:expression_location] == :rightmost ? :infix_token_checkers : :prefix_token_checkers
       end
 
       def calculate_new_base_precedence_value_from_stack_item(stack_item, base_precedence_value)

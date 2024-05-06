@@ -11,9 +11,12 @@ module SymDiffer
           return build_not_handled_response unless token.is_a?(Tokens::ParensToken)
 
           new_precedence_change = token.type == :opening ? 10 : -10
+
           stack_item = build_precedence_change_stack_item(new_precedence_change)
 
-          build_handled_response(stack_item)
+          new_next_expected_token_type = token.type == :opening ? :prefix_token_checkers : :infix_token_checkers
+
+          build_handled_response(new_next_expected_token_type, stack_item)
         end
 
         private
@@ -22,8 +25,8 @@ module SymDiffer
           { handled: false }
         end
 
-        def build_handled_response(stack_item)
-          { handled: true, stack_item: }
+        def build_handled_response(next_expected_token_type, stack_item)
+          { handled: true, next_expected_token_type:, stack_item: }
         end
 
         def build_precedence_change_stack_item(new_precedence_change)

@@ -17,7 +17,7 @@ module SymDiffer
 
           command = build_subtract_expression_command
           subtract_expression_command = build_command_type_stack_item(2, 1, 2, command)
-          handled_response(subtract_expression_command)
+          handled_response(:prefix_token_checkers, subtract_expression_command)
         end
 
         private
@@ -26,8 +26,8 @@ module SymDiffer
           { handled: false }
         end
 
-        def handled_response(stack_item)
-          { handled: true, expression_location: :leftmost_or_infix, stack_item: }
+        def handled_response(next_expected_token_type, stack_item)
+          { handled: true, next_expected_token_type:, stack_item: }
         end
 
         def build_command_type_stack_item(precedence, min_argument_amount, max_argument_amount, command)

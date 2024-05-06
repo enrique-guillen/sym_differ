@@ -7,6 +7,7 @@ require "sym_differ/expression_text_language_compiler/extractors/nil_token_extra
 require "sym_differ/expression_text_language_compiler/extractors/operator_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/parens_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"

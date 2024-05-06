@@ -17,7 +17,7 @@ module SymDiffer
           constant_expression = build_constant_expression_from_token(token)
           constant_expression_stack_item = build_expression_type_stack_item(constant_expression)
 
-          handled_response(constant_expression_stack_item)
+          handled_response(:infix_token_checkers, constant_expression_stack_item)
         end
 
         private
@@ -26,8 +26,8 @@ module SymDiffer
           { handled: false }
         end
 
-        def handled_response(stack_item)
-          { handled: true, expression_location: :rightmost, stack_item: }
+        def handled_response(next_expected_token_type, stack_item)
+          { handled: true, next_expected_token_type:, stack_item: }
         end
 
         def build_expression_type_stack_item(expression)

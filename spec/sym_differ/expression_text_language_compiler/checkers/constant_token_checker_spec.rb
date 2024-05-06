@@ -17,11 +17,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantToke
 
       it "returns an expression and sets expression location as rightmost" do
         expect(check).to include(
-          handled: true,
-          expression_location: :rightmost,
-          stack_item: { item_type: :expression,
-                        precedence: 1,
-                        value: same_expression_as(constant_expression(1)) }
+          successfully_handled_response(
+            :infix_token_checkers,
+            expression_stack_item(1, same_expression_as(constant_expression(1)))
+          )
         )
       end
     end
@@ -30,6 +29,14 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ConstantToke
       let(:token) { identifier_token("x") }
 
       it { is_expected.to eq(handled: false) }
+    end
+
+    define_method(:successfully_handled_response) do |next_expected_token_type, stack_item|
+      { handled: true, next_expected_token_type:, stack_item: }
+    end
+
+    define_method(:expression_stack_item) do |precedence, value|
+      { item_type: :expression, precedence:, value: }
     end
 
     define_method(:constant_token) do |value|

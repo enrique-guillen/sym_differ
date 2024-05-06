@@ -83,6 +83,39 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is '('" do
+      let(:expression_text) { "(" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+        )
+      end
+    end
+
+    xcontext "when the expression text to parse is ')'" do
+      let(:expression_text) { ")" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+        )
+      end
+    end
+
+    xcontext "when the expression text to parse is 'sine)'" do
+      let(:expression_text) { "sine)" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::UnparseableExpressionTextError)
+            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do

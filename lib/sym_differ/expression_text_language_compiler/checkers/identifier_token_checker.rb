@@ -15,9 +15,10 @@ module SymDiffer
         def check(token)
           return not_handled_response unless variable_token?(token)
 
-          command_stack_item = build_command_type_stack_item(4, 0, 1, build_identifier_command(token))
+          identifier_command = build_identifier_command(token)
+          command_stack_item = build_command_type_stack_item(4, 0, 1, identifier_command)
 
-          handled_response(command_stack_item)
+          handled_response(:infix_token_checkers, command_stack_item)
         end
 
         private
@@ -26,8 +27,8 @@ module SymDiffer
           { handled: false }
         end
 
-        def handled_response(stack_item)
-          { handled: true, expression_location: :rightmost, stack_item: }
+        def handled_response(next_expected_token_type, stack_item)
+          { handled: true, next_expected_token_type:, stack_item: }
         end
 
         def build_command_type_stack_item(precedence, min_argument_amount, max_argument_amount, command)

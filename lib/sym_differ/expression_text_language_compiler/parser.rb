@@ -3,21 +3,6 @@
 require "sym_differ/expression_text_language_compiler/token_extractor"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
-require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
-require "sym_differ/expression_text_language_compiler/tokens/constant_token"
-require "sym_differ/expression_text_language_compiler/tokens/operator_token"
-
-require "sym_differ/expression_text_language_compiler/extractors/nil_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/operator_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
-require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
-
-require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
-
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
 require "sym_differ/invalid_variable_given_to_expression_parser_error"

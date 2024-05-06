@@ -14,8 +14,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenC
 
       it "returns a precedence change" do
         expect(check).to include(
-          handled: true,
-          stack_item: { item_type: :precedence_change, new_precedence_change: 10 }
+          successfully_handled_response(
+            :prefix_token_checkers,
+            item_type: :precedence_change, new_precedence_change: 10
+          )
         )
       end
     end
@@ -25,8 +27,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenC
 
       it "returns a precedence change" do
         expect(check).to include(
-          handled: true,
-          stack_item: { item_type: :precedence_change, new_precedence_change: -10 }
+          successfully_handled_response(
+            :infix_token_checkers,
+            item_type: :precedence_change, new_precedence_change: -10
+          )
         )
       end
     end
@@ -37,6 +41,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenC
       it "returns a precedence change" do
         expect(check).to include(handled: false)
       end
+    end
+
+    define_method(:successfully_handled_response) do |next_expected_token_type, stack_item|
+      { handled: true, next_expected_token_type:, stack_item: }
     end
 
     define_method(:parens_token) do |type|
