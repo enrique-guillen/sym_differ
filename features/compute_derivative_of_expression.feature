@@ -148,14 +148,14 @@ Feature: Compute the symbolic derivative of a given expression.
       Given the expression to differentiate is sine(2 * x)
       And the variable of the expression to differentiate with is x
 
-      When (@wip) the expression is computed
+      When the expression is computed
 
-      Then (@wip) the derivative expression is 2 * sine(2 * x)
+      Then the derivative expression is 2 * cosine(2 * x)
 
     Scenario: The derivative of sine(x * x), with respect to x, is requested.
       Given the expression to differentiate is sine(x * x)
       And the variable of the expression to differentiate with is x
 
-      When (@wip) the expression is computed
+      When the expression is computed
 
-      Then (@wip) the derivative expression is (cos(x * x)) * (x + x)
+      Then the derivative expression is cosine(x * x) * (x + x)
