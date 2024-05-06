@@ -16,7 +16,7 @@ module SymDiffer
           return not_handled_response unless sum_token?(token)
 
           command = build_sum_expression_command
-          sum_expression_command = build_command_type_stack_item(0, 1, 2, command)
+          sum_expression_command = build_command_type_stack_item(1, 1, 2, command)
           handled_response(sum_expression_command)
         end
 

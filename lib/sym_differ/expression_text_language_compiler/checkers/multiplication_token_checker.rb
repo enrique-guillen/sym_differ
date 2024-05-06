@@ -18,7 +18,7 @@ module SymDiffer
           multiplicate_expression_command = build_multiplicate_expression_command
 
           multiplicate_expression_command_stack_item =
-            build_command_type_stack_item(2, 2, 2, multiplicate_expression_command)
+            build_command_type_stack_item(3, 2, 2, multiplicate_expression_command)
 
           build_handled_response(:infix, multiplicate_expression_command_stack_item)
         end

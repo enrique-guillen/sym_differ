@@ -15,7 +15,7 @@ module SymDiffer
         def check(token)
           return not_handled_response unless variable_token?(token)
 
-          command_stack_item = build_command_type_stack_item(9, 0, 1, build_identifier_command(token))
+          command_stack_item = build_command_type_stack_item(4, 0, 1, build_identifier_command(token))
 
           handled_response(command_stack_item)
         end

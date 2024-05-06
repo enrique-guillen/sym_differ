@@ -16,7 +16,7 @@ module SymDiffer
           return not_handled_response unless subtraction_token?(token)
 
           command = build_subtract_expression_command
-          subtract_expression_command = build_command_type_stack_item(1, 1, 2, command)
+          subtract_expression_command = build_command_type_stack_item(2, 1, 2, command)
           handled_response(subtract_expression_command)
         end
 

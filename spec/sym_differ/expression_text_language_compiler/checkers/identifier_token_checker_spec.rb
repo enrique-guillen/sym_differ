@@ -20,7 +20,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTo
           handled: true,
           expression_location: :rightmost,
           stack_item: {
-            item_type: :pending_command, precedence: 9, min_argument_amount: 0, max_argument_amount: 1,
+            item_type: :pending_command, precedence: 4, min_argument_amount: 0, max_argument_amount: 1,
             value: a_kind_of(
               SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildIdentifierExpressionCommand
             ).and(having_attributes(identifier_name: "x"))
