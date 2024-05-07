@@ -4,18 +4,19 @@ module SymDiffer
   module ExpressionTextLanguageCompiler
     # A stack with commands or expressions representing the expression tree for a given expression text.
     class EvaluationStack
+      extend Forwardable
+
       def initialize(stack = [])
         @stack = stack
       end
 
       attr_reader :stack
 
+      def_delegator :@stack, :last, :last_item
+      def_delegator :@stack, :size
+
       def add_item(item)
         evaluation_stack(@stack + [item])
-      end
-
-      def last_item
-        @stack.last
       end
 
       def peek_item(index)
@@ -40,10 +41,6 @@ module SymDiffer
       def combine(other_stack)
         new_stack = @stack + other_stack.stack
         evaluation_stack(new_stack)
-      end
-
-      def size
-        @stack.size
       end
 
       private
