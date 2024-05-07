@@ -70,7 +70,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when size 0 is passed" do
         let(:size) { 0 }
 
-        it { is_expected.to eq([]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: []) }
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when size 1 is passed" do
         let(:size) { 1 }
 
-        it { is_expected.to eq(["a"]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: ["a"]) }
       end
     end
 
@@ -90,19 +90,19 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when size 1 is passed" do
         let(:size) { 1 }
 
-        it { is_expected.to eq(["a"]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[a]) }
       end
 
       context "when size 2 is passed" do
         let(:size) { 2 }
 
-        it { is_expected.to eq(%w[a b]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[a b]) }
       end
 
       context "when size 3 is passed" do
         let(:size) { 3 }
 
-        it { is_expected.to eq(%w[a b]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[a b]) }
       end
     end
   end
@@ -118,7 +118,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when starting_index is 0" do
         let(:starting_index) { 0 }
 
-        it { is_expected.to eq([]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: []) }
       end
     end
 
@@ -128,13 +128,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when starting_index is 0" do
         let(:starting_index) { 0 }
 
-        it { is_expected.to eq(["a"]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: ["a"]) }
       end
 
       context "when starting_index is 1" do
         let(:starting_index) { 1 }
 
-        it { is_expected.to eq([]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: []) }
       end
     end
 
@@ -144,13 +144,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       context "when starting_index is 0" do
         let(:starting_index) { 0 }
 
-        it { is_expected.to eq(%w[a b]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[a b]) }
       end
 
       context "when starting_index is 1" do
         let(:starting_index) { 1 }
 
-        it { is_expected.to eq(%w[b]) }
+        it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[b]) }
       end
     end
   end
@@ -164,7 +164,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
     let(:starting_index) { 1 }
     let(:size) { 2 }
 
-    it { is_expected.to eq(%w[b c]) }
+    it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[b c]) }
   end
 
   describe "#combine" do
@@ -175,6 +175,6 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
     let(:stack) { described_class.new(%w[a b]) }
     let(:other_stack) { described_class.new(%w[c d]) }
 
-    it { is_expected.to eq(%w[a b c d]) }
+    it { is_expected.to be_a_kind_of(described_class).and have_attributes(stack: %w[a b c d]) }
   end
 end

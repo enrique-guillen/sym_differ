@@ -11,7 +11,7 @@ module SymDiffer
       attr_reader :stack
 
       def add_item(item)
-        EvaluationStack.new(@stack + [item])
+        evaluation_stack(@stack + [item])
       end
 
       def last_item
@@ -23,19 +23,29 @@ module SymDiffer
       end
 
       def extract_beginning_partition(size)
-        @stack[0, size].to_a
+        new_stack = @stack[0, size].to_a
+        evaluation_stack(new_stack)
       end
 
       def extract_tail_end_partition(starting_index)
-        @stack[starting_index, @stack.size].to_a
+        new_stack = @stack[starting_index, @stack.size].to_a
+        evaluation_stack(new_stack)
       end
 
       def extract_stack_partition(starting_index, size)
-        @stack[starting_index, size].to_a
+        new_stack = @stack[starting_index, size].to_a
+        evaluation_stack(new_stack)
       end
 
       def combine(other_stack)
-        @stack + other_stack.stack
+        new_stack = @stack + other_stack.stack
+        evaluation_stack(new_stack)
+      end
+
+      private
+
+      def evaluation_stack(stack)
+        EvaluationStack.new(stack)
       end
     end
   end
