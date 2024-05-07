@@ -3,10 +3,12 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer"
 
+require "sym_differ/expression_text_language_compiler/evaluation_stack"
+
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer do
   describe "#reduce" do
     subject(:reduce) do
-      described_class.new.reduce(command_and_expression_stack)
+      described_class.new.reduce(evaluation_stack(command_and_expression_stack))
     end
 
     context "when the stack = [expression]" do
@@ -16,7 +18,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
 
       let(:precedence) { 3 }
 
-      it { is_expected.to eq(command_and_expression_stack) }
+      it { is_expected.to have_attributes(stack: command_and_expression_stack) }
     end
 
     context "when the stack = [earlier_expression, command, last_expression]" do
@@ -40,7 +42,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
 
       let(:command_execution_value) { double(:command_execution_value) }
 
-      it { is_expected.to eq([expression_stack_item(command_execution_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(command_execution_value)]) }
     end
 
     context "when the stack = [twice_earlier_expression, command1, earlier_expression, command2, last_expression]" do
@@ -75,7 +77,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         double(:command_2_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(command_2_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(command_2_value)]) }
     end
 
     context "when the stack = [command1, command2, expression]" do
@@ -106,7 +108,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         double(:command_1_execution_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(command_1_execution_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(command_1_execution_value)]) }
     end
 
     context "when the stack = [exp, { command precedence 0 }, exp, { command precedence 1 }, exp]" do
@@ -144,7 +146,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         double(:lower_precedence_command_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(lower_precedence_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(lower_precedence_command_value)]) }
     end
 
     context "when the stack = [exp, lower_precedence_command, higher_precedence_command, exp]" do
@@ -179,7 +181,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         double(:higher_precedence_command_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(lower_precedence_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(lower_precedence_command_value)]) }
     end
 
     context "when the stack = [exp, lowest_precedence_cmd, lower_precedence_cmd, higher_precedence_cmd, exp]" do
@@ -223,7 +225,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
         double(:lowest_precedence_command_value)
       end
 
-      it { is_expected.to eq([expression_stack_item(lowest_precedence_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(lowest_precedence_command_value)]) }
     end
 
     context "when the stack = [zero_arity_command] (clarification)" do
@@ -241,7 +243,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
 
       let(:zero_arity_command_value) { double(:zero_arity_command_value) }
 
-      it { is_expected.to eq([expression_stack_item(zero_arity_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(zero_arity_command_value)]) }
     end
 
     context(<<~DOCSTRING) do
@@ -278,7 +280,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:x_command_value) { double(:x_command_value) }
       let(:sum_command_value) { double(:sum_command_value) }
 
-      it { is_expected.to eq([expression_stack_item(sum_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(sum_command_value)]) }
     end
 
     context "when the stack = [x_command, sine_command] same precedence (clarification)" do
@@ -299,7 +301,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:x_command_value) { double(:x_command_value) }
       let(:sine_command_value) { double(:sine_command_value) }
 
-      it { is_expected.to eq([expression_stack_item(x_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(x_command_value)]) }
     end
 
     context "when the stack = [subtract_command, subtract_command, expression]" do
@@ -326,7 +328,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
       let(:subtract_command_2_value) { double(:subtract_command_2_value) }
       let(:x_expression_value) { double(:x_expression_value) }
 
-      it { is_expected.to eq([expression_stack_item(subtract_command_1_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(subtract_command_1_value)]) }
     end
 
     context "when the stack = [command], higher precedence" do
@@ -343,7 +345,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
 
       let(:precedence) { 5 }
 
-      it { is_expected.to eq([expression_stack_item(command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(command_value)]) }
     end
 
     context "when the stack = [expression, command, lower_precedence_unary_command, expression], higher precedence" do
@@ -377,7 +379,11 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionSt
 
       let(:precedence) { 3 }
 
-      it { is_expected.to eq([expression_stack_item(high_precedence_binary_command_value)]) }
+      it { is_expected.to have_attributes(stack: [expression_stack_item(high_precedence_binary_command_value)]) }
+    end
+
+    define_method(:evaluation_stack) do |stack|
+      SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack.new(stack)
     end
 
     define_method(:map_command_response) do |command, from:, to:, input: from, output: to|

@@ -7,30 +7,26 @@ module SymDiffer
     # Evaluates the unevaluated expression tree (represented as a series of commands that return subexpressions) in the
     # provided stack by repeatedly evaluating the tail end of the stack and accumulating the results.
     class CommandAndExpressionStackReducer
-      def reduce(evaluation_stack)
-        precedence ||= evaluation_stack.map { |stack_item| stack_item_precedence(stack_item) }.max
+      def reduce(evaluation_stack, precedence = nil)
+        precedence ||= evaluation_stack.stack.map { |stack_item| stack_item_precedence(stack_item) }.max
 
-        shorten_stack_by_executing_commands_of_precedence(EvaluationStack.new(evaluation_stack), precedence).stack
+        shorten_stack_by_executing_commands_of_precedence(evaluation_stack, precedence)
       end
 
       private
-
-      def sub_reduce(eval_stack, precedence)
-        shorten_stack_by_executing_commands_of_precedence(eval_stack, precedence)
-      end
 
       def shorten_stack_by_executing_commands_of_precedence(eval_stack, precedence)
         command_index = retrieve_next_executable_command_index_of_precedence(eval_stack, precedence)
 
         return eval_stack if no_command_in_stack_at_index?(eval_stack, command_index) && precedence <= 0
 
-        return sub_reduce(eval_stack, precedence - 1) if no_command_in_stack_at_index?(eval_stack, command_index)
+        return reduce(eval_stack, precedence - 1) if no_command_in_stack_at_index?(eval_stack, command_index)
 
         new_eval_stack = reduce_tail_end_of_stack_if_unary(eval_stack, command_index, precedence)
         new_eval_stack = shorten_stack_by_executing_command(new_eval_stack, command_index)
-        new_eval_stack = sub_reduce(new_eval_stack, precedence)
+        new_eval_stack = reduce(new_eval_stack, precedence)
 
-        sub_reduce(new_eval_stack, precedence - 1)
+        reduce(new_eval_stack, precedence - 1)
       end
 
       def retrieve_next_executable_command_index_of_precedence(eval_stack, precedence)
@@ -54,7 +50,7 @@ module SymDiffer
         earlier_stack_partition = extract_stack_beginning_partition(eval_stack, command_index + 1)
         next_stack_partition = extract_stack_tail_end_partition(eval_stack, command_index + 1)
 
-        reduced_next_one = sub_reduce(next_stack_partition, precedence)
+        reduced_next_one = reduce(next_stack_partition, precedence)
 
         earlier_stack_partition.combine(reduced_next_one)
       end

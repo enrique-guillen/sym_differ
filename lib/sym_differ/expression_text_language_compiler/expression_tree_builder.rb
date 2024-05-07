@@ -24,7 +24,7 @@ module SymDiffer
       def convert_tokens_into_expression(tokens)
         evaluation_stack = calculate_evaluation_stack(tokens)
 
-        evaluation_stack = reduce_tail_end_of_stack_while_evaluatable(evaluation_stack.stack)
+        evaluation_stack = reduce_tail_end_of_stack_while_evaluatable(evaluation_stack)
 
         value_of_last_stack_item(evaluation_stack)
       end
@@ -120,7 +120,7 @@ module SymDiffer
       end
 
       def last_item_in_stack(stack)
-        EvaluationStack.new(stack).last_item
+        stack.last_item
       end
 
       def stack_item_value(stack_item)
