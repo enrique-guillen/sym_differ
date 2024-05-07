@@ -23,6 +23,9 @@ module SymDiffer
 
       private
 
+      WHITESPACE_MATCHER = /\s/
+      private_constant :WHITESPACE_MATCHER
+
       def extract_tokens(expression_text)
         tokens = []
 
@@ -81,7 +84,7 @@ module SymDiffer
       end
 
       def character_is_whitespace?(character)
-        character.match?(/\s/)
+        character.match?(WHITESPACE_MATCHER)
       end
     end
   end
