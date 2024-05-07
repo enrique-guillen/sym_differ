@@ -166,4 +166,15 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
 
     it { is_expected.to eq(%w[b c]) }
   end
+
+  describe "#combine" do
+    subject(:combine) do
+      stack.combine(other_stack)
+    end
+
+    let(:stack) { described_class.new(%w[a b]) }
+    let(:other_stack) { described_class.new(%w[c d]) }
+
+    it { is_expected.to eq(%w[a b c d]) }
+  end
 end

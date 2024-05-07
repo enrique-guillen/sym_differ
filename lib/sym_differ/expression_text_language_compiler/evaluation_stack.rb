@@ -33,6 +33,10 @@ module SymDiffer
       def extract_stack_partition(starting_index, size)
         @stack[starting_index, size].to_a
       end
+
+      def combine(other_stack)
+        @stack + other_stack.stack
+      end
     end
   end
 end
