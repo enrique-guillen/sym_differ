@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module SymDiffer
   module ExpressionTextLanguageCompiler
     # A stack with commands or expressions representing the expression tree for a given expression text.

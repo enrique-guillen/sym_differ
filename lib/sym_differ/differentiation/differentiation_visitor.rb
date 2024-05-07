@@ -8,6 +8,7 @@ require "sym_differ/differentiation/negate_expression_deriver"
 require "sym_differ/differentiation/positive_expression_deriver"
 require "sym_differ/differentiation/multiplicate_expression_deriver"
 require "sym_differ/differentiation/sine_expression_deriver"
+require "sym_differ/differentiation/cosine_expression_deriver"
 
 module SymDiffer
   module Differentiation
