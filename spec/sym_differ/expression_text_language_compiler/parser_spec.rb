@@ -69,8 +69,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
 
-    context "when the expression text to parse is '1 + sin(x)'" do
-      let(:expression_text) { "1 + sin(x)" }
+    context "when the expression text to parse is '1 + sine(x)'" do
+      let(:expression_text) { "1 + sine(x)" }
 
       it "has the expected structure" do
         expression = parse
@@ -82,6 +82,10 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
           )
         )
       end
+    end
+
+    context "when the expression text to parse is '1 + unrecognized(x)'" do
+      pending "no support for doing something to unrecognized functions yet"
     end
 
     context "when the expression text to parse is '('" do
