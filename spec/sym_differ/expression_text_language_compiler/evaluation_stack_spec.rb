@@ -58,4 +58,52 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       it { is_expected.to be_nil }
     end
   end
+
+  describe "#extract_beginning_partition" do
+    subject(:extract_beginning_partition) do
+      stack.extract_beginning_partition(size)
+    end
+
+    context "when the stack is empty" do
+      let(:stack) { described_class.new }
+
+      context "when size 0 is passed" do
+        let(:size) { 0 }
+
+        it { is_expected.to eq([]) }
+      end
+    end
+
+    context "when the stack is a" do
+      let(:stack) { described_class.new(["a"]) }
+
+      context "when size 1 is passed" do
+        let(:size) { 1 }
+
+        it { is_expected.to eq(["a"]) }
+      end
+    end
+
+    context "when the stack is a, b" do
+      let(:stack) { described_class.new(%w[a b]) }
+
+      context "when size 1 is passed" do
+        let(:size) { 1 }
+
+        it { is_expected.to eq(["a"]) }
+      end
+
+      context "when size 2 is passed" do
+        let(:size) { 2 }
+
+        it { is_expected.to eq(%w[a b]) }
+      end
+
+      context "when size 3 is passed" do
+        let(:size) { 3 }
+
+        it { is_expected.to eq(%w[a b]) }
+      end
+    end
+  end
 end

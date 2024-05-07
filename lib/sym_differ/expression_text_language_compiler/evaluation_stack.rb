@@ -21,6 +21,10 @@ module SymDiffer
       def peek_item(index)
         @stack[index] unless index.negative?
       end
+
+      def extract_beginning_partition(size)
+        stack[0, size].to_a
+      end
     end
   end
 end
