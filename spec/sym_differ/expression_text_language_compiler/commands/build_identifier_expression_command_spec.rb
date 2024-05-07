@@ -22,5 +22,12 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildIdentif
 
       it { is_expected.to be_same_as(sine_expression(variable_expression("x"))) }
     end
+
+    context "when identifier name = cosine, one argument" do
+      let(:identifier_name) { "cosine" }
+      let(:arguments) { [variable_expression("x")] }
+
+      it { is_expected.to be_same_as(cosine_expression(variable_expression("x"))) }
+    end
   end
 end
