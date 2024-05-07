@@ -154,4 +154,16 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       end
     end
   end
+
+  describe "#extract_stack_partition" do
+    subject(:extract_stack_partition) do
+      stack.extract_stack_partition(starting_index, size)
+    end
+
+    let(:stack) { described_class.new(%w[a b c d]) }
+    let(:starting_index) { 1 }
+    let(:size) { 2 }
+
+    it { is_expected.to eq(%w[b c]) }
+  end
 end
