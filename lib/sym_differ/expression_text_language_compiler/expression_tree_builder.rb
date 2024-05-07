@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_text_language_compiler/evaluation_stack"
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
 module SymDiffer
@@ -23,14 +24,14 @@ module SymDiffer
       def convert_tokens_into_expression(tokens)
         evaluation_stack = calculate_evaluation_stack(tokens)
 
-        evaluation_stack = reduce_tail_end_of_stack_while_evaluatable(evaluation_stack)
+        evaluation_stack = reduce_tail_end_of_stack_while_evaluatable(evaluation_stack.stack)
 
         value_of_last_stack_item(evaluation_stack)
       end
 
       def calculate_evaluation_stack(tokens)
         expected_token_type = :initial_token_checkers
-        evaluation_stack = []
+        evaluation_stack = EvaluationStack.new
         base_precedence_value = 0
 
         tokens.each do |t|
@@ -63,7 +64,10 @@ module SymDiffer
 
         current_precedence_value = base_precedence_value + stack_item[:stack_item][:precedence]
 
-        push_item_into_stack(stack_item[:stack_item].merge(precedence: current_precedence_value), evaluation_stack)
+        push_item_into_stack(
+          stack_item[:stack_item].merge(precedence: current_precedence_value),
+          evaluation_stack
+        )
       end
 
       def calculate_new_expected_token_type_from_stack_item(stack_item)
@@ -112,11 +116,11 @@ module SymDiffer
       end
 
       def push_item_into_stack(item, stack)
-        stack + [item]
+        stack.add_item(item)
       end
 
       def last_item_in_stack(stack)
-        stack.last
+        EvaluationStack.new(stack).last_item
       end
 
       def stack_item_value(stack_item)

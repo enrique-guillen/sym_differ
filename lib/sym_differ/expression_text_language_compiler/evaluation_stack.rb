@@ -42,6 +42,10 @@ module SymDiffer
         evaluation_stack(new_stack)
       end
 
+      def size
+        @stack.size
+      end
+
       private
 
       def evaluation_stack(stack)
