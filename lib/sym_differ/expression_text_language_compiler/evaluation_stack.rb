@@ -23,7 +23,11 @@ module SymDiffer
       end
 
       def extract_beginning_partition(size)
-        stack[0, size].to_a
+        @stack[0, size].to_a
+      end
+
+      def extract_tail_end_partition(starting_index)
+        @stack[starting_index, @stack.size].to_a
       end
     end
   end

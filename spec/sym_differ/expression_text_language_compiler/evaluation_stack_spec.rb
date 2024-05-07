@@ -106,4 +106,52 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStack do
       end
     end
   end
+
+  describe "#extract_tail_end_partition" do
+    subject(:extract_tail_end_partition) do
+      stack.extract_tail_end_partition(starting_index)
+    end
+
+    context "when stack is empty" do
+      let(:stack) { described_class.new([]) }
+
+      context "when starting_index is 0" do
+        let(:starting_index) { 0 }
+
+        it { is_expected.to eq([]) }
+      end
+    end
+
+    context "when stack is a" do
+      let(:stack) { described_class.new(["a"]) }
+
+      context "when starting_index is 0" do
+        let(:starting_index) { 0 }
+
+        it { is_expected.to eq(["a"]) }
+      end
+
+      context "when starting_index is 1" do
+        let(:starting_index) { 1 }
+
+        it { is_expected.to eq([]) }
+      end
+    end
+
+    context "when stack is a, b" do
+      let(:stack) { described_class.new(%w[a b]) }
+
+      context "when starting_index is 0" do
+        let(:starting_index) { 0 }
+
+        it { is_expected.to eq(%w[a b]) }
+      end
+
+      context "when starting_index is 1" do
+        let(:starting_index) { 1 }
+
+        it { is_expected.to eq(%w[b]) }
+      end
+    end
+  end
 end
