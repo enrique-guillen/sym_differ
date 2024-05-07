@@ -10,12 +10,16 @@ module SymDiffer
 
       attr_reader :stack
 
-      def add_item_to_stack(item)
+      def add_item(item)
         EvaluationStack.new(@stack + [item])
       end
 
-      def last_item_in_stack
+      def last_item
         @stack.last
+      end
+
+      def peek_item(index)
+        @stack[index] unless index.negative?
       end
     end
   end
