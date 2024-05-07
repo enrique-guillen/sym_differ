@@ -152,6 +152,25 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_cosine_expression" do
+    subject(:visit_cosine_expression) do
+      visitor.visit_cosine_expression(expression)
+    end
+
+    let(:expression) { cosine_expression(angle_expression) }
+    let(:angle_expression) { variable_expression("x") }
+    let(:variable) { "x" }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_cosine_expression).to be_same_as(
+        multiplicate_expression(
+          negate_expression(sine_expression(variable_expression("x"))),
+          constant_expression(1)
+        )
+      )
+    end
+  end
+
   describe "#visit_abstract_expression" do
     subject(:visit_abstract_expression) do
       visitor.visit_abstract_expression(expression)
