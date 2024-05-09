@@ -3,3 +3,4 @@ sym_differ-1.0.0.gem
 tags
 .rspec
 coverage/
+spec/test_artifacts
