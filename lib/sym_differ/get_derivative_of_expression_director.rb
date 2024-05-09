@@ -4,7 +4,7 @@ require "sym_differ/derivative_of_expression_getter"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/differentiation/differentiation_visitor"
 require "sym_differ/expression_reducer"
-require "sym_differ/inline_printing/printing_visitor"
+require "sym_differ/stringifier_visitor"
 require "sym_differ/expression_factory"
 
 module SymDiffer
@@ -34,7 +34,7 @@ module SymDiffer
     end
 
     def printing_visitor
-      InlinePrinting::PrintingVisitor.new
+      StringifierVisitor.new
     end
 
     def expression_factory

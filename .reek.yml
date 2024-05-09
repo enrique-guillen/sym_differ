@@ -74,13 +74,13 @@ detectors:
 
   BooleanParameter:
     exclude:
-      # We pass some parameters to the initializer to slightly customize the behavior of a PrintingVisitor. References
-      # to those parameters only happen internally of PrintingVisitor, so for the time being this is a fairly innocuous
-      # usage of boolean parameters.
-      - "SymDiffer::InlinePrinting::PrintingVisitor#initialize"
-      - "SymDiffer::InlinePrinting::PrintingVisitor#build_visitor"
+      # We pass some parameters to the initializer to slightly customize the behavior of a StringifierVisitor.
+      # References to those parameters only happen internally of StringifierVisitor, so for the time being this is a
+      # fairly innocuous usage of boolean parameters.
+      - "SymDiffer::StringifierVisitor#initialize"
+      - "SymDiffer::StringifierVisitor#build_visitor"
 
   RepeatedConditional:
     # We decided to take on the tech debt incurred by repeated conditionals across this call for the time being.
     exclude:
-      - "SymDiffer::InlinePrinting::PrintingVisitor"
+      - "SymDiffer::StringifierVisitor"

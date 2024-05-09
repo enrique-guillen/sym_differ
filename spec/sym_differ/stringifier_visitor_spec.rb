@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/inline_printing/printing_visitor"
+require "sym_differ/stringifier_visitor"
+
 require "sym_differ/expression_factory"
 
-RSpec.describe SymDiffer::InlinePrinting::PrintingVisitor do
+RSpec.describe SymDiffer::StringifierVisitor do
   let(:expression_factory) { SymDiffer::ExpressionFactory.new }
 
   describe "#visit_constant_expression" do
