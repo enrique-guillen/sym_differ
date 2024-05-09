@@ -9,7 +9,7 @@ require "sym_differ/expression_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
-  class GetDerivativeOfExpressionDirector
+  class GetDerivativeOfExpressionInteractor
     def calculate_derivative(expression_text, variable)
       DerivativeOfExpressionGetter
         .new(parser,

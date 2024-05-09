@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/get_derivative_of_expression_director"
+require "sym_differ/get_derivative_of_expression_interactor"
 
-RSpec.describe SymDiffer::GetDerivativeOfExpressionDirector do
+RSpec.describe SymDiffer::GetDerivativeOfExpressionInteractor do
   describe "#calculate_derivative" do
     subject(:calculate_derivative) { described_class.new.calculate_derivative("x + x", "x") }
 
