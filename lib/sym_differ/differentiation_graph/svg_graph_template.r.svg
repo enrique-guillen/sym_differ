@@ -1,0 +1,148 @@
+<svg version="1.1"
+     width="1000" height="1000"
+     xmlns="http://www.w3.org/2000/svg">
+
+
+
+
+  <!-- Legend  -->
+    <circle cx="20" cy="20" r="5" fill="blue"/>
+
+    <text x="40" y="30" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
+      Expression: <%= view.expression_text %>
+    </text>
+
+    <circle cx="20" cy="50" r="5" fill="red"/>
+
+    <text x="40" y="60" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
+      Derivative: <%= view.derivative_expression_text %>
+    </text>
+
+
+
+
+  <!-- Axis names  -->
+    <text x="20" y="450" font-size="1.5em" font-style="italic" id="ordinate-name" font-family="Cantarell">
+      <%= view.ordinate_name %>
+    </text>
+
+    <text x="450" y="880" font-size="1.5em" font-style="italic" id="abscissa-name" font-family="Cantarell">
+      <%= view.abscissa_name %>
+    </text>
+
+
+
+
+  <% view.abscissa_number_labels.reverse.each_with_index do |label, index| %>
+    <text x="0"
+          y="<%= calculate_y_placement_of_abscissa_label(index) %>"
+          transform="translate(70, 100)">
+      <%= label %>
+    </text>
+
+    <path
+      d="M 0   <%= calculate_y_placement_of_abscissa_gridline(index) %>
+         L 700 <%= calculate_y_placement_of_abscissa_gridline(index) %>"
+      style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
+      transform = "translate(100, 100)"
+    />
+  <% end %>
+
+
+
+
+  <% view.ordinate_number_labels.each_with_index do |label, index| %>
+    <text x="<%= calculate_x_placement_of_ordinate_label(index) %>" y="0" transform="translate(90, 820)">
+      <%= label %>
+    </text>
+
+    <path
+      d="M <%= calculate_x_placement_of_ordinate_label(index) %> 0
+         L <%= calculate_x_placement_of_ordinate_label(index) %> 700"
+      style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
+      transform = "translate(100, 100)"
+    />
+  <% end %>
+
+
+
+
+  <path
+    id="graph-perimeter"
+    d="M 0,   0
+         700, 0
+         700, 700
+         0,   700
+         Z"
+    style="
+      fill:none;
+      stroke:#000000;
+      stroke-width:0.8985;
+      stroke-linecap:butt;
+      stroke-linejoin:miter;
+      stroke-miterlimit:10;
+      stroke-opacity:1
+    "
+    transform="translate(100, 100)"
+  />
+
+
+
+
+  <path
+    id="expression-curve-approximation"
+    d="
+      M <%= join_expression_point(view.expression_path.first) %>
+      L <% view.expression_path.each do |expression_data_point| %>
+          <%= join_expression_point(expression_data_point) %>
+        <% end %>
+    "
+    style="fill:none; stroke:blue; stroke-width:0.8985; stroke-opacity:1"
+    transform="
+      translate(<%= 100 + multiply_by_grid_unit_size(view.origin_ordinate) %>,
+                <%= 100 + multiply_by_grid_unit_size(view.origin_abscissa) %>)
+      scale(<%= grid_unit_size %>)
+    "
+  />
+
+
+
+
+  <path
+    id="derivative-expression-curve-approximation"
+    d="
+      M <%= join_expression_point(view.derivative_expression_path.first) %>
+      L <% view.derivative_expression_path.each do |expression_data_point| %>
+          <%= join_expression_point(expression_data_point) %>
+        <% end %>
+    "
+    style="fill:none; stroke:red; stroke-width:0.3985; stroke-opacity:1"
+    transform="
+      translate(<%= 100 + multiply_by_grid_unit_size(view.origin_ordinate) %>,
+                <%= 100 + multiply_by_grid_unit_size(view.origin_abscissa) %>)
+      scale(<%= grid_unit_size %>)
+    "
+  />
+
+
+
+
+  <% if view.show_total_area_aid %>
+    <path
+      id="total-svg-area-aid"
+      d="
+        M
+          1,   1
+          1,   900
+          900, 900
+          900, 1
+          Z
+      "
+      style="
+        fill:none;
+        stroke:red;
+        stroke-width:9;
+      "
+    />
+  <% end %>
+</svg>
