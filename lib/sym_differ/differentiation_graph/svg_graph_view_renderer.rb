@@ -16,6 +16,8 @@ module SymDiffer
 
       GRID_UNIT_SIZE = 7
 
+      private_constant :GRID_UNIT_SIZE
+
       attr_reader :view
 
       def template

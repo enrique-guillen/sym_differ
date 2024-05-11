@@ -2,7 +2,7 @@
 
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"
-require "sym_differ/inline_printing/printing_visitor"
+require "sym_differ/stringifier_visitor"
 
 module SymDiffer
   # Allows converting an Expression into an inline textual representation of the expression, and from a free form
@@ -15,7 +15,7 @@ module SymDiffer
     end
 
     def inline_expression(expression)
-      expression.accept(SymDiffer::InlinePrinting::PrintingVisitor.new)
+      expression.accept(SymDiffer::StringifierVisitor.new)
     end
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/get_derivative_of_expression_director"
+require "sym_differ/get_derivative_of_expression_interactor"
 
 Before do
   @params = { expression: nil, variable: nil }
@@ -22,7 +22,7 @@ end
 
 When("the expression is computed") do
   @payload =
-    SymDiffer::GetDerivativeOfExpressionDirector
+    SymDiffer::GetDerivativeOfExpressionInteractor
     .new
     .calculate_derivative(@params[:expression], @params[:variable])
 end
