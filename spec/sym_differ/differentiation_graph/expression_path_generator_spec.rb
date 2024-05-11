@@ -3,6 +3,8 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/expression_path_generator"
 
+require "sym_differ/differentiation_graph/step_range"
+
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
   describe "#generate" do
     subject(:generate) do
@@ -32,7 +34,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     context "when step range == 2..1" do
-      let(:step_range) { (2..1) }
+      let(:step_range) { graph_step_range(2..1) }
 
       it "generates the expression path" do
         expect(generate).to eq([])
@@ -40,22 +42,24 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     context "when step_range == 1..1" do
-      let(:step_range) { (1..1) }
+      let(:step_range) { graph_step_range(1..1) }
 
       it "generates the expression path" do
-        expect(generate).to eq([[1, 30]])
+        expect(generate).to eq(
+          [evaluation_point(1, 30)]
+        )
       end
     end
 
     context "when step_range == -1..1" do
-      let(:step_range) { (-1..1) }
+      let(:step_range) { graph_step_range(-1..1) }
 
       it "generates the expression path" do
         expect(generate).to eq(
           [
-            [-1, 10],
-            [0, 20],
-            [1, 30]
+            evaluation_point(-1, 10),
+            evaluation_point(0, 20),
+            evaluation_point(1, 30)
           ]
         )
       end
@@ -67,6 +71,14 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
 
     define_method(:map_evaluator_response) do |expression_evaluator, from:, to:, input: from, output: to|
       allow(expression_evaluator).to receive(:evaluate).with(input).and_return(output)
+    end
+
+    define_method(:evaluation_point) do |abscissa, ordinate|
+      [abscissa, ordinate]
+    end
+
+    define_method(:graph_step_range) do |range|
+      SymDiffer::DifferentiationGraph::StepRange.new(range)
     end
   end
 end
