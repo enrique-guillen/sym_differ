@@ -9,14 +9,14 @@ RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
   describe "#get" do
     subject(:get) do
       described_class
-        .new(expression_text_parser, differentiation_visitor, expression_reducer, expression_stringifier)
+        .new(expression_text_parser, deriver, expression_reducer, expression_stringifier)
         .get(expression_text, variable)
     end
 
     before { allow(expression_text_parser).to receive(:validate_variable) }
 
     let(:expression_text_parser) { double(:expression_text_parser) }
-    let(:differentiation_visitor) { double(:differentiation_visitor) }
+    let(:deriver) { double(:deriver) }
     let(:expression_reducer) { double(:expression_reducer) }
     let(:expression_stringifier) { double(:expression_stringifier) }
 
@@ -30,9 +30,9 @@ RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
           .with("x")
           .and_return(parsed_expression)
 
-        allow(parsed_expression)
-          .to receive(:accept)
-          .with(differentiation_visitor)
+        allow(deriver)
+          .to receive(:derive)
+          .with(parsed_expression)
           .and_return(derivative_result)
 
         allow(expression_reducer)

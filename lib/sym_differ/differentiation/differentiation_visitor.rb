@@ -19,6 +19,10 @@ module SymDiffer
         @expression_factory = expression_factory
       end
 
+      def derive(expression)
+        expression.accept(self)
+      end
+
       def visit_constant_expression(expression)
         constant_expression_deriver.derive(expression, @variable)
       end
