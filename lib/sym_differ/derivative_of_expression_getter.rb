@@ -9,11 +9,11 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:derivative_expression)
 
-    def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_textifier)
+    def initialize(expression_text_parser, differentiation_visitor, expression_reducer, expression_stringifier)
       @expression_text_parser = expression_text_parser
       @differentiation_visitor = differentiation_visitor
       @expression_reducer = expression_reducer
-      @expression_textifier = expression_textifier
+      @expression_stringifier = expression_stringifier
     end
 
     def get(expression_text, variable)
@@ -57,7 +57,7 @@ module SymDiffer
     end
 
     def textify_expression(expression)
-      expression.accept(@expression_textifier)
+      @expression_stringifier.stringify(expression)
     end
   end
 end

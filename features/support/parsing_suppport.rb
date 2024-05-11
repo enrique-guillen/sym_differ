@@ -15,7 +15,7 @@ module SymDiffer
     end
 
     def inline_expression(expression)
-      expression.accept(SymDiffer::StringifierVisitor.new)
+      SymDiffer::StringifierVisitor.new.stringify(expression)
     end
   end
 end

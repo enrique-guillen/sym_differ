@@ -9,6 +9,10 @@ module SymDiffer
 
     attr_reader :parenthesize_infix_expressions_once
 
+    def stringify(expression)
+      expression.accept(self)
+    end
+
     def visit_constant_expression(expression)
       expression.value.to_s
     end
