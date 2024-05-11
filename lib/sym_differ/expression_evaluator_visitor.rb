@@ -8,10 +8,6 @@ module SymDiffer
       @variable_values = variable_values
     end
 
-    def evaluate!(expression)
-      expression.accept(self)
-    end
-
     def visit_constant_expression(expression)
       expression.value
     end
