@@ -5,6 +5,7 @@ SimpleCov.start
 
 require "support/sym_differ_expression_double_builder"
 require "support/sym_differ_expression_factory_dsl"
+require "support/test_artifact_storage"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -25,6 +26,8 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   RSpec::Matchers.alias_matcher :same_expression_as, :be_same_as
+
   config.include Support::SymDifferDoubleBuilder
   config.include Support::SymDifferExpressionFactoryDsl
+  config.include Support::TestArtifactStorage
 end
