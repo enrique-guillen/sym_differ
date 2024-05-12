@@ -35,14 +35,14 @@
 
   <% view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
     <text x="0"
-          y="<%= calculate_y_placement_of_abscissa_label(index) %>"
+          y="<%= calculate_y_placement_of_ordinate_label(index) %>"
           transform="translate(60, 100)">
       <%= label %>
     </text>
 
     <path
-      d="M 0   <%= calculate_y_placement_of_abscissa_gridline(index) %>
-         L 700 <%= calculate_y_placement_of_abscissa_gridline(index) %>"
+      d="M 0   <%= calculate_y_placement_of_ordinate_gridline(index) %>
+         L 700 <%= calculate_y_placement_of_ordinate_gridline(index) %>"
       style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
       transform = "translate(100, 100)"
     />
@@ -52,13 +52,13 @@
 
 
   <% view.abscissa_axis.number_labels.each_with_index do |label, index| %>
-    <text x="<%= calculate_x_placement_of_ordinate_label(index) %>" y="0" transform="translate(90, 820)">
+    <text x="<%= calculate_x_placement_of_abscissa_label(index) %>" y="0" transform="translate(90, 820)">
       <%= label %>
     </text>
 
     <path
-      d="M <%= calculate_x_placement_of_ordinate_label(index) %> 0
-         L <%= calculate_x_placement_of_ordinate_label(index) %> 700"
+      d="M <%= calculate_x_placement_of_abscissa_gridline(index) %> 0
+         L <%= calculate_x_placement_of_abscissa_gridline(index) %> 700"
       style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
       transform = "translate(100, 100)"
     />
