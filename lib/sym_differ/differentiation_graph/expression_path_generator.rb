@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/differentiation_graph/step_range"
+require "sym_differ/differentiation_graph/evaluation_point"
 
 module SymDiffer
   module DifferentiationGraph
@@ -54,7 +55,7 @@ module SymDiffer
       end
 
       def build_evaluation_point(abscissa, ordinate)
-        [abscissa, ordinate]
+        EvaluationPoint.new(abscissa, ordinate)
       end
 
       def build_new_step_range(min, max)

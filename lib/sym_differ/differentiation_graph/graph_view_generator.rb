@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/differentiation_graph/step_range"
+require "sym_differ/differentiation_graph/evaluation_point"
 
 module SymDiffer
   module DifferentiationGraph
@@ -39,10 +40,10 @@ module SymDiffer
 
       def scale_to_100_unit_square(expression_path, distance)
         expression_path.map do |expression_point|
-          [
-            expression_point[0] * 5,
-            (expression_point[1] * 100) / distance
-          ]
+          EvaluationPoint.new(
+            expression_point.abscissa * 5,
+            (expression_point.ordinate * 100) / distance
+          )
         end
       end
 
@@ -82,7 +83,7 @@ module SymDiffer
       def ordinate_labels_and_positioning(min_value, max_value, distance)
         origin_ordinate = (max_value * 100) / distance
 
-        ordinate_offset = 0
+        ordinate_offset = 0.0
         ordinate_label_gap = distance / 10.0
 
         ordinate_number_labels = (0..10).map { |i| (min_value + (ordinate_label_gap * i)).round(3) }
@@ -91,7 +92,7 @@ module SymDiffer
       end
 
       def evaluate_point_ordinate(point)
-        point[1]
+        point.ordinate
       end
 
       def stringify_expression(expression)

@@ -51,7 +51,7 @@ module SymDiffer
       end
 
       def join_expression_point(point)
-        [point[0], -point[1]].join(", ")
+        [point.abscissa, -point.ordinate].join(", ")
       end
 
       def vertical_offset_for_text_alignment

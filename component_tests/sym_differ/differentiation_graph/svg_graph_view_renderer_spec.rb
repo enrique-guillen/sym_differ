@@ -3,6 +3,8 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/svg_graph_view_renderer"
 
+require "sym_differ/differentiation_graph/evaluation_point"
+
 RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
   describe "#render" do
     subject(:render) do
@@ -29,10 +31,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
     end
 
     context "when the expression paths have 15 and 2 points respectively" do
-      let(:expression_path) { (-7..7).map { |i| [i, i**2] } }
+      let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
 
       let(:derivative_expression_path) do
-        [-26, 25].map { |i| [i, i * 2] }
+        [-26, 25].map { |i| evaluation_point(i, i * 2) }
       end
 
       it "can be stored in test artifacts after execution" do
@@ -57,11 +59,11 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
          4, 4.5,
          5, 5.5,
          6, 6.5,
-         7].map { |i| [i, i**2] }
+         7].map { |i| evaluation_point(i, i**2) }
       end
 
       let(:derivative_expression_path) do
-        [-26, 25].map { |i| [i, i * 2] }
+        [-26, 25].map { |i| evaluation_point(i, i * 2) }
       end
 
       it "can be stored in test artifacts after execution" do
@@ -72,6 +74,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
 
     define_method(:prefix_with_class_name) do |file_name|
       [filesystem_friendlify_class_name(described_class.name), file_name].join(".")
+    end
+
+    define_method(:evaluation_point) do |abscissa, ordinate|
+      SymDiffer::DifferentiationGraph::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end
