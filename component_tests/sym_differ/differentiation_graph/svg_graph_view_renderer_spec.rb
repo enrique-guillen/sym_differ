@@ -37,7 +37,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
 
       it "can be stored in test artifacts after execution" do
         expect { render }.not_to raise_error
-        write_test_artifact_path("low_precision_path", render)
+        write_test_artifact_path(prefix_with_class_name("low_precision_path.svg"), render)
       end
     end
 
@@ -66,26 +66,12 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
 
       it "can be stored in test artifacts after execution" do
         expect { render }.not_to raise_error
-        write_test_artifact_path("high_precision_path", render)
+        write_test_artifact_path(prefix_with_class_name("high_precision_path.svg"), render)
       end
     end
 
-    define_method(:write_test_artifact_path) do |description, contents|
-      File.write(
-        test_artifact_path(filesystem_friendlify_class_name, description),
-        contents
-      )
-    end
-
-    define_method(:test_artifact_path) do |class_name, line_number|
-      directory = %w[spec test_artifacts].join("/")
-      file_name = [class_name, line_number, "svg"].join(".")
-
-      [directory, file_name].join("/")
-    end
-
-    define_method(:filesystem_friendlify_class_name) do
-      described_class.name.split("::").join("_")
+    define_method(:prefix_with_class_name) do |file_name|
+      [filesystem_friendlify_class_name(described_class.name), file_name].join(".")
     end
   end
 end

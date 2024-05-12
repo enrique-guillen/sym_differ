@@ -143,21 +143,8 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgBuilder do
       end
     end
 
-    define_method(:write_test_artifact_path) do |file_name, contents|
-      File.write(test_artifact_path(file_name), contents)
-    end
-
     define_method(:prefix_with_class_name) do |file_name|
       [filesystem_friendlify_class_name(described_class.name), file_name].join(".")
-    end
-
-    define_method(:test_artifact_path) do |file_name|
-      directory = %w[spec test_artifacts].join("/")
-      [directory, file_name].join("/")
-    end
-
-    define_method(:filesystem_friendlify_class_name) do |class_name|
-      class_name.split("::").join("_")
     end
   end
 end
