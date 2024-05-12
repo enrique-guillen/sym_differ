@@ -80,34 +80,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
     end
   end
 
-  describe "#scale_to_100_unit_square" do
-    subject(:scale_to_100_unit_square) do
-      described_class
-        .new(variable, expression_stringifier, expression_path_generator)
-        .scale_to_100_unit_square(expression_path, distance)
-    end
-
-    let(:variable) { "x" }
-    let(:expression_stringifier) { double(:expression_stringifier) }
-    let(:expression_path_generator) { double(:expression_path_generator) }
-
-    let(:expression_path) do
-      [evaluation_point(-10.0, -60.0),
-       evaluation_point(0.0, 30.0),
-       evaluation_point(10.0, 40.0)]
-    end
-
-    let(:distance) { 100 }
-
-    it "returns the evaluation points scaled down by the distance/100 factor" do
-      expect(scale_to_100_unit_square).to contain_exactly(
-        same_evaluation_point_as(evaluation_point(-50.0, -60.0)),
-        same_evaluation_point_as(evaluation_point(0.0, 30.0)),
-        same_evaluation_point_as(evaluation_point(50.0, 40.0))
-      )
-    end
-  end
-
   define_method(:evaluation_point) do |abscissa, ordinate|
     SymDiffer::DifferentiationGraph::EvaluationPoint.new(abscissa, ordinate)
   end

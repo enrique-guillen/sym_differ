@@ -4,6 +4,8 @@ require "sym_differ/differentiation_graph/step_range"
 require "sym_differ/differentiation_graph/evaluation_point"
 require "sym_differ/differentiation_graph/view"
 
+require "sym_differ/differentiation_graph/expression_path_scaler"
+
 module SymDiffer
   module DifferentiationGraph
     # Generates the view of the graphs for an expression and its derivative.
@@ -30,16 +32,11 @@ module SymDiffer
                  *ordinate_labels_and_positioning(min_value, max_value, distance))
       end
 
-      def scale_to_100_unit_square(expression_path, distance)
-        expression_path.map do |expression_point|
-          EvaluationPoint.new(
-            expression_point.abscissa * 5,
-            (expression_point.ordinate * 100) / distance
-          )
-        end
-      end
-
       private
+
+      def generate_expression_path(expression, step_range)
+        @expression_path_generator.generate(expression, @variable, step_range)
+      end
 
       def max_value_from_expression_paths(*paths)
         paths
@@ -53,15 +50,18 @@ module SymDiffer
           .min
       end
 
-      def generate_expression_path(expression, step_range)
-        @expression_path_generator.generate(expression, @variable, step_range)
-      end
-
       def stringified_expressions(expression, derivative_expression)
         stringified_expression = stringify_expression(expression)
         stringified_derivative_expression = stringify_expression(derivative_expression)
 
         [stringified_expression, stringified_derivative_expression]
+      end
+
+      def scale_to_100_unit_square(expression_path, ordinate_axis_distance)
+        abscissa_axis_distance = 20
+
+        expression_path_scaler_size_100
+          .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
       end
 
       def abscissas_labels_and_positioning
@@ -89,6 +89,10 @@ module SymDiffer
 
       def stringify_expression(expression)
         @expression_stringifier.stringify(expression)
+      end
+
+      def expression_path_scaler_size_100
+        @expression_path_scaler_size_100 ||= ExpressionPathScaler.new(100)
       end
     end
   end
