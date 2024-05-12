@@ -15,18 +15,18 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
       double(
         :view,
         show_total_area_aid: true,
-        expression_text: "x ^ 2",
-        derivative_expression_text: "2 * x",
-        abscissa_name: "x",
-        ordinate_name: "y",
-        ordinate_number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8],
-        ordinate_offset: 9,
-        abscissa_number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50],
-        abscissa_offset: 0,
-        origin_ordinate: 49,
-        origin_abscissa: 50,
-        expression_path:,
-        derivative_expression_path:
+        abscissa_axis: double(
+          :abscissa_axis,
+          name: "x", offset: 0, origin: 50,
+          number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50]
+        ),
+        ordinate_axis: double(
+          :ordinate_axis,
+          name: "y", offset: 9, origin: 49,
+          number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8]
+        ),
+        expression_graph: double(:expression_graph, text: "x ^ 2", path: expression_path),
+        derivative_expression_graph: double(:d_expression_graph, text: "2 * x", path: derivative_expression_path)
       )
     end
 

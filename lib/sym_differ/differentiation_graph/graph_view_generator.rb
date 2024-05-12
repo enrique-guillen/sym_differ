@@ -2,7 +2,10 @@
 
 require "sym_differ/differentiation_graph/step_range"
 require "sym_differ/differentiation_graph/evaluation_point"
+
 require "sym_differ/differentiation_graph/view"
+require "sym_differ/differentiation_graph/expression_graph_view"
+require "sym_differ/differentiation_graph/axis_view"
 
 require "sym_differ/differentiation_graph/expression_path_scaler"
 
@@ -18,49 +21,57 @@ module SymDiffer
       end
 
       def generate(expression, derivative_expression)
-        expression_path = generate_expression_path(expression, StepRange.new(-10.0..10.0))
-        derivative_expression_path = generate_expression_path(derivative_expression, StepRange.new(-10.0..10.0))
+        expression_path = generate_expression_path(expression, build_step_range(-10.0..10.0))
+        derivative_expression_path = generate_expression_path(derivative_expression, build_step_range(-10.0..10.0))
 
         max_value = max_value_from_expression_paths(expression_path, derivative_expression_path)
         min_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
         distance = max_value - min_value
 
-        View.new(false, @variable, "y", *stringified_expressions(expression, derivative_expression),
-                 scale_to_100_unit_square(expression_path, distance),
-                 scale_to_100_unit_square(derivative_expression_path, distance),
-                 *abscissas_labels_and_positioning,
-                 *ordinate_labels_and_positioning(min_value, max_value, distance))
+        abscissa_axis_view = generate_abscissa_axis_view
+        ordinate_axis_view = generate_ordinate_axis_view(min_value, max_value, distance)
+
+        expression_graph_view =
+          generate_expression_graph_view(expression, expression_path, distance)
+        derivative_expression_graph_view =
+          generate_expression_graph_view(derivative_expression, derivative_expression_path, distance)
+
+        new_view(false, abscissa_axis_view, ordinate_axis_view, expression_graph_view, derivative_expression_graph_view)
       end
 
       private
 
-      def generate_expression_path(expression, step_range)
-        @expression_path_generator.generate(expression, @variable, step_range)
-      end
-
       def max_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&method(:evaluate_point_ordinate)) }
+          .flat_map { |path| path.map(&:ordinate) }
           .max
       end
 
       def min_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&method(:evaluate_point_ordinate)) }
+          .flat_map { |path| path.map(&:ordinate) }
           .min
       end
 
-      def stringified_expressions(expression, derivative_expression)
-        stringified_expression = stringify_expression(expression)
-        stringified_derivative_expression = stringify_expression(derivative_expression)
+      def generate_abscissa_axis_view
+        new_axis_view(@variable, *abscissas_labels_and_positioning)
+      end
 
-        [stringified_expression, stringified_derivative_expression]
+      def generate_ordinate_axis_view(min_value, max_value, distance)
+        new_axis_view("y", *ordinate_labels_and_positioning(min_value, max_value, distance))
+      end
+
+      def generate_expression_graph_view(expression, expression_path, distance)
+        stringified_expression = stringify_expression(expression)
+        scaled_expression_path = scale_to_100_unit_square(expression_path, distance)
+
+        new_expression_graph_view(stringified_expression, scaled_expression_path)
       end
 
       def scale_to_100_unit_square(expression_path, ordinate_axis_distance)
         abscissa_axis_distance = 20
 
-        expression_path_scaler_size_100
+        expression_path_scaler
           .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
       end
 
@@ -83,16 +94,32 @@ module SymDiffer
         [ordinate_number_labels, origin_ordinate, ordinate_offset]
       end
 
-      def evaluate_point_ordinate(point)
-        point.ordinate
+      def generate_expression_path(expression, step_range)
+        @expression_path_generator.generate(expression, @variable, step_range)
+      end
+
+      def new_view(*args)
+        View.new(*args)
+      end
+
+      def new_expression_graph_view(*args)
+        ExpressionGraphView.new(*args)
+      end
+
+      def new_axis_view(*args)
+        AxisView.new(*args)
+      end
+
+      def build_step_range(range)
+        StepRange.new(range)
+      end
+
+      def expression_path_scaler
+        @expression_path_scaler ||= ExpressionPathScaler.new(100)
       end
 
       def stringify_expression(expression)
         @expression_stringifier.stringify(expression)
-      end
-
-      def expression_path_scaler_size_100
-        @expression_path_scaler_size_100 ||= ExpressionPathScaler.new(100)
       end
     end
   end

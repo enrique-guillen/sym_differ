@@ -9,13 +9,13 @@
     <circle cx="20" cy="20" r="5" fill="blue"/>
 
     <text x="40" y="30" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
-      Expression: <%= view.expression_text %>
+      Expression: <%= view.expression_graph.text %>
     </text>
 
     <circle cx="20" cy="50" r="5" fill="red"/>
 
     <text x="40" y="60" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
-      Derivative: <%= view.derivative_expression_text %>
+      Derivative: <%= view.derivative_expression_graph.text %>
     </text>
 
 
@@ -23,17 +23,17 @@
 
   <!-- Axis names  -->
     <text x="20" y="450" font-size="1.5em" font-style="italic" id="ordinate-name" font-family="Cantarell">
-      <%= view.ordinate_name %>
+      <%= view.ordinate_axis.name %>
     </text>
 
     <text x="450" y="880" font-size="1.5em" font-style="italic" id="abscissa-name" font-family="Cantarell">
-      <%= view.abscissa_name %>
+      <%= view.abscissa_axis.name %>
     </text>
 
 
 
 
-  <% view.ordinate_number_labels.reverse.each_with_index do |label, index| %>
+  <% view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
     <text x="0"
           y="<%= calculate_y_placement_of_abscissa_label(index) %>"
           transform="translate(60, 100)">
@@ -51,7 +51,7 @@
 
 
 
-  <% view.abscissa_number_labels.each_with_index do |label, index| %>
+  <% view.abscissa_axis.number_labels.each_with_index do |label, index| %>
     <text x="<%= calculate_x_placement_of_ordinate_label(index) %>" y="0" transform="translate(90, 820)">
       <%= label %>
     </text>
@@ -92,15 +92,15 @@
   <path
     id="expression-curve-approximation"
     d="
-      M <%= join_expression_point(view.expression_path.first) %>
-      L <% view.expression_path.each do |expression_data_point| %>
+      M <%= join_expression_point(view.expression_graph.path.first) %>
+      L <% view.expression_graph.path.each do |expression_data_point| %>
           <%= join_expression_point(expression_data_point) %>
         <% end %>
     "
     style="fill:none; stroke:blue; stroke-width:0.5985; stroke-opacity:1"
     transform="
-      translate(<%= 100 + multiply_by_grid_unit_size(view.origin_abscissa) %>,
-                <%= 100 + multiply_by_grid_unit_size(view.origin_ordinate) %>)
+      translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
+                <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
       scale(<%= grid_unit_size %>)
     "
   />
@@ -111,15 +111,15 @@
   <path
     id="derivative-expression-curve-approximation"
     d="
-      M <%= join_expression_point(view.derivative_expression_path.first) %>
-      L <% view.derivative_expression_path.each do |expression_data_point| %>
+      M <%= join_expression_point(view.derivative_expression_graph.path.first) %>
+      L <% view.derivative_expression_graph.path.each do |expression_data_point| %>
           <%= join_expression_point(expression_data_point) %>
         <% end %>
     "
     style="fill:none; stroke:red; stroke-width:0.3985; stroke-opacity:1"
     transform="
-      translate(<%= 100 + multiply_by_grid_unit_size(view.origin_abscissa) %>,
-                <%= 100 + multiply_by_grid_unit_size(view.origin_ordinate) %>)
+      translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
+                <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
       scale(<%= grid_unit_size %>)
     "
   />
