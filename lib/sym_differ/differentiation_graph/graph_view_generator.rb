@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/differentiation_graph/step_range"
-require "sym_differ/differentiation_graph/evaluation_point"
-
 require "sym_differ/differentiation_graph/view"
 require "sym_differ/differentiation_graph/expression_graph_view"
 require "sym_differ/differentiation_graph/axis_view"
@@ -14,65 +11,52 @@ module SymDiffer
     # Generates the view of the graphs for an expression and its derivative.
     class GraphViewGenerator
       # View of the graphs for an expression and its derivative.
-      def initialize(variable, expression_stringifier, expression_path_generator)
+      def initialize(variable, expression_stringifier)
         @variable = variable
         @expression_stringifier = expression_stringifier
-        @expression_path_generator = expression_path_generator
       end
 
-      def generate(expression, derivative_expression)
-        expression_path = generate_expression_path(expression, build_step_range(-10.0..10.0))
-        derivative_expression_path = generate_expression_path(derivative_expression, build_step_range(-10.0..10.0))
+      def generate(expression, derivative_expression, expression_graph_parameters = {})
+        @expression_graph_parameters = expression_graph_parameters
 
-        max_value = max_value_from_expression_paths(expression_path, derivative_expression_path)
-        min_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
-        distance = max_value - min_value
+        new_expression_path = expression_path
+        new_derivative_expression_path = derivative_expression_path
 
         abscissa_axis_view = generate_abscissa_axis_view
-        ordinate_axis_view = generate_ordinate_axis_view(min_value, max_value, distance)
+        ordinate_axis_view = generate_ordinate_axis_view
 
         expression_graph_view =
-          generate_expression_graph_view(expression, expression_path, distance)
+          generate_expression_graph_view(expression, new_expression_path)
         derivative_expression_graph_view =
-          generate_expression_graph_view(derivative_expression, derivative_expression_path, distance)
+          generate_expression_graph_view(derivative_expression, new_derivative_expression_path)
 
         new_view(false, abscissa_axis_view, ordinate_axis_view, expression_graph_view, derivative_expression_graph_view)
       end
 
       private
 
-      def max_value_from_expression_paths(*paths)
-        paths
-          .flat_map { |path| path.map(&:ordinate) }
-          .max
-      end
-
-      def min_value_from_expression_paths(*paths)
-        paths
-          .flat_map { |path| path.map(&:ordinate) }
-          .min
-      end
+      attr_reader :expression_graph_parameters
 
       def generate_abscissa_axis_view
         new_axis_view(@variable, *abscissas_labels_and_positioning)
       end
 
-      def generate_ordinate_axis_view(min_value, max_value, distance)
-        new_axis_view("y", *ordinate_labels_and_positioning(min_value, max_value, distance))
+      def generate_ordinate_axis_view
+        new_axis_view("y", *ordinate_labels_and_positioning)
       end
 
-      def generate_expression_graph_view(expression, expression_path, distance)
+      def generate_expression_graph_view(expression, expression_path)
         stringified_expression = stringify_expression(expression)
-        scaled_expression_path = scale_to_100_unit_square(expression_path, distance)
+        scaled_expression_path = scale_to_100_unit_square(expression_path)
 
         new_expression_graph_view(stringified_expression, scaled_expression_path)
       end
 
-      def scale_to_100_unit_square(expression_path, ordinate_axis_distance)
+      def scale_to_100_unit_square(expression_path)
         abscissa_axis_distance = 20
 
         expression_path_scaler
-          .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
+          .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_distance)
       end
 
       def abscissas_labels_and_positioning
@@ -83,35 +67,47 @@ module SymDiffer
         [abscissa_number_labels, origin_abscissa, abscissa_offset]
       end
 
-      def ordinate_labels_and_positioning(min_value, max_value, distance)
-        origin_ordinate = (max_value * 100) / distance
+      def ordinate_labels_and_positioning
+        origin_ordinate = (max_value * 100) / ordinate_distance
 
         ordinate_offset = 0.0
-        ordinate_label_gap = distance / 10.0
+        ordinate_label_gap = ordinate_distance / 10.0
 
         ordinate_number_labels = (0..10).map { |i| (min_value + (ordinate_label_gap * i)).round(3) }
 
         [ordinate_number_labels, origin_ordinate, ordinate_offset]
       end
 
-      def generate_expression_path(expression, step_range)
-        @expression_path_generator.generate(expression, @variable, step_range)
+      def expression_path
+        expression_graph_parameters[:expression_path]
       end
 
-      def new_view(*args)
-        View.new(*args)
+      def derivative_expression_path
+        expression_graph_parameters[:derivative_expression_path]
       end
 
-      def new_expression_graph_view(*args)
-        ExpressionGraphView.new(*args)
+      def max_value
+        expression_graph_parameters[:max_ordinate_value]
       end
 
-      def new_axis_view(*args)
-        AxisView.new(*args)
+      def min_value
+        expression_graph_parameters[:min_ordinate_value]
       end
 
-      def build_step_range(range)
-        StepRange.new(range)
+      def ordinate_distance
+        expression_graph_parameters[:ordinate_distance]
+      end
+
+      def new_view(*)
+        View.new(*)
+      end
+
+      def new_expression_graph_view(*)
+        ExpressionGraphView.new(*)
+      end
+
+      def new_axis_view(*)
+        AxisView.new(*)
       end
 
       def expression_path_scaler

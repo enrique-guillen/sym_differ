@@ -64,6 +64,9 @@ detectors:
       # We decided to take on the tech debt incurred by the data clump ['command_and_expresion_stack', 'index'] and it
       # should be refactored.
       - "SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer"
+      # We decided to take on the tech debt incurred by the data clump ['derivative_expression', 'expression'] but it's
+      # probably not a serious offense at the time of writing this.
+      - "SymDiffer::DifferentiationGraph::SvgBuilder"
 
   Attribute:
     exclude:

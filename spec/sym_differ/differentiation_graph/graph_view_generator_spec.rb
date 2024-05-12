@@ -9,28 +9,23 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
   describe "#generate" do
     subject(:generate) do
       described_class
-        .new(variable, expression_stringifier, expression_path_generator)
-        .generate(expression, derivative_expression)
+        .new(variable, expression_stringifier)
+        .generate(expression,
+                  derivative_expression,
+                  expression_path: expected_expression_path,
+                  derivative_expression_path: expected_derivative_expression_path,
+                  max_ordinate_value: 1000.0,
+                  min_ordinate_value: -1000.0,
+                  ordinate_distance: 2000.0)
     end
 
     before do
       allow(expression_stringifier).to receive(:stringify).with(expression).and_return("fun(x)")
       allow(expression_stringifier).to receive(:stringify).with(derivative_expression).and_return("defun(x)")
-
-      allow(expression_path_generator)
-        .to receive(:generate)
-        .with(expression, variable, an_object_having_attributes(first_element: -10.0, last_element: 10.0))
-        .and_return(expected_expression_path)
-
-      allow(expression_path_generator)
-        .to receive(:generate)
-        .with(derivative_expression, variable, an_object_having_attributes(first_element: -10.0, last_element: 10.0))
-        .and_return(expected_derivative_expression_path)
     end
 
     let(:variable) { "x" }
     let(:expression_stringifier) { double(:expression_stringifier) }
-    let(:expression_path_generator) { double(:expression_path_generator) }
 
     let(:expression) { double(:expression) }
     let(:derivative_expression) { double(:derivative_expression) }
