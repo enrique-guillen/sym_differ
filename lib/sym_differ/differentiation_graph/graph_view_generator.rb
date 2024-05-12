@@ -2,21 +2,13 @@
 
 require "sym_differ/differentiation_graph/step_range"
 require "sym_differ/differentiation_graph/evaluation_point"
+require "sym_differ/differentiation_graph/view"
 
 module SymDiffer
   module DifferentiationGraph
     # Generates the view of the graphs for an expression and its derivative.
     class GraphViewGenerator
       # View of the graphs for an expression and its derivative.
-      ViewStruct = Struct.new(
-        :show_total_area_aid,
-        :abscissa_name, :ordinate_name,
-        :expression_text, :derivative_expression_text,
-        :expression_path, :derivative_expression_path,
-        :abscissa_number_labels, :origin_abscissa, :abscissa_offset,
-        :ordinate_number_labels, :origin_ordinate, :ordinate_offset
-      )
-
       def initialize(variable, expression_stringifier, expression_path_generator)
         @variable = variable
         @expression_stringifier = expression_stringifier
@@ -31,11 +23,11 @@ module SymDiffer
         min_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
         distance = max_value - min_value
 
-        ViewStruct.new(false, @variable, "y", *stringified_expressions(expression, derivative_expression),
-                       scale_to_100_unit_square(expression_path, distance),
-                       scale_to_100_unit_square(derivative_expression_path, distance),
-                       *abscissas_labels_and_positioning,
-                       *ordinate_labels_and_positioning(min_value, max_value, distance))
+        View.new(false, @variable, "y", *stringified_expressions(expression, derivative_expression),
+                 scale_to_100_unit_square(expression_path, distance),
+                 scale_to_100_unit_square(derivative_expression_path, distance),
+                 *abscissas_labels_and_positioning,
+                 *ordinate_labels_and_positioning(min_value, max_value, distance))
       end
 
       def scale_to_100_unit_square(expression_path, distance)
