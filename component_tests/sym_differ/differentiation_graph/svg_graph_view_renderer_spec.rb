@@ -17,12 +17,12 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
         derivative_expression_text: "2 * x",
         abscissa_name: "x",
         ordinate_name: "y",
-        abscissa_number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40],
-        abscissa_offset: 9,
-        ordinate_number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50],
-        ordinate_offset: 0,
-        origin_abscissa: 49,
-        origin_ordinate: 50,
+        ordinate_number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8],
+        ordinate_offset: 9,
+        abscissa_number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50],
+        abscissa_offset: 0,
+        origin_ordinate: 49,
+        origin_abscissa: 50,
         expression_path:,
         derivative_expression_path:
       )

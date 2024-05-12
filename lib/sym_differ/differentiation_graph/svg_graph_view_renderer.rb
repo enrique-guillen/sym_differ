@@ -15,7 +15,6 @@ module SymDiffer
       private
 
       GRID_UNIT_SIZE = 7
-
       private_constant :GRID_UNIT_SIZE
 
       attr_reader :view
@@ -34,21 +33,21 @@ module SymDiffer
       end
 
       def calculate_y_placement_of_abscissa_label(index)
-        multiply_by_grid_unit_size(view.abscissa_offset) +
+        multiply_by_grid_unit_size(view.ordinate_offset) +
           multiply_by_grid_unit_size(index * 10) +
           vertical_offset_for_text_alignment
       end
 
       def calculate_y_placement_of_abscissa_gridline(index)
-        multiply_by_grid_unit_size(view.abscissa_offset) + multiply_by_grid_unit_size(index * 10)
+        multiply_by_grid_unit_size(view.ordinate_offset) + multiply_by_grid_unit_size(index * 10)
       end
 
       def calculate_x_placement_of_ordinate_label(index)
-        multiply_by_grid_unit_size(view.ordinate_offset) + multiply_by_grid_unit_size(index * 10)
+        multiply_by_grid_unit_size(view.abscissa_offset) + multiply_by_grid_unit_size(index * 10)
       end
 
       def calculate_x_placement_of_ordinate_gridline(index)
-        multiply_by_grid_unit_size(view.ordinate_offset) + multiply_by_grid_unit_size(index * 10)
+        multiply_by_grid_unit_size(view.abscissa_offset) + multiply_by_grid_unit_size(index * 10)
       end
 
       def join_expression_point(point)
