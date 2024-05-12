@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Support
+  # Support for storing post-test artifacts that form part of the test suite's output but not printed as part of the
+  # inmediate report (e.g., rspec logs).
   module TestArtifactStorage
     def write_test_artifact_path(file_name, contents)
       path = test_artifact_path(file_name)
