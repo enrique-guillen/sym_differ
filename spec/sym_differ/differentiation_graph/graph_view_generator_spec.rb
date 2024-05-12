@@ -43,19 +43,19 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
 
     let(:scaled_expected_expression_path) do
       [
-        evaluation_point(-10.0, -5.0), evaluation_point(-8.0, -2.56), evaluation_point(-6.0, -1.08),
-        evaluation_point(-4.0, -0.32), evaluation_point(-2.0, -0.04), evaluation_point(0.0, 0.0),
-        evaluation_point(2.0, 0.04), evaluation_point(4.0, 0.32), evaluation_point(6.0, 1.08),
-        evaluation_point(8.0, 2.56), evaluation_point(10.0, 5.0)
+        evaluation_point(-50.0, -50.0), evaluation_point(-40.0, -25.6), evaluation_point(-30.0, -10.8),
+        evaluation_point(-20.0, -3.2), evaluation_point(-10.0, -0.4), evaluation_point(0.0, 0.0),
+        evaluation_point(10.0, 0.4), evaluation_point(20.0, 3.2), evaluation_point(30.0, 10.8),
+        evaluation_point(40.0, 25.6), evaluation_point(50.0, 50.0)
       ]
     end
 
     let(:scaled_expected_derivative_expression_path) do
       [
-        evaluation_point(-10.0, 1.0), evaluation_point(-8.0, 0.64), evaluation_point(-6.0, 0.36),
-        evaluation_point(-4.0, 0.16), evaluation_point(-2.0, 0.04), evaluation_point(0.0, 0.0),
-        evaluation_point(2.0, 0.04), evaluation_point(4.0, 0.16), evaluation_point(6.0, 0.36),
-        evaluation_point(8.0, 0.64), evaluation_point(10.0, 1.0)
+        evaluation_point(-50.0, 10.0), evaluation_point(-40.0, 6.4), evaluation_point(-30.0, 3.6),
+        evaluation_point(-20.0, 1.6), evaluation_point(-10.0, 0.4), evaluation_point(0.0, 0.0),
+        evaluation_point(10.0, 0.4), evaluation_point(20.0, 1.6), evaluation_point(30.0, 3.6),
+        evaluation_point(40.0, 6.4), evaluation_point(50.0, 10.0)
       ]
     end
 
@@ -73,16 +73,16 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
         abscissa_number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
         origin_abscissa: 50, abscissa_offset: 0.0,
         ordinate_number_labels: [-1000.0, -800.0, -600.0, -400.0, -200.0, 0.0, 200.0, 400.0, 600.0, 800.0, 1000.0],
-        origin_ordinate: 5.0, ordinate_offset: 0.0
+        origin_ordinate: 50.0, ordinate_offset: 0.0
       )
     end
   end
 
-  describe "#scale_to_10_height_presentation" do
-    subject(:scale_to_10_height_presentation) do
+  describe "#scale_to_100_unit_square" do
+    subject(:scale_to_100_unit_square) do
       described_class
         .new(variable, expression_stringifier, expression_path_generator)
-        .scale_to_10_height_presentation(expression_path, distance)
+        .scale_to_100_unit_square(expression_path, distance)
     end
 
     let(:variable) { "x" }
@@ -98,10 +98,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
     let(:distance) { 100 }
 
     it "returns the evaluation points scaled down by the distance/100 factor" do
-      expect(scale_to_10_height_presentation).to eq(
-        [evaluation_point(-10.0, -6.0),
-         evaluation_point(0.0, 3.0),
-         evaluation_point(10.0, 4.0)]
+      expect(scale_to_100_unit_square).to eq(
+        [evaluation_point(-50.0, -60.0),
+         evaluation_point(0.0, 30.0),
+         evaluation_point(50.0, 40.0)]
       )
     end
   end

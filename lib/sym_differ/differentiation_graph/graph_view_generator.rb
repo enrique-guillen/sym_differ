@@ -31,17 +31,17 @@ module SymDiffer
         distance = max_value - min_value
 
         ViewStruct.new(false, @variable, "y", *stringified_expressions(expression, derivative_expression),
-                       scale_to_10_height_presentation(expression_path, distance),
-                       scale_to_10_height_presentation(derivative_expression_path, distance),
+                       scale_to_100_unit_square(expression_path, distance),
+                       scale_to_100_unit_square(derivative_expression_path, distance),
                        *abscissas_labels_and_positioning,
                        *ordinate_labels_and_positioning(min_value, max_value, distance))
       end
 
-      def scale_to_10_height_presentation(expression_path, distance)
+      def scale_to_100_unit_square(expression_path, distance)
         expression_path.map do |expression_point|
           [
-            expression_point[0],
-            (expression_point[1] * 10) / distance
+            expression_point[0] * 5,
+            (expression_point[1] * 100) / distance
           ]
         end
       end
@@ -80,17 +80,12 @@ module SymDiffer
       end
 
       def ordinate_labels_and_positioning(min_value, max_value, distance)
-        origin_ordinate = (max_value * 10) / distance
+        origin_ordinate = (max_value * 100) / distance
 
-        ordinate_offset = distance % 10
+        ordinate_offset = 0
         ordinate_label_gap = distance / 10.0
 
-        ordinate_number_labels =
-          if ordinate_offset.zero?
-            (0..10).map { |i| min_value + (ordinate_label_gap * i) }
-          else
-            (0..9).map { |i| min_value + (ordinate_label_gap * i) }
-          end
+        ordinate_number_labels = (0..10).map { |i| (min_value + (ordinate_label_gap * i)).round(3) }
 
         [ordinate_number_labels, origin_ordinate, ordinate_offset]
       end
