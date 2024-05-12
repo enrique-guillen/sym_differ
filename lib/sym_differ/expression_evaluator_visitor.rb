@@ -8,6 +8,10 @@ module SymDiffer
       @variable_values = variable_values
     end
 
+    def evaluate(expression)
+      evaluate_expression(expression)
+    end
+
     def visit_constant_expression(expression)
       expression.value
     end
@@ -17,38 +21,41 @@ module SymDiffer
     end
 
     def visit_sine_expression(expression)
-      angle = evaluate(expression.angle_expression)
+      angle = evaluate_expression(expression.angle_expression)
       Math.sin(angle)
     end
 
     def visit_cosine_expression(expression)
-      angle = evaluate(expression.angle_expression)
+      angle = evaluate_expression(expression.angle_expression)
       Math.cos(angle)
     end
 
     def visit_negate_expression(expression)
-      -evaluate(expression.negated_expression)
+      -evaluate_expression(expression.negated_expression)
     end
 
     def visit_positive_expression(expression)
-      evaluate(expression.summand)
+      evaluate_expression(expression.summand)
     end
 
     def visit_sum_expression(expression)
-      evaluate(expression.expression_a) + evaluate(expression.expression_b)
+      evaluate_expression(expression.expression_a) +
+        evaluate_expression(expression.expression_b)
     end
 
     def visit_subtract_expression(expression)
-      evaluate(expression.minuend) - evaluate(expression.subtrahend)
+      evaluate_expression(expression.minuend) -
+        evaluate_expression(expression.subtrahend)
     end
 
     def visit_multiplicate_expression(expression)
-      evaluate(expression.multiplicand) * evaluate(expression.multiplier)
+      evaluate_expression(expression.multiplicand) *
+        evaluate_expression(expression.multiplier)
     end
 
     private
 
-    def evaluate(expression)
+    def evaluate_expression(expression)
       expression.accept(self)
     end
   end
