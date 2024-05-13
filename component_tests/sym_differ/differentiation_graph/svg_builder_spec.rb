@@ -4,12 +4,14 @@ require "spec_helper"
 require "sym_differ/differentiation_graph/svg_builder"
 
 require "sym_differ/stringifier_visitor"
+require "sym_differ/differentiation_graph/svg_graph_view_renderer"
+require "sym_differ/expression_evaluator_visitor"
 
 RSpec.describe SymDiffer::DifferentiationGraph::SvgBuilder do
   describe "#build" do
     subject(:build) do
       described_class
-        .new(variable, expression_stringifier)
+        .new(variable, expression_stringifier, expression_path_generator, view_renderer, step_range)
         .build(expression, derivative_expression)
     end
 
@@ -17,6 +19,22 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgBuilder do
 
     let(:variable) { "x" }
     let(:expression_stringifier) { SymDiffer::StringifierVisitor.new }
+
+    let(:expression_path_generator) do
+      SymDiffer::DifferentiationGraph::ExpressionPathGenerator
+        .new(0.125, expression_evaluator_builder_class.new)
+    end
+
+    let(:view_renderer) { SymDiffer::DifferentiationGraph::SvgGraphViewRenderer.new }
+    let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(-10..10) }
+
+    let(:expression_evaluator_builder_class) do
+      Class.new do
+        def build(variable_values)
+          SymDiffer::ExpressionEvaluatorVisitor.new(variable_values)
+        end
+      end
+    end
 
     context "when the expression is 1" do
       let(:expression) { constant_expression(1) }

@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
-require "sym_differ/differentiation_graph/step_range"
-
 module SymDiffer
   module DifferentiationGraph
     # Outputs information about the expression graphs that must be honored regardless of view size.
     class ExpressionGraphParametersCalculator
-      def initialize(variable, expression_path_generator)
+      def initialize(variable, expression_path_generator, step_range)
         @variable = variable
         @expression_path_generator = expression_path_generator
+        @step_range = step_range
       end
 
       def calculate(expression, derivative_expression)
-        expression_path = generate_expression_path(expression, build_step_range(-10.0..10.0))
-        derivative_expression_path = generate_expression_path(derivative_expression, build_step_range(-10.0..10.0))
+        expression_path = generate_expression_path(expression, @step_range)
+        derivative_expression_path = generate_expression_path(derivative_expression, @step_range)
 
         max_ordinate_value = max_value_from_expression_paths(expression_path, derivative_expression_path)
         min_ordinate_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
@@ -38,10 +37,6 @@ module SymDiffer
 
       def generate_expression_path(expression, step_range)
         @expression_path_generator.generate(expression, @variable, step_range)
-      end
-
-      def build_step_range(range)
-        StepRange.new(range)
       end
     end
   end
