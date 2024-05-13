@@ -3,11 +3,13 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/expression_graph_parameters_calculator"
 
+require "sym_differ/differentiation_graph/step_range"
+
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalculator do
   describe "#generate" do
     subject(:generate) do
       described_class
-        .new(variable, expression_path_generator)
+        .new(variable, expression_path_generator, step_range)
         .calculate(expression, derivative_expression)
     end
 
@@ -25,6 +27,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
 
     let(:variable) { "x" }
     let(:expression_path_generator) { double(:expression_path_generator) }
+    let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(-10..10.0) }
 
     let(:expression) { double(:expression) }
     let(:derivative_expression) { double(:derivative_expression) }
