@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/parser"
 
-require "sym_differ/invalid_variable_given_to_expression_parser_error"
+require "sym_differ/expression_text_language_compiler/invalid_variable_given_to_expression_parser_error"
 require "sym_differ/expression_factory"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
@@ -121,7 +121,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       let(:variable) { "" }
 
       it "raises an error" do
-        expect { validate_variable }.to raise_error(a_kind_of(SymDiffer::InvalidVariableGivenToExpressionParserError))
+        expect { validate_variable }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidVariableGivenToExpressionParserError)
+        )
       end
     end
 
@@ -137,7 +139,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       let(:variable) { " " }
 
       it "raises an error" do
-        expect { validate_variable }.to raise_error(a_kind_of(SymDiffer::InvalidVariableGivenToExpressionParserError))
+        expect { validate_variable }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidVariableGivenToExpressionParserError)
+        )
       end
     end
 
@@ -145,7 +149,9 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       let(:variable) { " c " }
 
       it "raises an error" do
-        expect { validate_variable }.to raise_error(a_kind_of(SymDiffer::InvalidVariableGivenToExpressionParserError))
+        expect { validate_variable }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidVariableGivenToExpressionParserError)
+        )
       end
     end
   end

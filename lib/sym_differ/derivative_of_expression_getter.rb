@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sym_differ/invalid_variable_given_to_expression_parser_error"
-
 module SymDiffer
   # Implements the use case for a user getting the derivative of an expression.
   class DerivativeOfExpressionGetter
