@@ -22,6 +22,8 @@ module SymDiffer
     end
 
     def visualize(expression_text, variable)
+      validate_variable(variable)
+
       expression = parse_expression_text(expression_text)
 
       derive_expression(expression)
@@ -30,6 +32,10 @@ module SymDiffer
     end
 
     private
+
+    def validate_variable(variable)
+      @expression_text_parser.validate_variable(variable)
+    end
 
     def parse_expression_text(text)
       @expression_text_parser.parse(text)

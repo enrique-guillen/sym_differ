@@ -51,79 +51,93 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
     let(:step_range) { double(:step_range) }
 
     let(:expression_text) { "x + x" }
-    let(:variable) { "x" }
-
     let(:expression) { double(:expression) }
     let(:derivative_expression) { double(:derivative_expression) }
     let(:reduced_derivative_expression) { double(:reduced_derivative_expression) }
     let(:rendered_view) { double(:rendered_view) }
 
-    it { is_expected.to eq(rendered_view) }
+    context "when the variable is x" do
+      before { allow(expression_text_parser).to receive(:validate_variable).with("x").and_return(true) }
 
-    it "requests to render the expected view" do
-      visualize
+      let(:variable) { "x" }
 
-      expect(view_renderer).to have_received(:render).with(an_object_having_attributes(show_total_area_aid: false))
-    end
+      it { is_expected.to eq(rendered_view) }
 
-    it "requests to render the expected abscissa axis" do
-      visualize
+      it "requests to render the expected view" do
+        visualize
 
-      expect(view_renderer).to have_received(:render).with(
-        an_object_having_attributes(
-          show_total_area_aid: false,
-          abscissa_axis: an_object_having_attributes(
-            name: "x",
-            number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
-            origin: 50,
-            offset: 0.0
+        expect(view_renderer).to have_received(:render).with(an_object_having_attributes(show_total_area_aid: false))
+      end
+
+      it "requests to render the expected abscissa axis" do
+        visualize
+
+        expect(view_renderer).to have_received(:render).with(
+          an_object_having_attributes(
+            show_total_area_aid: false,
+            abscissa_axis: an_object_having_attributes(
+              name: "x",
+              number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
+              origin: 50,
+              offset: 0.0
+            )
           )
         )
-      )
-    end
+      end
 
-    it "requests to render the expected ordinate axis" do
-      visualize
+      it "requests to render the expected ordinate axis" do
+        visualize
 
-      expect(view_renderer).to have_received(:render).with(
-        an_object_having_attributes(
-          show_total_area_aid: false,
-          ordinate_axis: an_object_having_attributes(
-            name: "y",
-            number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0],
-            origin: 50,
-            offset: 0.0
+        expect(view_renderer).to have_received(:render).with(
+          an_object_having_attributes(
+            show_total_area_aid: false,
+            ordinate_axis: an_object_having_attributes(
+              name: "y",
+              number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0],
+              origin: 50,
+              offset: 0.0
+            )
           )
         )
-      )
-    end
+      end
 
-    it "requests to render the expected expression graph" do
-      visualize
+      it "requests to render the expected expression graph" do
+        visualize
 
-      expect(view_renderer).to have_received(:render).with(
-        an_object_having_attributes(
-          expression_graph: an_object_having_attributes(
-            text: "x + x",
-            path: [same_evaluation_point_as(evaluation_point(-50, -40)),
-                   same_evaluation_point_as(evaluation_point(50, 40))]
+        expect(view_renderer).to have_received(:render).with(
+          an_object_having_attributes(
+            expression_graph: an_object_having_attributes(
+              text: "x + x",
+              path: [same_evaluation_point_as(evaluation_point(-50, -40)),
+                     same_evaluation_point_as(evaluation_point(50, 40))]
+            )
           )
         )
-      )
-    end
+      end
 
-    it "requests to render the expected derivative expression graph" do
-      visualize
+      it "requests to render the expected derivative expression graph" do
+        visualize
 
-      expect(view_renderer).to have_received(:render).with(
-        an_object_having_attributes(
-          derivative_expression_graph: an_object_having_attributes(
-            text: "2",
-            path: [same_evaluation_point_as(evaluation_point(-50, 4)),
-                   same_evaluation_point_as(evaluation_point(50, 4))]
+        expect(view_renderer).to have_received(:render).with(
+          an_object_having_attributes(
+            derivative_expression_graph: an_object_having_attributes(
+              text: "2",
+              path: [same_evaluation_point_as(evaluation_point(-50, 4)),
+                     same_evaluation_point_as(evaluation_point(50, 4))]
+            )
           )
         )
-      )
+      end
+    end
+
+    context "when the variable is 1" do
+      before { allow(expression_text_parser).to receive(:validate_variable).with("1").and_raise("Error") }
+
+      let(:variable) { "1" }
+
+      it "raises the error from the validate-variable call" do
+        expect { visualize }.to raise_error("Error")
+      end
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
