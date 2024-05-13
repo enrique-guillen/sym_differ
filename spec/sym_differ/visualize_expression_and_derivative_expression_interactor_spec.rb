@@ -34,7 +34,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
       ]
     end
 
-    it { is_expected.to eq(rendered_view) }
+    it { is_expected.to have_attributes(image: rendered_view) }
 
     it "renders the expected view" do
       visualize

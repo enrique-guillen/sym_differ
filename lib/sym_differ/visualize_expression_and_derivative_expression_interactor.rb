@@ -13,25 +13,33 @@ require "sym_differ/differentiation_graph/step_range"
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
   class VisualizeExpressionAndDerivativeExpressionInteractor
+    # Defines the high-level response of this use case.
+    OperationResponse = Struct.new(:image)
+
     def initialize(view_renderer = SymDiffer::DifferentiationGraph::SvgGraphViewRenderer.new)
       @view_renderer = view_renderer
     end
 
     def visualize(expression_text, variable)
-      visualizer(variable).visualize(expression_text, variable)
+      image = visualizer(variable).visualize(expression_text, variable)
+
+      OperationResponse.new(image)
     end
 
     private
 
     def visualizer(variable)
+      expression_differentiation_visitor = differentiation_visitor(variable)
+      step_range = build_step_range(-10..10)
+
       ExpressionAndDerivativeExpressionVisualizer.new(
         expression_parser,
-        differentiation_visitor(variable),
+        expression_differentiation_visitor,
         expression_reducer,
         expression_stringifier,
         expression_path_generator,
         @view_renderer,
-        build_step_range(-10..10)
+        step_range
       )
     end
 
