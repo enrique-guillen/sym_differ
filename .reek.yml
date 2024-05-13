@@ -47,6 +47,9 @@ detectors:
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker#build_command_type_stack_item"
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker#build_command_type_stack_item"
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker#build_command_type_stack_item"
+      # There are many configurable behaviors and parameters to the visualization process and output of the graphs
+      # produced by this class. The tech debt is not significantly high at the time of writing this.
+      - "SymDiffer::ExpressionAndDerivativeExpressionVisualizer#initialize"
 
   NilCheck:
     # Use of Nil and nil checks can be justified, although avoiding it is an improvement. Adding a justification for
@@ -87,3 +90,10 @@ detectors:
     # We decided to take on the tech debt incurred by repeated conditionals across this call for the time being.
     exclude:
       - "SymDiffer::StringifierVisitor"
+
+  TooManyInstanceVariables:
+    exclude:
+      # There are many configurable behaviors and parameters to the visualization process and output of the graphs
+      # produced by the following 2 classes. The tech debt is not significantly high at the time of writing this.
+      - "SymDiffer::DifferentiationGraph::SvgBuilder"
+      - "SymDiffer::ExpressionAndDerivativeExpressionVisualizer"
