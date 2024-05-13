@@ -108,8 +108,8 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
           an_object_having_attributes(
             expression_graph: an_object_having_attributes(
               text: "x + x",
-              path: [same_evaluation_point_as(evaluation_point(-50, -40)),
-                     same_evaluation_point_as(evaluation_point(50, 40))]
+              path: [same_evaluation_point_as(evaluation_point(-50.0, -50.0)),
+                     same_evaluation_point_as(evaluation_point(50.0, 50.0))]
             )
           )
         )
@@ -122,8 +122,8 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
           an_object_having_attributes(
             derivative_expression_graph: an_object_having_attributes(
               text: "2",
-              path: [same_evaluation_point_as(evaluation_point(-50, 4)),
-                     same_evaluation_point_as(evaluation_point(50, 4))]
+              path: [same_evaluation_point_as(evaluation_point(-50.0, 5.0)),
+                     same_evaluation_point_as(evaluation_point(50.0, 5.0))]
             )
           )
         )

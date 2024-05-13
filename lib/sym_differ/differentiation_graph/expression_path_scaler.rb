@@ -7,13 +7,13 @@ module SymDiffer
     # Resizes the provided expression path's points so that the maximum value is scaled to the target size.
     class ExpressionPathScaler
       def initialize(target_size)
-        @target_size = target_size
+        @target_size = target_size.to_f
       end
 
       def scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
         expression_path.map do |expression_point|
-          new_abscissa = scale(expression_point.abscissa, @target_size / abscissa_axis_distance)
-          new_ordinate = scale(expression_point.ordinate, @target_size / ordinate_axis_distance)
+          new_abscissa = scale(expression_point.abscissa, @target_size / abscissa_axis_distance.to_f)
+          new_ordinate = scale(expression_point.ordinate, @target_size / ordinate_axis_distance.to_f)
 
           build_evaluation_point(new_abscissa, new_ordinate)
         end
