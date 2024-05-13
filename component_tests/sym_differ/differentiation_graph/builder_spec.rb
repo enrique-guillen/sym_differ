@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/differentiation_graph/svg_builder"
+require "sym_differ/differentiation_graph/builder"
 
 require "sym_differ/stringifier_visitor"
 require "sym_differ/differentiation_graph/svg_graph_view_renderer"
 require "sym_differ/expression_evaluator_visitor"
 
-RSpec.describe SymDiffer::DifferentiationGraph::SvgBuilder do
+RSpec.describe SymDiffer::DifferentiationGraph::Builder do
   describe "#build" do
     subject(:build) do
       described_class

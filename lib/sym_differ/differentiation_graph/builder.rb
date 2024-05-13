@@ -10,7 +10,7 @@ module SymDiffer
   module DifferentiationGraph
     # Takes the provided expression and derivative expression; builds an image of the "expression paths" approximating
     # the provided expression curves.
-    class SvgBuilder
+    class Builder
       def initialize(variable, expression_stringifier, expression_path_generator, view_renderer, step_range)
         @variable = variable
         @expression_stringifier = expression_stringifier
