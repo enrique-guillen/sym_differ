@@ -23,8 +23,6 @@ module SymDiffer
       def parse(expression_text)
         tokens = extract_tokens_from_expression(expression_text)
         convert_tokens_into_expression(tokens)
-      rescue EmptyExpressionTextError, UnrecognizedTokenError, InvalidSyntaxError
-        raise_unparseable_expression_error
       end
 
       def validate_variable(variable)
@@ -78,10 +76,6 @@ module SymDiffer
 
       def command_and_expression_stack_reducer
         CommandAndExpressionStackReducer.new
-      end
-
-      def raise_unparseable_expression_error
-        raise UnparseableExpressionTextError
       end
 
       def raise_invalid_variable_error(variable)

@@ -27,7 +27,9 @@ When("the user requests the derivative") do
     .new
     .calculate_derivative(@params[:expression], @params[:variable])
 rescue SymDiffer::InvalidVariableGivenToExpressionParserError,
-       SymDiffer::UnparseableExpressionTextError => e
+       SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError,
+       SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError,
+       SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError => e
   @result[:raised_exception] = e
 end
 

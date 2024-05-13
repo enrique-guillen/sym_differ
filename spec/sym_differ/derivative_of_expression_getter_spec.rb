@@ -3,7 +3,6 @@
 require "spec_helper"
 require "sym_differ/derivative_of_expression_getter"
 require "sym_differ/invalid_variable_given_to_expression_parser_error"
-require "sym_differ/unparseable_expression_text_error"
 
 RSpec.describe SymDiffer::DerivativeOfExpressionGetter do
   describe "#get" do

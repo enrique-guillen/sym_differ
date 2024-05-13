@@ -36,10 +36,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error referencing the unexpected symbol" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
-            having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError)
-              .and(having_attributes(invalid_expression_text: "!")))
-          )
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedTokenError)
+            .and(having_attributes(invalid_expression_text: "!"))
         )
       end
     end
@@ -49,11 +47,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error referencing the unexpected symbol" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError).and(
-            having_attributes(
-              cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError)
-            )
-          )
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::EmptyExpressionTextError)
         )
       end
     end
@@ -63,8 +57,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
         )
       end
     end
@@ -93,8 +86,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
         )
       end
     end
@@ -104,8 +96,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
         )
       end
     end
@@ -115,8 +106,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::UnparseableExpressionTextError)
-            .and(having_attributes(cause: a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)))
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
         )
       end
     end
