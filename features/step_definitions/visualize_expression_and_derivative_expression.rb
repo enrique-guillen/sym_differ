@@ -2,6 +2,8 @@
 
 require "sym_differ/visualize_expression_and_derivative_expression_interactor"
 
+require "sym_differ/error"
+
 Before do
   @params = { expression: nil, variable: nil }
   @result = { raised_exception: nil }
@@ -26,7 +28,7 @@ When("the user requests the image") do
     SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor
     .new
     .visualize(@params[:expression], @params[:variable])
-rescue StandardError => e
+rescue SymDiffer::Error => e
   @result[:raised_exception] = e
 end
 

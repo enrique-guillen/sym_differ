@@ -3,6 +3,8 @@
 require "spec_helper"
 require "sym_differ/expression_and_derivative_expression_visualizer"
 
+require "sym_differ/error"
+
 RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
   describe "#visualize" do
     subject(:visualize) do
@@ -131,12 +133,17 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
     end
 
     context "when the variable is 1" do
-      before { allow(expression_text_parser).to receive(:validate_variable).with("1").and_raise("Error") }
+      before do
+        allow(expression_text_parser)
+          .to receive(:validate_variable)
+          .with("1")
+          .and_raise(SymDiffer::Error, "Error")
+      end
 
       let(:variable) { "1" }
 
       it "raises the error from the validate-variable call" do
-        expect { visualize }.to raise_error("Error")
+        expect { visualize }.to raise_error(SymDiffer::Error, "Error")
       end
     end
 
