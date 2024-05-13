@@ -32,15 +32,13 @@ module SymDiffer
       expression_differentiation_visitor = differentiation_visitor(variable)
       step_range = build_step_range(-10..10)
 
-      ExpressionAndDerivativeExpressionVisualizer.new(
-        expression_parser,
-        expression_differentiation_visitor,
-        expression_reducer,
-        expression_stringifier,
-        expression_path_generator,
-        @view_renderer,
-        step_range
-      )
+      ExpressionAndDerivativeExpressionVisualizer.new(expression_parser,
+                                                      expression_differentiation_visitor,
+                                                      expression_reducer,
+                                                      expression_stringifier,
+                                                      expression_path_generator,
+                                                      @view_renderer,
+                                                      step_range)
     end
 
     def expression_parser
