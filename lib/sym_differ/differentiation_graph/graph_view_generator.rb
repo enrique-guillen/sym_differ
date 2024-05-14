@@ -60,22 +60,33 @@ module SymDiffer
       end
 
       def abscissas_labels_and_positioning
+        abscissa_offset = 0.0
         abscissa_number_labels = [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
         origin_abscissa = 50
-        abscissa_offset = 0.0
 
         [abscissa_number_labels, origin_abscissa, abscissa_offset]
       end
 
       def ordinate_labels_and_positioning
-        origin_ordinate = (max_value * 100) / ordinate_distance
-
         ordinate_offset = 0.0
-        ordinate_label_gap = ordinate_distance / 10.0
 
-        ordinate_number_labels = (0..10).map { |i| (min_value + (ordinate_label_gap * i)).round(3) }
+        origin_ordinate = ordinate_distance.zero? ? (max_value + 100.0) : (max_value * 100.0 / ordinate_distance)
+
+        new_ordinate_distance = ordinate_distance.zero? ? 1.0 : ordinate_distance
+
+        ordinate_label_gap = new_ordinate_distance / 10.0
+
+        ordinate_number_labels = produce_10_number_labels(min_value, ordinate_label_gap)
 
         [ordinate_number_labels, origin_ordinate, ordinate_offset]
+      end
+
+      def produce_10_number_labels(starting_value, numeric_gap)
+        (0..10).map { |i| round_number_label(starting_value + (numeric_gap * i)) }
+      end
+
+      def round_number_label(number)
+        number.round(3)
       end
 
       def expression_path

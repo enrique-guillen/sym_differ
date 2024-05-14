@@ -12,6 +12,14 @@ Feature: Visualize expression and derivative expression as SVG
 
   Rule: As long as the rule is valid per expression rules, it can be visualized.
 
+    Scenario: Visualizing image of 0 and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of 0
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_0_expression_and_derivative.svg
+
     Scenario: Visualizing image of 1 and its derivative, with respect to x.
       Given the image is requested of the expression and derivative of 1
       And the image is of the graphs with respect to, and of the derivative of the expression with respect to x

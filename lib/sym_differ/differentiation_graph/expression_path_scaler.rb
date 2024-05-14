@@ -11,6 +11,8 @@ module SymDiffer
       end
 
       def scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
+        (ordinate_axis_distance = @target_size) if ordinate_axis_distance.zero?
+
         expression_path.map do |expression_point|
           new_abscissa = scale(expression_point.abscissa, @target_size / abscissa_axis_distance.to_f)
           new_ordinate = scale(expression_point.ordinate, @target_size / ordinate_axis_distance.to_f)
