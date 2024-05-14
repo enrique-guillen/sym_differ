@@ -3,5 +3,7 @@ sym_differ-1.0.0.gem
 tags
 .rspec
 coverage/
-spec/test_artifacts
-features/test_artifacts
+spec/test_artifacts/*
+features/test_artifacts/*
+!spec/test_artifacts/.keepme
+!features/test_artifacts/.keepme
