@@ -2,11 +2,16 @@
 
 require "sym_differ/expression_and_derivative_expression_visualizer"
 require "sym_differ/expression_text_language_compiler/parser"
+
+require "sym_differ/expression_factory"
+
 require "sym_differ/differentiation/differentiation_visitor"
+
 require "sym_differ/expression_reducer"
 require "sym_differ/stringifier_visitor"
-require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/expression_evaluator_visitor"
+
+require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/differentiation_graph/svg_graph_view_renderer"
 require "sym_differ/differentiation_graph/step_range"
 
