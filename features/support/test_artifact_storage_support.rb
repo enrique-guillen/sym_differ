@@ -9,7 +9,7 @@ module SymDiffer
   module TestArtifactStorageSupport
     def write_test_artifact_path(file_name, contents)
       file_path = test_artifact_path(file_name)
-      hash_path = test_artifact_hash_path("#{file_name}.svg")
+      hash_path = test_artifact_hash_path("#{file_name}.hash")
 
       File.write(file_path, contents)
       File.write(hash_path, ::Digest::SHA256.bubblebabble(contents))
