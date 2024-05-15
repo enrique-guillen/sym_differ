@@ -12,18 +12,18 @@ Feature: Get the first order approximation of a first order differential equatio
 
   Rule: A simple approximation can be calculated.
 
-    Scenario: The user requests the approximation of y' = y, y(0) = 1, y-var="y", t-var="x"
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (0, 1)
+    Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var="y", t-var="x"
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, 1.0)
       And the user sets the y-variable name to y
       And the user sets the t-variable name to x
 
       When the user requests the approximation
 
       Then the approximation operation is successful
-      And the inital values of the approximation are:
+      And the initial values of the approximation are:
       """
-      0.000,1
+      0.000,1.0
       0.125,<to be defined>
       0.250,<to be defined>
       0.375,<to be defined>
@@ -32,9 +32,9 @@ Feature: Get the first order approximation of a first order differential equatio
 
   Rule: The expression, y-variable name, t-variable name, and initial ordinate value must be valid, if all provided.
 
-    Scenario: The user requests the approximation of y' = ~empty~, y(0) = 1, y-var="y", t-var="x"
-      Given the user wants the approximation of the equation y' = ~empty~
-      And the user sets the initial (t-var, y-var) coordinate is (0, 1)
+    Scenario: The user requests the approximation of y_function' = ~empty~, y(0.0) = 1.0, y-var="y", t-var="x"
+      Given the user wants the approximation of the equation y_function' = ~empty~
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, 1.0)
       And the user sets the y-variable name to y
       And the user sets the t-variable name to x
 
@@ -42,9 +42,9 @@ Feature: Get the first order approximation of a first order differential equatio
 
       Then the approximation operation is unsuccessful
 
-    Scenario: The user requests the approximation of y' = y, y(~empty~) = 1, y-var="y", t-var="x"
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (~empty~, 1)
+    Scenario: The user requests the approximation of y_function' = y, y(~empty~) = 1, y-var="y", t-var="x"
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (~empty~, 1)
       And the user sets the y-variable name to y
       And the user sets the t-variable name to x
 
@@ -52,9 +52,9 @@ Feature: Get the first order approximation of a first order differential equatio
 
       Then the approximation operation is unsuccessful
 
-    Scenario: The user requests the approximation of y' = y, y(0) = ~empty~, y-var="y", t-var="x"
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (0, ~empty~)
+    Scenario: The user requests the approximation of y_function' = y, y(0.0) = ~empty~, y-var="y", t-var="x"
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, ~empty~)
       And the user sets the y-variable name to y
       And the user sets the t-variable name to x
 
@@ -62,9 +62,9 @@ Feature: Get the first order approximation of a first order differential equatio
 
       Then the approximation operation is unsuccessful
 
-    Scenario: The user requests the approximation of y' = y, y(0) = 1, y-var="123invalid", t-var="x"
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (0, 1)
+    Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var="123invalid", t-var="x"
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, 1.0)
       And the user sets the y-variable name to 123invalid
       And the user sets the t-variable name to x
 
@@ -72,9 +72,9 @@ Feature: Get the first order approximation of a first order differential equatio
 
       Then the approximation operation is unsuccessful
 
-    Scenario: The user requests the approximation of y' = y, y(0) = 1, y-var="y", t-var="123invalid"
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (0, 1)
+    Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var="y", t-var="123invalid"
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, 1.0)
       And the user sets the y-variable name to x
       And the user sets the t-variable name to 123invalid
 
@@ -84,18 +84,18 @@ Feature: Get the first order approximation of a first order differential equatio
 
   Rule: The y-variable name, and t-variable name, may be omitted, and will default to "y" & "t" respectively.
 
-    Scenario: The user requests the approximation of y' = y, y(0) = 1, y-var=~empty~, t-var=~empty~
-      Given the user wants the approximation of the equation y' = y
-      And the user sets the initial (t-var, y-var) coordinate is (0, 1)
+    Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var=~empty~, t-var=~empty~
+      Given the user wants the approximation of the equation y_function' = y
+      And the user sets the initial (t-var, y-var) coordinate to (0.0, 1.0)
       And the user sets the y-variable name to ~empty~
       And the user sets the t-variable name to ~empty~
 
       When the user requests the approximation
 
       Then the approximation operation is successful
-      And the inital values of the approximation are:
+      And the initial values of the approximation are:
       """
-      0.000,1
+      0.000,1.0
       0.125,<to be defined>
       0.250,<to be defined>
       0.375,<to be defined>
