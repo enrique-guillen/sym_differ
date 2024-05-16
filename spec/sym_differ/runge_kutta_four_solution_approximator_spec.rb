@@ -3,6 +3,7 @@
 require "spec_helper"
 require "sym_differ/runge_kutta_four_solution_approximator"
 
+require "sym_differ/first_order_differential_equation_solution/equation_parameters"
 require "sym_differ/differentiation_graph/step_range"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
@@ -10,7 +11,12 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
     subject(:approximate_solution) do
       described_class
         .new(expression_evaluator, step_size)
-        .approximate_solution(expression, "y", "x", initial_value_coordinates, step_range)
+        .approximate_solution(equation_parameters, step_range)
+    end
+
+    let(:equation_parameters) do
+      SymDiffer::FirstOrderDifferentialEquationSolution::EquationParameters
+        .new(expression, "y", "x", initial_value_coordinates)
     end
 
     let(:expression_evaluator) { double(:expression_evaluator) }
