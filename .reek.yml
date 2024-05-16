@@ -20,13 +20,14 @@ detectors:
     enabled: false
 
   FeatureEnvy:
-    # Supressing this smell is less important than upholding other principles.
+    # Supressing this smell is less important than upholding other principles. Only check this smell occasionally.
     enabled: false
   UtilityFunction:
     # Supressing this smell is less important than upholding other principles.
     enabled: false
   DuplicateMethodCall:
-    # Instances of this smell don't necessarily indicate code we are not confident in.
+    # Instances of this smell don't necessarily indicate code we are not confident in. Only check this smell
+    # occasionally.
     enabled: false
   ControlParameter:
     # From documentation at time of writing this:
@@ -34,6 +35,14 @@ detectors:
     #
     # For behavior impacted by external factors such as user input, the best place to decide the code path to take might
     # not be the calling method.
+    enabled: false
+
+  NilCheck:
+    # The cost of nil checks is not high enough to enable this smell by default.
+    enabled: false
+
+  DataClump:
+    # Only check this smell occasionally.
     enabled: false
 
   LongParameterList:
@@ -50,26 +59,9 @@ detectors:
       # There are many configurable behaviors and parameters to the visualization process and output of the graphs
       # produced by this class. The tech debt is not significantly high at the time of writing this.
       - "SymDiffer::ExpressionAndDerivativeExpressionVisualizer#initialize"
-
-  NilCheck:
-    # Use of Nil and nil checks can be justified, although avoiding it is an improvement. Adding a justification for
-    # each usage is not necessary.
-    enabled: false
-
-  DataClump:
-    exclude:
-      # We decided to take on the tech debt incurred by the data clump ['expression_text', 'variable'] and it should be
-      # refactored.
-      - "SymDiffer::DerivativeOfExpressionGetter"
-      # We decided to take on the tech debt incurred by the data clump ['minuend', 'subtrahend'] and it should be
-      # refactored.
-      - "SymDiffer::ExpressionReduction::SubtractExpressionReducer"
-      # We decided to take on the tech debt incurred by the data clump ['command_and_expresion_stack', 'index'] and it
-      # should be refactored.
-      - "SymDiffer::ExpressionTextLanguageCompiler::CommandAndExpressionStackReducer"
-      # We decided to take on the tech debt incurred by the data clump ['derivative_expression', 'expression'] but it's
-      # probably not a serious offense at the time of writing this.
-      - "SymDiffer::DifferentiationGraph::Builder"
+      # In context the long parameter list makes sense and we've partially compacted the list already by e.g.,
+      # introducing the EquationParameters object.
+      - "SymDiffer::FirstOrderDifferentialEquationApproximator#approximate_solution"
 
   Attribute:
     exclude:
@@ -97,3 +89,6 @@ detectors:
       # produced by the following 2 classes. The tech debt is not significantly high at the time of writing this.
       - "SymDiffer::DifferentiationGraph::Builder"
       - "SymDiffer::ExpressionAndDerivativeExpressionVisualizer"
+      # There are many configurable behaviors and parameters to the approximation process. The tech debt is not
+      # significantly high at the time of writing this.
+      - "SymDiffer::FirstOrderDifferentialEquationApproximator"
