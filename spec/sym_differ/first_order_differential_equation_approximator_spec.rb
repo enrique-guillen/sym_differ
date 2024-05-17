@@ -43,7 +43,14 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
       before do
         allow(solution_approximator)
           .to receive(:approximate_solution)
-          .with(same_expression_as(variable_expression("y")), "y", "x", coordinates(0, 1))
+          .with(
+            an_object_having_attributes(
+              expression: same_expression_as(variable_expression("y")),
+              undetermined_function_name: "y",
+              variable_name: "x",
+              initial_coordinates: coordinates(0, 1)
+            )
+          )
           .and_return(solution_approximation)
       end
 
@@ -100,7 +107,14 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
       before do
         allow(solution_approximator)
           .to receive(:approximate_solution)
-          .with(same_expression_as(variable_expression("y")), "y", "t", coordinates(0, 1))
+          .with(
+            an_object_having_attributes(
+              expression: same_expression_as(variable_expression("y")),
+              undetermined_function_name: "y",
+              variable_name: "t",
+              initial_coordinates: coordinates(0, 1)
+            )
+          )
           .and_return(solution_approximation)
       end
 
