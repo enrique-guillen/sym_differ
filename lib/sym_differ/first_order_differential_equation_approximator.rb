@@ -11,12 +11,14 @@ module SymDiffer
       @solution_approximator = solution_approximator
     end
 
-    def approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates, step_range)
-      y_variable_name = "y" if y_variable_name.empty?
-      t_variable_name = "t" if t_variable_name.empty?
+    def approximate_solution(
+      expression_text, undetermined_function_name, variable_name, initial_value_coordinates, step_range
+    )
+      undetermined_function_name = "y" if undetermined_function_name.empty?
+      variable_name = "t" if variable_name.empty?
 
-      @y_variable_name = y_variable_name
-      @t_variable_name = t_variable_name
+      @undetermined_function_name = undetermined_function_name
+      @variable_name = variable_name
       @initial_value_coordinates = initial_value_coordinates
 
       validate_variables_and_approximate_solution(expression_text, step_range)
@@ -24,11 +26,11 @@ module SymDiffer
 
     private
 
-    attr_reader :y_variable_name, :t_variable_name, :initial_value_coordinates
+    attr_reader :undetermined_function_name, :variable_name, :initial_value_coordinates
 
     def validate_variables_and_approximate_solution(expression_text, step_range)
-      validate_variable(y_variable_name)
-      validate_variable(t_variable_name)
+      validate_variable(undetermined_function_name)
+      validate_variable(variable_name)
 
       parse_expression_text(expression_text)
         .then { |expression| approximate_solution_via_approximator(expression, step_range) }
@@ -44,7 +46,7 @@ module SymDiffer
 
     def approximate_solution_via_approximator(expression, step_range)
       @solution_approximator.approximate_solution(
-        build_equation_parameters(expression, y_variable_name, t_variable_name, initial_value_coordinates),
+        build_equation_parameters(expression, undetermined_function_name, variable_name, initial_value_coordinates),
         step_range
       )
     end

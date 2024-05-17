@@ -10,7 +10,11 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
     subject(:approximate_solution) do
       described_class
         .new(expression_text_parser, solution_approximator)
-        .approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates, step_range)
+        .approximate_solution(expression_text,
+                              undetermined_function_name,
+                              variable_name,
+                              initial_value_coordinates,
+                              step_range)
     end
 
     before do
@@ -58,8 +62,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
       end
 
       let(:expression_text) { "y" }
-      let(:y_variable_name) { "y" }
-      let(:t_variable_name) { "x" }
+      let(:undetermined_function_name) { "y" }
+      let(:variable_name) { "x" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
       let(:solution_approximation) { double(:solution_approximation) }
@@ -69,8 +73,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
 
     context "when expression = , y-var name = y, t-var name = x, initial value coordinates = (0, 1)" do
       let(:expression_text) { "" }
-      let(:y_variable_name) { "y" }
-      let(:t_variable_name) { "x" }
+      let(:undetermined_function_name) { "y" }
+      let(:variable_name) { "x" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
       let(:solution_approximation) { double(:solution_approximation) }
@@ -82,8 +86,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
 
     context "when expression = y, y-var name = 123invalid, t-var name = x, initial value coordinates = (0, 1)" do
       let(:expression_text) { "y" }
-      let(:y_variable_name) { "123invalid" }
-      let(:t_variable_name) { "x" }
+      let(:undetermined_function_name) { "123invalid" }
+      let(:variable_name) { "x" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
       let(:solution_approximation) { double(:solution_approximation) }
@@ -95,8 +99,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
 
     context "when expression = y, y-var name = y, t-var name = 123invalid, initial value coordinates = (0, 1)" do
       let(:expression_text) { "y" }
-      let(:y_variable_name) { "y" }
-      let(:t_variable_name) { "123invalid" }
+      let(:undetermined_function_name) { "y" }
+      let(:variable_name) { "123invalid" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
       let(:solution_approximation) { double(:solution_approximation) }
@@ -123,8 +127,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
       end
 
       let(:expression_text) { "y" }
-      let(:y_variable_name) { "" }
-      let(:t_variable_name) { "" }
+      let(:undetermined_function_name) { "" }
+      let(:variable_name) { "" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
       let(:solution_approximation) { double(:solution_approximation) }
