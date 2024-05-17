@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/visualize_expression_and_derivative_expression_interactor"
 
-require "sym_differ/differentiation_graph/evaluation_point"
+require "sym_differ/evaluation_point"
 
 RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor do
   describe "#visualize" do
@@ -95,7 +95,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::DifferentiationGraph::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end

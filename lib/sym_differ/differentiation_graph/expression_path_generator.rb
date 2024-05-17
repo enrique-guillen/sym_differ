@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/step_range"
-require "sym_differ/differentiation_graph/evaluation_point"
+require "sym_differ/evaluation_point"
 
 module SymDiffer
   module DifferentiationGraph

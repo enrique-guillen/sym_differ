@@ -74,6 +74,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
   end
 
   define_method(:evaluation_point) do |abscissa, ordinate|
-    SymDiffer::DifferentiationGraph::EvaluationPoint.new(abscissa, ordinate)
+    SymDiffer::EvaluationPoint.new(abscissa, ordinate)
   end
 end

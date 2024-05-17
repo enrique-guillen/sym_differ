@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/differentiation_graph/evaluation_point"
+require "sym_differ/evaluation_point"
 
-RSpec.describe SymDiffer::DifferentiationGraph::EvaluationPoint do
+RSpec.describe SymDiffer::EvaluationPoint do
   describe "#initialize" do
     subject(:evaluation_point) do
       described_class.new(2, 3)

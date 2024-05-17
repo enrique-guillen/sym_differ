@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/expression_path_scaler"
 
-require "sym_differ/differentiation_graph/evaluation_point"
+require "sym_differ/evaluation_point"
 
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathScaler do
   describe "#scale_to_target_sized_square" do
@@ -56,7 +56,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathScaler do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::DifferentiationGraph::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end
