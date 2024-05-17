@@ -4,7 +4,7 @@ require "spec_helper"
 require "sym_differ/runge_kutta_four_solution_approximator"
 
 require "sym_differ/first_order_differential_equation_solution/equation_parameters"
-require "sym_differ/differentiation_graph/step_range"
+require "sym_differ/step_range"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
@@ -34,7 +34,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       let(:step_size) { 0.250 }
 
       context "when step range = 0.25..0.25" do
-        let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(0.25..0.25) }
+        let(:step_range) { SymDiffer::StepRange.new(0.25..0.25) }
 
         it "returns the expected approximation over the given step range" do
           expect(approximate_solution).to eq(
@@ -44,7 +44,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       context "when step range = 0.25..1" do
-        let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(0.25..1) }
+        let(:step_range) { SymDiffer::StepRange.new(0.25..1) }
 
         it "returns the expected approximation over the given step range" do
           expect(approximate_solution).to eq(
@@ -70,7 +70,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       let(:initial_value_coordinates) { [0.0, 0.0] }
-      let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(0.125..1) }
+      let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
       let(:step_size) { 0.125 }
 
       it "returns the expected approximation over the given step range" do
@@ -96,7 +96,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       let(:initial_value_coordinates) { [0.0, 1.0] }
-      let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(0.125..1) }
+      let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
       let(:step_size) { 0.125 }
 
       it "returns the expected approximation over the given step range" do

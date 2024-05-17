@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/differentiation_graph/step_range"
+require "sym_differ/step_range"
 
 module SymDiffer
   # Returns an expression path (list of approximate coordinates) that solve the equation f'=provided-expression.
@@ -138,7 +138,7 @@ module SymDiffer
     end
 
     def build_step_range(range)
-      DifferentiationGraph::StepRange.new(range)
+      StepRange.new(range)
     end
 
     def equation_expression

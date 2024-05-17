@@ -26,7 +26,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::Builder do
     end
 
     let(:view_renderer) { SymDiffer::DifferentiationGraph::SvgGraphViewRenderer.new }
-    let(:step_range) { SymDiffer::DifferentiationGraph::StepRange.new(-10..10) }
+    let(:step_range) { SymDiffer::StepRange.new(-10..10) }
 
     let(:expression_evaluator_builder_class) do
       Class.new do

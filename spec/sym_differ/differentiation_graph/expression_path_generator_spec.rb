@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/expression_path_generator"
 
-require "sym_differ/differentiation_graph/step_range"
+require "sym_differ/step_range"
 require "sym_differ/differentiation_graph/evaluation_point"
 
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
@@ -77,7 +77,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     define_method(:graph_step_range) do |range|
-      SymDiffer::DifferentiationGraph::StepRange.new(range)
+      SymDiffer::StepRange.new(range)
     end
   end
 end
