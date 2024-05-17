@@ -24,14 +24,14 @@ Feature: Numerical approximation of first order differential equation solution.
 
       When the approximation is requested
 
-      Then the approximation operation is successful
-      And the inital values of the approximation are:
+      Then some of the values of the approximation are:
       """
-      0.000,0.0
-      0.125,<to be defined>
-      0.250,<to be defined>
-      0.375,<to be defined>
-      0.500,<to be defined>
+      0.0, 0.0
+      0.125, 0.023437499999999997
+      0.5, 0.18750000000000003
+      1.0, 0.6250000000000002
+      5.0, 13.125
+      10.0, 51.250000000000014
       """
 
     Scenario: The user requests the approximation of y' = y, y(0.0) = 1, y-var="y", t-var="x"
@@ -42,66 +42,66 @@ Feature: Numerical approximation of first order differential equation solution.
 
       When the approximation is requested
 
-      Then the approximation operation is successful
-      And the inital values of the approximation are:
+      Then some of the values of the approximation are:
       """
-      0.000,1.0
-      0.125,<to be defined>
-      0.250,<to be defined>
-      0.375,<to be defined>
-      0.500,<to be defined>
+      0.0, 1.0
+      0.125, 1.1271974540051117
+      0.5, 1.6143585443928121
+      1.0, 2.6061535098540802
+      5.0, 120.22643420198703
+      10.0, 14454.395480924717
       """
 
     Scenario: The user requests the approximation of y' = x - y, y(0.0) = 1, y-var="y", t-var="x"
-      Given the approximation is requested of the equation y' = y
+      Given the approximation is requested of the equation y' = x - y
       And the initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
       And the y-variable name of the approximation is set to y
       And the t-variable name of the approximation is set to x
 
       When the approximation is requested
 
-      Then the approximation operation is successful
-      And the inital values of the approximation are:
+      Then some of the values of the approximation are:
       """
-      0.000,1.0
-      0.125,<to be defined>
-      0.250,<to be defined>
-      0.375,<to be defined>
-      0.500,<to be defined>
+      0.0, 1.0
+      0.125, 0.9002054238025052
+      0.5, 0.7533717903344526
+      1.0, 0.8114082952744177
+      5.0, 4.179936698450573
+      10.0, 9.170322644855332
       """
 
-    Scenario: The user requests the approximation of y' = x * x + 1, y(0.0) = 0.0, y-var="y", t-var="x"
-      Given the approximation is requested of the equation y' = y
+    Scenario: The user requests the approximation of y' = x + 1, y(0.0) = 0.0, y-var="y", t-var="x"
+      Given the approximation is requested of the equation y' = x + 1
       And the initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
       And the y-variable name of the approximation is set to y
       And the t-variable name of the approximation is set to x
 
       When the approximation is requested
 
-      Then the approximation operation is successful
-      And the inital values of the approximation are:
+      Then some of the values of the approximation are:
       """
-      0.000,0.0
-      0.125,<to be defined>
-      0.250,<to be defined>
-      0.375,<to be defined>
-      0.500,<to be defined>
+      0.0, 0.0
+      0.125, 0.14843749999999997
+      0.5, 0.6874999999999998
+      1.0, 1.625
+      5.0, 18.124999999999996
+      10.0, 61.25
       """
 
     Scenario: The user requests the approximation of y' = x * x + 1, y(0.0) = 1.0, y-var="y", t-var="x"
-      Given the approximation is requested of the equation y' = y
+      Given the approximation is requested of the equation y' = x * x + 1
       And the initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
       And the y-variable name of the approximation is set to y
       And the t-variable name of the approximation is set to x
 
       When the approximation is requested
 
-      Then the approximation operation is successful
-      And the inital values of the approximation are:
+      Then some of the values of the approximation are:
       """
-      0.000,1.0
-      0.125,<to be defined>
-      0.250,<to be defined>
-      0.375,<to be defined>
-      0.500,<to be defined>
+      0.0, 1.0
+      0.125, 1.129557291666667
+      0.5, 1.580729166666667
+      1.0, 2.473958333333333
+      5.0, 50.86979166666666
+      10.0, 356.98958333333337
       """
