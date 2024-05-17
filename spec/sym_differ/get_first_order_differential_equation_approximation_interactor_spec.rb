@@ -9,13 +9,13 @@ RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteract
   describe "#approximate_solution" do
     subject(:approximate_solution) do
       described_class.new.approximate_solution(
-        expression_text, y_variable_name, t_variable_name, initial_value_coordinates
+        expression_text, undetermined_function_name, variable_name, initial_value_coordinates
       )
     end
 
     let(:expression_text) { "y" }
-    let(:y_variable_name) { "y" }
-    let(:t_variable_name) { "x" }
+    let(:undetermined_function_name) { "y" }
+    let(:variable_name) { "x" }
 
     context "when initial coordinates = 0.0, 1.0" do
       let(:initial_value_coordinates) { coordinates(0.0, 1.0) }

@@ -12,16 +12,16 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:approximated_solution)
 
-    def approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates)
+    def approximate_solution(expression_text, undetermined_function_name, variable_name, initial_value_coordinates)
       starting_abscissa = access_asbcissa_of_coordinates(initial_value_coordinates)
 
       step_range_starting_point = (starting_abscissa + 0.125)
       step_range_last_point = (starting_abscissa + 10.0)
       step_range = build_step_range(step_range_starting_point..step_range_last_point)
 
-      approximated_solution =
-        first_order_differential_equation_approximator
-        .approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates, step_range)
+      approximated_solution = first_order_differential_equation_approximator.approximate_solution(
+        expression_text, undetermined_function_name, variable_name, initial_value_coordinates, step_range
+      )
 
       build_operation_response(approximated_solution)
     end
