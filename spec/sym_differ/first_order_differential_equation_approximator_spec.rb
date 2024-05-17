@@ -10,7 +10,7 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
     subject(:approximate_solution) do
       described_class
         .new(expression_text_parser, solution_approximator)
-        .approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates)
+        .approximate_solution(expression_text, y_variable_name, t_variable_name, initial_value_coordinates, step_range)
     end
 
     before do
@@ -39,6 +39,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
     let(:expression_text_parser) { double(:expression_text_parser) }
     let(:solution_approximator) { double(:solution_approximator) }
 
+    let(:step_range) { double(:step_range) }
+
     context "when expression = y, y-var name = y, t-var name = x, initial value coordinates = (0, 1)" do
       before do
         allow(solution_approximator)
@@ -49,7 +51,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
               undetermined_function_name: "y",
               variable_name: "x",
               initial_coordinates: coordinates(0, 1)
-            )
+            ),
+            step_range
           )
           .and_return(solution_approximation)
       end
@@ -113,7 +116,8 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
               undetermined_function_name: "y",
               variable_name: "t",
               initial_coordinates: coordinates(0, 1)
-            )
+            ),
+            step_range
           )
           .and_return(solution_approximation)
       end
