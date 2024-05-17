@@ -4,7 +4,9 @@ require "spec_helper"
 require "sym_differ/runge_kutta_four_solution_approximator"
 
 require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+
 require "sym_differ/step_range"
+require "sym_differ/evaluation_point"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
@@ -36,27 +38,30 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       context "when step range = 0.25..0.25" do
         let(:step_range) { SymDiffer::StepRange.new(0.25..0.25) }
 
-        it "returns the expected approximation over the given step range" do
-          expect(approximate_solution).to eq(
-            [[0.0, 0.0], [0.25, 0.24999999999999997]]
-          )
+        let(:expected_solution_path) do
+          [
+            evaluation_point(0.0, 0.0),
+            evaluation_point(0.25, 0.24999999999999997)
+          ].map(&method(:same_evaluation_point_as))
         end
+
+        it { is_expected.to match_array(expected_solution_path) }
       end
 
       context "when step range = 0.25..1" do
         let(:step_range) { SymDiffer::StepRange.new(0.25..1) }
 
-        it "returns the expected approximation over the given step range" do
-          expect(approximate_solution).to eq(
-            [
-              [0.0, 0.0],
-              [0.25, 0.24999999999999997],
-              [0.5, 0.49999999999999994],
-              [0.75, 0.75],
-              [1.0, 1.0]
-            ]
-          )
+        let(:expected_solution_path) do
+          [
+            evaluation_point(0.0, 0.0),
+            evaluation_point(0.25, 0.24999999999999997),
+            evaluation_point(0.5, 0.49999999999999994),
+            evaluation_point(0.75, 0.75),
+            evaluation_point(1.0, 1.0)
+          ].map(&method(:same_evaluation_point_as))
         end
+
+        it { is_expected.to match_array(expected_solution_path) }
       end
     end
 
@@ -73,17 +78,17 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
       let(:step_size) { 0.125 }
 
-      it "returns the expected approximation over the given step range" do
-        expect(approximate_solution).to eq(
-          [
-            evaluation_point(0.0, 0.0), evaluation_point(0.125, 0.171875),
-            evaluation_point(0.25, 0.37499999999999994), evaluation_point(0.375, 0.6093749999999999),
-            evaluation_point(0.5, 0.8749999999999998), evaluation_point(0.625, 1.1718749999999996),
-            evaluation_point(0.75, 1.4999999999999996), evaluation_point(0.875, 1.8593749999999998),
-            evaluation_point(1.0, 2.25)
-          ]
-        )
+      let(:expected_solution_path) do
+        [
+          evaluation_point(0.0, 0.0), evaluation_point(0.125, 0.171875),
+          evaluation_point(0.25, 0.37499999999999994), evaluation_point(0.375, 0.6093749999999999),
+          evaluation_point(0.5, 0.8749999999999998), evaluation_point(0.625, 1.1718749999999996),
+          evaluation_point(0.75, 1.4999999999999996), evaluation_point(0.875, 1.8593749999999998),
+          evaluation_point(1.0, 2.25)
+        ].map(&method(:same_evaluation_point_as))
       end
+
+      it { is_expected.to match_array(expected_solution_path) }
     end
 
     context "when the expression is y, initial coordinates (0, 1), step range = 0.125..1, step size 0.125" do
@@ -99,21 +104,21 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
       let(:step_size) { 0.125 }
 
-      it "returns the expected approximation over the given step range" do
-        expect(approximate_solution).to eq(
-          [
-            evaluation_point(0.0, 1.0), evaluation_point(0.125, 1.1271974540051117),
-            evaluation_point(0.25, 1.2705741003156061), evaluation_point(0.375, 1.4321878910005867),
-            evaluation_point(0.5, 1.6143585443928121), evaluation_point(0.625, 1.8197008410909763),
-            evaluation_point(0.75, 2.0511621551287096), evaluation_point(0.875, 2.3120647590127197),
-            evaluation_point(1.0, 2.6061535098540802)
-          ]
-        )
+      let(:expected_solution_path) do
+        [
+          evaluation_point(0.0, 1.0), evaluation_point(0.125, 1.1271974540051117),
+          evaluation_point(0.25, 1.2705741003156061), evaluation_point(0.375, 1.4321878910005867),
+          evaluation_point(0.5, 1.6143585443928121), evaluation_point(0.625, 1.8197008410909763),
+          evaluation_point(0.75, 2.0511621551287096), evaluation_point(0.875, 2.3120647590127197),
+          evaluation_point(1.0, 2.6061535098540802)
+        ].map(&method(:same_evaluation_point_as))
       end
+
+      it { is_expected.to match_array(expected_solution_path) }
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      [abscissa, ordinate]
+      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
     end
 
     define_method(:evaluate_expression_as_2x_plus_1) do |_expression, variables|

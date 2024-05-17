@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 require "sym_differ/step_range"
+require "sym_differ/evaluation_point"
+require "forwardable"
 
 module SymDiffer
   # Returns an expression path (list of approximate coordinates) that solve the equation f'=provided-expression.
   class RungeKuttaFourSolutionApproximator
+    extend Forwardable
+
     def initialize(expression_evaluator, step_size)
       @expression_evaluator = expression_evaluator
       @step_size = step_size
@@ -12,12 +16,12 @@ module SymDiffer
 
     def approximate_solution(equation_parameters, step_range)
       @equation_parameters = equation_parameters
-      approximate_solution_for_step_range(step_range)
+      approximate_solution_for_step_range(step_range, [build_evaluation_point(*equation_initial_coordinates)])
     end
 
     private
 
-    def approximate_solution_for_step_range(step_range, evaluation_path = [equation_parameters.initial_coordinates])
+    def approximate_solution_for_step_range(step_range, evaluation_path)
       return evaluation_path if no_remaining_items_in_range?(step_range)
 
       current_abscissa = step_range_minimum(step_range)
@@ -54,42 +58,29 @@ module SymDiffer
 
     def k1_sum_component(base_y_function_value, current_abscissa)
       expression_value_scaled_by_step_size(
-        equation_expression,
-        equation_variable_name => current_abscissa,
-        equation_undetermined_function_name => base_y_function_value
+        equation_expression, equation_variable_name => current_abscissa,
+                             equation_undetermined_function_name => base_y_function_value
       )
     end
 
     def k2_sum_component(base_y_function_value, component_k_1, current_abscissa)
-      t_variable_value = current_abscissa + (@step_size / 2.0)
-      y_variable_value = base_y_function_value + (component_k_1 / 2.0)
-
       expression_value_scaled_by_step_size(
-        equation_expression,
-        equation_variable_name => t_variable_value,
-        equation_undetermined_function_name => y_variable_value
+        equation_expression, equation_variable_name => (current_abscissa + (@step_size / 2.0)),
+                             equation_undetermined_function_name => (base_y_function_value + (component_k_1 / 2.0))
       )
     end
 
     def k3_sum_component(base_y_function_value, component_k_2, current_abscissa)
-      t_variable_value = current_abscissa + (@step_size / 2.0)
-      y_variable_value = base_y_function_value + (component_k_2 / 2.0)
-
       expression_value_scaled_by_step_size(
-        equation_expression,
-        equation_variable_name => t_variable_value,
-        equation_undetermined_function_name => y_variable_value
+        equation_expression, equation_variable_name => (current_abscissa + (@step_size / 2.0)),
+                             equation_undetermined_function_name => (base_y_function_value + (component_k_2 / 2.0))
       )
     end
 
     def k4_sum_component(base_y_function_value, component_k_3, current_abscissa)
-      t_variable_value = current_abscissa + @step_size
-      y_variable_value = base_y_function_value + component_k_3
-
       expression_value_scaled_by_step_size(
-        equation_expression,
-        equation_variable_name => t_variable_value,
-        equation_undetermined_function_name => y_variable_value
+        equation_expression, equation_variable_name => (current_abscissa + @step_size),
+                             equation_undetermined_function_name => (base_y_function_value + component_k_3)
       )
     end
 
@@ -114,11 +105,11 @@ module SymDiffer
     end
 
     def access_ordinate_of_evaluation_point(point)
-      point[1]
+      point.ordinate
     end
 
     def build_evaluation_point(abscissa, ordinate)
-      [abscissa, ordinate]
+      EvaluationPoint.new(abscissa, ordinate)
     end
 
     def step_range_minimum(step_range)
@@ -141,17 +132,8 @@ module SymDiffer
       StepRange.new(range)
     end
 
-    def equation_expression
-      equation_parameters.expression
-    end
-
-    def equation_variable_name
-      equation_parameters.variable_name
-    end
-
-    def equation_undetermined_function_name
-      equation_parameters.undetermined_function_name
-    end
+    %w[expression variable_name undetermined_function_name initial_coordinates]
+      .each { |method_name| def_delegator :equation_parameters, method_name, "equation_#{method_name}" }
 
     attr_reader :equation_parameters
   end
