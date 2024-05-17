@@ -62,6 +62,7 @@ detectors:
       # In context the long parameter list makes sense and we've partially compacted the list already by e.g.,
       # introducing the EquationParameters object.
       - "SymDiffer::FirstOrderDifferentialEquationApproximator#approximate_solution"
+      - "SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor#approximate_solution"
 
   Attribute:
     exclude:
