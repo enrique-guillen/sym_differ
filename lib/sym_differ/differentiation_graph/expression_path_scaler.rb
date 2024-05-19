@@ -4,21 +4,26 @@ require "sym_differ/evaluation_point"
 
 module SymDiffer
   module DifferentiationGraph
-    # Resizes the provided expression path's points so that the maximum value is scaled to the target size.
+    # Resizes the provided expression path's points so that all points can fit in a square of size = @target_size
+    # and exposes the underlying scaling operation that's performed on each value as a separate method.
     class ExpressionPathScaler
       def initialize(target_size)
         @target_size = target_size.to_f
       end
 
       def scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
-        (ordinate_axis_distance = @target_size) if ordinate_axis_distance.zero?
-
         expression_path.map do |expression_point|
-          new_abscissa = scale(expression_point.abscissa, @target_size / abscissa_axis_distance.to_f)
-          new_ordinate = scale(expression_point.ordinate, @target_size / ordinate_axis_distance.to_f)
+          new_abscissa = scale_along_axis(expression_point.abscissa, abscissa_axis_distance)
+          new_ordinate = scale_along_axis(expression_point.ordinate, ordinate_axis_distance)
 
           build_evaluation_point(new_abscissa, new_ordinate)
         end
+      end
+
+      def scale_along_axis(value, axis_distance)
+        (axis_distance = @target_size) if axis_distance.zero?
+
+        scale(value, @target_size / axis_distance.to_f)
       end
 
       private

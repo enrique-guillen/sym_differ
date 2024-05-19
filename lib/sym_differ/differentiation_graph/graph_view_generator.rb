@@ -47,22 +47,20 @@ module SymDiffer
 
       def generate_expression_graph_view(expression, expression_path)
         stringified_expression = stringify_expression(expression)
-        scaled_expression_path = scale_to_100_unit_square(expression_path)
+        scaled_expression_path = scale_expression_path_to_100_unit_square(expression_path)
 
         new_expression_graph_view(stringified_expression, scaled_expression_path)
       end
 
-      def scale_to_100_unit_square(expression_path)
-        abscissa_axis_distance = 20
-
-        expression_path_scaler
-          .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_distance)
-      end
-
       def abscissas_labels_and_positioning
         abscissa_offset = 0.0
-        abscissa_number_labels = [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
-        origin_abscissa = 50
+
+        distance_of_axis_to_draw = 20
+
+        origin_abscissa = scale_value_along_100_unit_axis(10, distance_of_axis_to_draw)
+
+        abscissa_label_gap = distance_of_axis_to_draw / 10.0
+        abscissa_number_labels = produce_10_number_labels(-10, abscissa_label_gap)
 
         [abscissa_number_labels, origin_abscissa, abscissa_offset]
       end
@@ -70,12 +68,12 @@ module SymDiffer
       def ordinate_labels_and_positioning
         ordinate_offset = 0.0
 
-        origin_ordinate = ordinate_distance.zero? ? (max_value + 100.0) : (max_value * 100.0 / ordinate_distance)
+        distance_of_axis_to_draw = ordinate_distance.zero? ? 1.0 : ordinate_distance
+        maximum_value_of_axis_to_draw = ordinate_distance.zero? ? 1 : max_value
 
-        new_ordinate_distance = ordinate_distance.zero? ? 1.0 : ordinate_distance
+        origin_ordinate = scale_value_along_100_unit_axis(maximum_value_of_axis_to_draw, distance_of_axis_to_draw)
 
-        ordinate_label_gap = new_ordinate_distance / 10.0
-
+        ordinate_label_gap = distance_of_axis_to_draw / 10.0
         ordinate_number_labels = produce_10_number_labels(min_value, ordinate_label_gap)
 
         [ordinate_number_labels, origin_ordinate, ordinate_offset]
@@ -107,6 +105,21 @@ module SymDiffer
 
       def ordinate_distance
         expression_graph_parameters[:ordinate_distance]
+      end
+
+      def abscissa_axis_distance
+        20
+      end
+
+      def scale_expression_path_to_100_unit_square(expression_path,
+                                                   axis_distance_1 = abscissa_axis_distance,
+                                                   axis_distance_2 = ordinate_distance)
+        expression_path_scaler
+          .scale_to_target_sized_square(expression_path, axis_distance_1, axis_distance_2)
+      end
+
+      def scale_value_along_100_unit_axis(value, axis_distance)
+        expression_path_scaler.scale_along_axis(value, axis_distance)
       end
 
       def new_view(*)
