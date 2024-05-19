@@ -63,10 +63,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
           have_attributes(text: "fun(x)", path: a_collection_containing_exactly(*scaled_path)),
           derivative_expression_graph:
             have_attributes(text: "defun(x)", path: a_collection_containing_exactly(*scaled_derivative_path)),
-          abscissa_axis: have_attributes(name: "x", origin: 50, offset: 0.0,
+          abscissa_axis: have_attributes(name: "x", origin: 50,
                                          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
           ordinate_axis:
-            have_attributes(name: "y", origin: 50.0, offset: 0.0,
+            have_attributes(name: "y", origin: 50.0,
                             number_labels: [-1000.0, -800.0, -600.0, -400.0, -200.0, 0.0,
                                             200.0, 400.0, 600.0, 800.0, 1000.0])
         )
@@ -112,9 +112,9 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
           derivative_expression_graph:
             have_attributes(text: "defun(x)", path: a_collection_containing_exactly(*scaled_derivative_path)),
           abscissa_axis:
-            have_attributes(name: "x", origin: 50, offset: 0.0,
+            have_attributes(name: "x", origin: 50,
                             number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
-          ordinate_axis: have_attributes(name: "y", origin: 100.0, offset: 0.0,
+          ordinate_axis: have_attributes(name: "y", origin: 100.0,
                                          number_labels: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
         )
       end

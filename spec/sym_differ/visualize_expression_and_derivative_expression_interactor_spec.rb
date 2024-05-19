@@ -48,7 +48,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
       expect(view_renderer).to have_received(:render).with(
         an_object_having_attributes(
           abscissa_axis: an_object_having_attributes(
-            name: "x", origin: 50, offset: 0.0,
+            name: "x", origin: 50,
             number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
           )
         )
@@ -61,7 +61,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
       expect(view_renderer).to have_received(:render).with(
         an_object_having_attributes(
           ordinate_axis: an_object_having_attributes(
-            name: "y", origin: 50, offset: 0.0,
+            name: "y", origin: 50,
             number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0]
           )
         )

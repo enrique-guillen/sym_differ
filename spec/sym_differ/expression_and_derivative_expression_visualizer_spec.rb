@@ -80,8 +80,7 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             abscissa_axis: an_object_having_attributes(
               name: "x",
               number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
-              origin: 50,
-              offset: 0.0
+              origin: 50
             )
           )
         )
@@ -96,8 +95,7 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             ordinate_axis: an_object_having_attributes(
               name: "y",
               number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0],
-              origin: 50,
-              offset: 0.0
+              origin: 50
             )
           )
         )

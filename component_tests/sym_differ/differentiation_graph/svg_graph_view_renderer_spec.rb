@@ -17,16 +17,16 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
         show_total_area_aid: true,
         abscissa_axis: double(
           :abscissa_axis,
-          name: "x", offset: 0, origin: 50,
-          number_labels: [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50]
+          name: "x", origin: 50,
+          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0]
         ),
         ordinate_axis: double(
           :ordinate_axis,
-          name: "y", offset: 9, origin: 49,
-          number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8]
+          name: "y", origin: 49,
+          number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0]
         ),
-        expression_graph: double(:expression_graph, text: "x ^ 2", path: expression_path),
-        derivative_expression_graph: double(:d_expression_graph, text: "2 * x", path: derivative_expression_path)
+        expression_graph: double(:expression_graph, text: "f(x)", path: expression_path),
+        derivative_expression_graph: double(:d_expression_graph, text: "f'(x)", path: derivative_expression_path)
       )
     end
 

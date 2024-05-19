@@ -53,8 +53,6 @@ module SymDiffer
       end
 
       def abscissas_labels_and_positioning
-        abscissa_offset = 0.0
-
         distance_of_axis_to_draw = 20
 
         origin_abscissa = scale_value_along_100_unit_axis(10, distance_of_axis_to_draw)
@@ -62,12 +60,10 @@ module SymDiffer
         abscissa_label_gap = distance_of_axis_to_draw / 10.0
         abscissa_number_labels = produce_10_number_labels(-10, abscissa_label_gap)
 
-        [abscissa_number_labels, origin_abscissa, abscissa_offset]
+        [abscissa_number_labels, origin_abscissa]
       end
 
       def ordinate_labels_and_positioning
-        ordinate_offset = 0.0
-
         distance_of_axis_to_draw = ordinate_distance.zero? ? 1.0 : ordinate_distance
         maximum_value_of_axis_to_draw = ordinate_distance.zero? ? 1 : max_value
 
@@ -76,7 +72,7 @@ module SymDiffer
         ordinate_label_gap = distance_of_axis_to_draw / 10.0
         ordinate_number_labels = produce_10_number_labels(min_value, ordinate_label_gap)
 
-        [ordinate_number_labels, origin_ordinate, ordinate_offset]
+        [ordinate_number_labels, origin_ordinate]
       end
 
       def produce_10_number_labels(starting_value, numeric_gap)

@@ -3,6 +3,6 @@
 module SymDiffer
   module DifferentiationGraph
     # View representing the axis labeling information and positioning of the curve within the different axis.
-    AxisView = Struct.new(:name, :number_labels, :origin, :offset)
+    AxisView = Struct.new(:name, :number_labels, :origin)
   end
 end
