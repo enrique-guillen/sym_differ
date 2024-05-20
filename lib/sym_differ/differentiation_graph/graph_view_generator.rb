@@ -2,7 +2,7 @@
 
 require "sym_differ/graphing/view"
 require "sym_differ/differentiation_graph/expression_graph_view"
-require "sym_differ/differentiation_graph/axis_view"
+require "sym_differ/graphing/axis_view"
 
 require "sym_differ/differentiation_graph/expression_path_scaler"
 
@@ -134,7 +134,7 @@ module SymDiffer
       end
 
       def new_axis_view(*)
-        AxisView.new(*)
+        Graphing::AxisView.new(*)
       end
 
       def expression_path_scaler
