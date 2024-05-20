@@ -3,8 +3,6 @@
 require "spec_helper"
 require "sym_differ/visualize_expression_and_derivative_expression_interactor"
 
-require "sym_differ/numerical_analysis/evaluation_point"
-
 RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor do
   describe "#visualize" do
     subject(:visualize) do
@@ -12,6 +10,8 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
     end
 
     before { allow(view_renderer).to receive(:render).and_return(rendered_view) }
+
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:view_renderer) { double(:view_renderer) }
     let(:rendered_view) { double(:rendered_view) }
@@ -93,7 +93,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
+      create_evaluation_point(abscissa, ordinate)
     end
   end
 end
