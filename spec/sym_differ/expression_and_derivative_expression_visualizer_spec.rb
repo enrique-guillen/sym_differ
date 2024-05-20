@@ -3,8 +3,6 @@
 require "spec_helper"
 require "sym_differ/expression_and_derivative_expression_visualizer"
 
-require "sym_differ/numerical_analysis/evaluation_point"
-
 require "sym_differ/error"
 
 RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
@@ -45,6 +43,8 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
 
       allow(view_renderer).to receive(:render).and_return(rendered_view)
     end
+
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:expression_text_parser) { double(:expression_text_parser) }
     let(:deriver) { double(:deriver) }
@@ -144,7 +144,7 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
+      create_evaluation_point(abscissa, ordinate)
     end
   end
 end
