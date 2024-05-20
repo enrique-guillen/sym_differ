@@ -3,8 +3,6 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/graph_view_generator"
 
-require "sym_differ/numerical_analysis/evaluation_point"
-
 RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
   describe "#generate" do
     subject(:generate) do
@@ -17,6 +15,8 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
       allow(expression_stringifier).to receive(:stringify).with(expression).and_return("fun(x)")
       allow(expression_stringifier).to receive(:stringify).with(derivative_expression).and_return("defun(x)")
     end
+
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:variable) { "x" }
     let(:expression_stringifier) { double(:expression_stringifier) }
@@ -36,20 +36,20 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
       end
 
       let(:expected_expression_path) do
-        expression_path_steps.map { |s| evaluation_point(s, s**3) }
+        expression_path_steps.map { |s| create_evaluation_point(s, s**3) }
       end
 
       let(:expected_derivative_expression_path) do
-        expression_path_steps.map { |s| evaluation_point(s, 2 * (s**2)) }
+        expression_path_steps.map { |s| create_evaluation_point(s, 2 * (s**2)) }
       end
 
       let(:scaled_path) do
-        [evaluation_point(-50.0, -50.0), evaluation_point(0.0, 0.0), evaluation_point(50.0, 50.0)]
+        [create_evaluation_point(-50.0, -50.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 50.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
       let(:scaled_derivative_path) do
-        [evaluation_point(-50.0, 10.0), evaluation_point(0.0, 0.0), evaluation_point(50.0, 10.0)]
+        [create_evaluation_point(-50.0, 10.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 10.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
@@ -85,20 +85,20 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
       end
 
       let(:expected_expression_path) do
-        expression_path_steps.map { |s| evaluation_point(s, 0) }
+        expression_path_steps.map { |s| create_evaluation_point(s, 0) }
       end
 
       let(:expected_derivative_expression_path) do
-        expression_path_steps.map { |s| evaluation_point(s, 0) }
+        expression_path_steps.map { |s| create_evaluation_point(s, 0) }
       end
 
       let(:scaled_path) do
-        [evaluation_point(-50.0, -0.0), evaluation_point(0.0, 0.0), evaluation_point(50.0, 0.0)]
+        [create_evaluation_point(-50.0, -0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 0.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
       let(:scaled_derivative_path) do
-        [evaluation_point(-50.0, 0.0), evaluation_point(0.0, 0.0), evaluation_point(50.0, 0.0)]
+        [create_evaluation_point(-50.0, 0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 0.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
@@ -117,10 +117,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
                                          number_labels: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
         )
       end
-    end
-
-    define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end
