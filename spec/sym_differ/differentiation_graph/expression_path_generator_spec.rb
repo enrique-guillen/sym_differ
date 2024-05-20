@@ -4,7 +4,6 @@ require "spec_helper"
 require "sym_differ/differentiation_graph/expression_path_generator"
 
 require "sym_differ/numerical_analysis/step_range"
-require "sym_differ/numerical_analysis/evaluation_point"
 
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
   describe "#generate" do
@@ -24,6 +23,8 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       map_evaluator_response(expression_evaluator_3, from: expression, to: 30)
     end
 
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
+
     let(:expression_evaluator_builder) { double(:expression_evaluator_builder) }
     let(:step_size) { 1 }
 
@@ -35,7 +36,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     context "when step range == 2..1" do
-      let(:step_range) { graph_step_range(2..1) }
+      let(:step_range) { create_step_range(2..1) }
 
       it "generates the expression path" do
         expect(generate).to eq([])
@@ -43,23 +44,23 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     context "when step_range == 1..1" do
-      let(:step_range) { graph_step_range(1..1) }
+      let(:step_range) { create_step_range(1..1) }
 
       it "generates the expression path" do
         expect(generate).to contain_exactly(
-          same_evaluation_point_as(evaluation_point(1, 30))
+          same_evaluation_point_as(create_evaluation_point(1, 30))
         )
       end
     end
 
     context "when step_range == -1..1" do
-      let(:step_range) { graph_step_range(-1..1) }
+      let(:step_range) { create_step_range(-1..1) }
 
       it "generates the expression path" do
         expect(generate).to contain_exactly(
-          same_evaluation_point_as(evaluation_point(-1, 10)),
-          same_evaluation_point_as(evaluation_point(0, 20)),
-          same_evaluation_point_as(evaluation_point(1, 30))
+          same_evaluation_point_as(create_evaluation_point(-1, 10)),
+          same_evaluation_point_as(create_evaluation_point(0, 20)),
+          same_evaluation_point_as(create_evaluation_point(1, 30))
         )
       end
     end
@@ -70,14 +71,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
 
     define_method(:map_evaluator_response) do |expression_evaluator, from:, to:, input: from, output: to|
       allow(expression_evaluator).to receive(:evaluate).with(input).and_return(output)
-    end
-
-    define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
-    end
-
-    define_method(:graph_step_range) do |range|
-      SymDiffer::NumericalAnalysis::StepRange.new(range)
     end
   end
 end
