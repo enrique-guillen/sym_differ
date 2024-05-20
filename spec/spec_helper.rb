@@ -5,6 +5,7 @@ SimpleCov.start
 
 require "support/sym_differ_expression_double_builder"
 require "support/sym_differ_expression_factory_dsl"
+require "support/sym_differ_numerical_analysis_item_factory_dsl"
 require "support/test_artifact_storage"
 
 RSpec.configure do |config|
@@ -30,5 +31,6 @@ RSpec.configure do |config|
 
   config.include Support::SymDifferDoubleBuilder
   config.include Support::SymDifferExpressionFactoryDsl
+  config.include Support::SymDifferNumericalAnalysisItemFactoryDsl
   config.include Support::TestArtifactStorage
 end
