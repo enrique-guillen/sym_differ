@@ -6,6 +6,8 @@ require "sym_differ/differentiation_graph/axis_view"
 
 require "sym_differ/differentiation_graph/expression_path_scaler"
 
+require "sym_differ/svg_graphing/view"
+
 module SymDiffer
   module DifferentiationGraph
     # Generates the view of the graphs for an expression and its derivative.
@@ -30,8 +32,7 @@ module SymDiffer
         derivative_expression_graph_view =
           generate_derivative_expression_graph_view(derivative_expression, new_derivative_expression_path)
 
-        new_view(false,
-                 abscissa_axis_view, ordinate_axis_view, [expression_graph_view, derivative_expression_graph_view])
+        new_view(abscissa_axis_view, ordinate_axis_view, [expression_graph_view, derivative_expression_graph_view])
       end
 
       private
@@ -49,17 +50,15 @@ module SymDiffer
       def generate_original_expression_graph_view(expression, expression_path)
         stringified_expression = "Expression: #{stringify_expression(expression)}"
         scaled_expression_path = scale_expression_path_to_100_unit_square(expression_path)
-        style = { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" }
 
-        new_expression_graph_view(stringified_expression, scaled_expression_path, style)
+        new_expression_graph_view(stringified_expression, scaled_expression_path)
       end
 
       def generate_derivative_expression_graph_view(expression, expression_path)
         stringified_expression = "Derivative: #{stringify_expression(expression)}"
         scaled_expression_path = scale_expression_path_to_100_unit_square(expression_path)
-        style = { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" }
 
-        new_expression_graph_view(stringified_expression, scaled_expression_path, style)
+        new_expression_graph_view(stringified_expression, scaled_expression_path)
       end
 
       def abscissas_labels_and_positioning

@@ -4,7 +4,7 @@ require "spec_helper"
 require "sym_differ/differentiation_graph/builder"
 
 require "sym_differ/stringifier_visitor"
-require "sym_differ/svg_graphing/graph_view_renderer"
+require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
 require "sym_differ/expression_evaluator_visitor"
 
 RSpec.describe SymDiffer::DifferentiationGraph::Builder do
@@ -25,7 +25,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::Builder do
         .new(0.125, expression_evaluator_builder_class.new)
     end
 
-    let(:view_renderer) { SymDiffer::SvgGraphing::GraphViewRenderer.new }
+    let(:view_renderer) { SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new }
     let(:step_range) { SymDiffer::StepRange.new(-10..10) }
 
     let(:expression_evaluator_builder_class) do

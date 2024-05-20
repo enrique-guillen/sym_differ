@@ -65,18 +65,11 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
 
       it { is_expected.to eq(rendered_view) }
 
-      it "requests to render the expected view" do
-        visualize
-
-        expect(view_renderer).to have_received(:render).with(an_object_having_attributes(show_total_area_aid: false))
-      end
-
       it "requests to render the expected abscissa axis" do
         visualize
 
         expect(view_renderer).to have_received(:render).with(
           an_object_having_attributes(
-            show_total_area_aid: false,
             abscissa_axis: an_object_having_attributes(
               name: "x",
               number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
@@ -91,7 +84,6 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
 
         expect(view_renderer).to have_received(:render).with(
           an_object_having_attributes(
-            show_total_area_aid: false,
             ordinate_axis: an_object_having_attributes(
               name: "y",
               number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0],

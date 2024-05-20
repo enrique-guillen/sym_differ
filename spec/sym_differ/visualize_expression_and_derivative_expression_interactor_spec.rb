@@ -36,12 +36,6 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
 
     it { is_expected.to have_attributes(image: rendered_view) }
 
-    it "renders the expected view" do
-      visualize
-
-      expect(view_renderer).to have_received(:render).with(an_object_having_attributes(show_total_area_aid: false))
-    end
-
     it "renders the expected abscissa axis" do
       visualize
 
