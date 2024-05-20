@@ -12,6 +12,8 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       described_class.new.render(svg_view)
     end
 
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
+
     let(:svg_view) do
       view(true, original_view, curve_stylings)
     end
@@ -96,7 +98,7 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
+      create_evaluation_point(abscissa, ordinate)
     end
 
     define_method(:view) do |show_total_area_aid, original_view, curve_stylings|
