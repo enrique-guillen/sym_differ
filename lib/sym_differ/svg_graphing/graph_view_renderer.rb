@@ -3,9 +3,9 @@
 require "erb"
 
 module SymDiffer
-  module DifferentiationGraph
+  module SvgGraphing
     # Takes the GraphView view with the data necessary to display the provided expression curves.
-    class SvgGraphViewRenderer
+    class GraphViewRenderer
       def render(view)
         @view = view
 
@@ -21,7 +21,7 @@ module SymDiffer
 
       def template
         current_file_directory = File.dirname(__FILE__)
-        template_filename = "svg_graph_template.r.svg"
+        template_filename = "graph_template.r.svg"
 
         template_path = [current_file_directory, template_filename].join("/")
 

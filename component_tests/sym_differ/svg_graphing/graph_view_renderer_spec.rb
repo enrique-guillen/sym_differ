@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/differentiation_graph/svg_graph_view_renderer"
+require "sym_differ/svg_graphing/graph_view_renderer"
 
 require "sym_differ/evaluation_point"
 
-RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
+RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
   describe "#render" do
     subject(:render) do
       described_class.new.render(view)

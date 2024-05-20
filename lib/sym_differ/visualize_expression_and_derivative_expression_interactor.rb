@@ -12,7 +12,7 @@ require "sym_differ/stringifier_visitor"
 require "sym_differ/expression_evaluator_visitor"
 
 require "sym_differ/differentiation_graph/expression_path_generator"
-require "sym_differ/differentiation_graph/svg_graph_view_renderer"
+require "sym_differ/svg_graphing/graph_view_renderer"
 require "sym_differ/step_range"
 
 module SymDiffer
@@ -21,7 +21,7 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 
-    def initialize(view_renderer = SymDiffer::DifferentiationGraph::SvgGraphViewRenderer.new)
+    def initialize(view_renderer = SymDiffer::SvgGraphing::GraphViewRenderer.new)
       @view_renderer = view_renderer
     end
 
