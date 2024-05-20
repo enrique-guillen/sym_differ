@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "sym_differ/differentiation_graph/view"
+require "sym_differ/graphing/view"
 require "sym_differ/differentiation_graph/expression_graph_view"
 require "sym_differ/differentiation_graph/axis_view"
 
 require "sym_differ/differentiation_graph/expression_path_scaler"
-
-require "sym_differ/svg_graphing/view"
 
 module SymDiffer
   module DifferentiationGraph
@@ -128,7 +126,7 @@ module SymDiffer
       end
 
       def new_view(*)
-        View.new(*)
+        Graphing::View.new(*)
       end
 
       def new_expression_graph_view(*)
