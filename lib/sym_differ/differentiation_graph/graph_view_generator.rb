@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/graphing/view"
-require "sym_differ/differentiation_graph/expression_graph_view"
+require "sym_differ/graphing/expression_graph_view"
 require "sym_differ/graphing/axis_view"
 
 require "sym_differ/differentiation_graph/expression_path_scaler"
@@ -130,7 +130,7 @@ module SymDiffer
       end
 
       def new_expression_graph_view(*)
-        ExpressionGraphView.new(*)
+        Graphing::ExpressionGraphView.new(*)
       end
 
       def new_axis_view(*)
