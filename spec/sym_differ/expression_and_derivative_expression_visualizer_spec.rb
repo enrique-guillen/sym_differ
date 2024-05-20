@@ -106,10 +106,12 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
 
         expect(view_renderer).to have_received(:render).with(
           an_object_having_attributes(
-            expression_graph: an_object_having_attributes(
-              text: "x + x",
-              path: [same_evaluation_point_as(evaluation_point(-50.0, -50.0)),
-                     same_evaluation_point_as(evaluation_point(50.0, 50.0))]
+            curves: a_collection_including(
+              an_object_having_attributes(
+                text: "Expression: x + x",
+                path: [same_evaluation_point_as(evaluation_point(-50.0, -50.0)),
+                       same_evaluation_point_as(evaluation_point(50.0, 50.0))]
+              )
             )
           )
         )
@@ -120,10 +122,12 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
 
         expect(view_renderer).to have_received(:render).with(
           an_object_having_attributes(
-            derivative_expression_graph: an_object_having_attributes(
-              text: "2",
-              path: [same_evaluation_point_as(evaluation_point(-50.0, 5.0)),
-                     same_evaluation_point_as(evaluation_point(50.0, 5.0))]
+            curves: a_collection_including(
+              an_object_having_attributes(
+                text: "Derivative: 2",
+                path: [same_evaluation_point_as(evaluation_point(-50.0, 5.0)),
+                       same_evaluation_point_as(evaluation_point(50.0, 5.0))]
+              )
             )
           )
         )

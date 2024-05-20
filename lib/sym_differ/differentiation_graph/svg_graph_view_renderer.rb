@@ -60,6 +60,12 @@ module SymDiffer
       def multiply_by_grid_unit_size(value)
         value * GRID_UNIT_SIZE
       end
+
+      def cssify_style(style)
+        style
+          .map { |key, value| "#{key}:#{value}" }
+          .join(";")
+      end
     end
   end
 end

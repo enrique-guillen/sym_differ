@@ -15,19 +15,34 @@ RSpec.describe SymDiffer::DifferentiationGraph::SvgGraphViewRenderer do
       double(
         :view,
         show_total_area_aid: true,
-        abscissa_axis: double(
-          :abscissa_axis,
-          name: "x", origin: 50,
-          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0]
-        ),
-        ordinate_axis: double(
-          :ordinate_axis,
-          name: "y", origin: 49,
-          number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0]
-        ),
-        expression_graph: double(:expression_graph, text: "f(x)", path: expression_path),
-        derivative_expression_graph: double(:d_expression_graph, text: "f'(x)", path: derivative_expression_path)
+        abscissa_axis:,
+        ordinate_axis:,
+        curves: [expression_graph, derivative_expression_graph]
       )
+    end
+
+    let(:abscissa_axis) do
+      double(:abscissa_axis,
+             name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
+    end
+
+    let(:ordinate_axis) do
+      double(:ordinate_axis,
+             name: "y", origin: 49, number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
+    end
+
+    let(:expression_graph) do
+      double(:expression_graph,
+             text: "Expression: f(x)",
+             path: expression_path,
+             style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
+    end
+
+    let(:derivative_expression_graph) do
+      double(:d_expression_graph,
+             text: "Derivative: f'(x)",
+             path: derivative_expression_path,
+             style: { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" })
     end
 
     context "when the expression paths have 15 and 2 points respectively" do

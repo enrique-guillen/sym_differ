@@ -6,17 +6,13 @@
 
 
   <!-- Legend  -->
-    <circle cx="20" cy="20" r="5" fill="blue"/>
+    <% view.curves.each_with_index do |curve, index| %>
+      <circle cx="20" cy="<%= 20 + (index * 30) %>" r="5" fill="<%= curve.style["stroke"] %>"/>
 
-    <text x="40" y="30" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
-      Expression: <%= view.expression_graph.text %>
-    </text>
-
-    <circle cx="20" cy="50" r="5" fill="red"/>
-
-    <text x="40" y="60" font-size="1.5em" id="ordinate-name" font-family="Cantarell">
-      Derivative: <%= view.derivative_expression_graph.text %>
-    </text>
+      <text x="40" y="<%= 30 * (index + 1) %>" font-size="1.5em" id="axis-<%= index %>" font-family="Cantarell">
+        <%= curve.text %>
+      </text>
+    <% end %>
 
 
 
@@ -88,42 +84,23 @@
 
 
 
-
-  <path
-    id="expression-curve-approximation"
-    d="
-      M <%= join_expression_point(view.expression_graph.path.first) %>
-      L <% view.expression_graph.path.each do |expression_data_point| %>
-          <%= join_expression_point(expression_data_point) %>
-        <% end %>
-    "
-    style="fill:none; stroke:blue; stroke-width:0.5985; stroke-opacity:1"
-    transform="
-      translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
-                <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
-      scale(<%= grid_unit_size %>)
-    "
-  />
-
-
-
-
-  <path
-    id="derivative-expression-curve-approximation"
-    d="
-      M <%= join_expression_point(view.derivative_expression_graph.path.first) %>
-      L <% view.derivative_expression_graph.path.each do |expression_data_point| %>
-          <%= join_expression_point(expression_data_point) %>
-        <% end %>
-    "
-    style="fill:none; stroke:red; stroke-width:0.3985; stroke-opacity:1"
-    transform="
-      translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
-                <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
-      scale(<%= grid_unit_size %>)
-    "
-  />
-
+  <% view.curves.each_with_index do |curve, index| %>
+    <path
+      id="curve-number-<%= index %>"
+      d="
+        M <%= join_expression_point(curve.path.first) %>
+        L <% curve.path.each do |expression_data_point| %>
+            <%= join_expression_point(expression_data_point) %>
+          <% end %>
+      "
+      style="<%= cssify_style(curve.style) %>"
+      transform="
+        translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
+                  <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
+        scale(<%= grid_unit_size %>)
+      "
+    />
+  <% end %>
 
 
 

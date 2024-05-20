@@ -59,10 +59,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
 
       it "has the expected attributes" do
         expect(generate).to have_attributes(
-          expression_graph:
-          have_attributes(text: "fun(x)", path: a_collection_containing_exactly(*scaled_path)),
-          derivative_expression_graph:
-            have_attributes(text: "defun(x)", path: a_collection_containing_exactly(*scaled_derivative_path)),
+          curves: [an_object_having_attributes(text: "Expression: fun(x)",
+                                               path: a_collection_containing_exactly(*scaled_path)),
+                   an_object_having_attributes(text: "Derivative: defun(x)",
+                                               path: a_collection_containing_exactly(*scaled_derivative_path))],
           abscissa_axis: have_attributes(name: "x", origin: 50,
                                          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
           ordinate_axis:
@@ -108,12 +108,11 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
 
       it "has the expected attributes" do
         expect(generate).to have_attributes(
-          expression_graph: have_attributes(text: "fun(x)", path: a_collection_containing_exactly(*scaled_path)),
-          derivative_expression_graph:
-            have_attributes(text: "defun(x)", path: a_collection_containing_exactly(*scaled_derivative_path)),
-          abscissa_axis:
-            have_attributes(name: "x", origin: 50,
-                            number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
+          curves: [an_object_having_attributes(text: "Expression: fun(x)",
+                                               path: a_collection_containing_exactly(*scaled_path)),
+                   an_object_having_attributes(path: a_collection_containing_exactly(*scaled_derivative_path))],
+          abscissa_axis: have_attributes(name: "x", origin: 50,
+                                         number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
           ordinate_axis: have_attributes(name: "y", origin: 100.0,
                                          number_labels: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
         )
