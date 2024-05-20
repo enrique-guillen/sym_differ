@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/step_range"
+require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/evaluation_point"
 require "forwardable"
 
@@ -129,7 +129,7 @@ module SymDiffer
     end
 
     def build_step_range(range)
-      StepRange.new(range)
+      NumericalAnalysis::StepRange.new(range)
     end
 
     %w[expression variable_name undetermined_function_name initial_coordinates]

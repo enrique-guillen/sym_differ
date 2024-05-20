@@ -13,7 +13,7 @@ require "sym_differ/expression_evaluator_visitor"
 
 require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
-require "sym_differ/step_range"
+require "sym_differ/numerical_analysis/step_range"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
@@ -67,7 +67,7 @@ module SymDiffer
     end
 
     def build_step_range(range)
-      StepRange.new(range)
+      NumericalAnalysis::StepRange.new(range)
     end
 
     def expression_evaluator_builder

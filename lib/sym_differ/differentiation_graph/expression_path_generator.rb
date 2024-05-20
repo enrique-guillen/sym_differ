@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/step_range"
+require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/evaluation_point"
 
 module SymDiffer
@@ -59,7 +59,7 @@ module SymDiffer
       end
 
       def build_new_step_range(min, max)
-        StepRange.new(min..max)
+        NumericalAnalysis::StepRange.new(min..max)
       end
 
       def first_element_of_range(step_range)

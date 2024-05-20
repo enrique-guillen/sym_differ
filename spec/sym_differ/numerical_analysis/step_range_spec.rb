@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/step_range"
+require "sym_differ/numerical_analysis/step_range"
 
-RSpec.describe SymDiffer::StepRange do
+RSpec.describe SymDiffer::NumericalAnalysis::StepRange do
   describe "#first_element" do
     subject(:first_element) do
       described_class.new(range).first_element

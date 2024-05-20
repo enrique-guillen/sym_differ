@@ -5,7 +5,7 @@ require "sym_differ/runge_kutta_four_solution_approximator"
 
 require "sym_differ/first_order_differential_equation_solution/equation_parameters"
 
-require "sym_differ/step_range"
+require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/evaluation_point"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
@@ -36,7 +36,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       let(:step_size) { 0.250 }
 
       context "when step range = 0.25..0.25" do
-        let(:step_range) { SymDiffer::StepRange.new(0.25..0.25) }
+        let(:step_range) { build_step_range(0.25..0.25) }
 
         let(:expected_solution_path) do
           [
@@ -49,7 +49,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       context "when step range = 0.25..1" do
-        let(:step_range) { SymDiffer::StepRange.new(0.25..1) }
+        let(:step_range) { build_step_range(0.25..1) }
 
         let(:expected_solution_path) do
           [
@@ -75,7 +75,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       let(:initial_value_coordinates) { [0.0, 0.0] }
-      let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
+      let(:step_range) { build_step_range(0.125..1) }
       let(:step_size) { 0.125 }
 
       let(:expected_solution_path) do
@@ -101,7 +101,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
       end
 
       let(:initial_value_coordinates) { [0.0, 1.0] }
-      let(:step_range) { SymDiffer::StepRange.new(0.125..1) }
+      let(:step_range) { build_step_range(0.125..1) }
       let(:step_size) { 0.125 }
 
       let(:expected_solution_path) do
@@ -119,6 +119,10 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
 
     define_method(:evaluation_point) do |abscissa, ordinate|
       SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+    end
+
+    define_method(:build_step_range) do |range|
+      SymDiffer::NumericalAnalysis::StepRange.new(range)
     end
 
     define_method(:evaluate_expression_as_2x_plus_1) do |_expression, variables|
