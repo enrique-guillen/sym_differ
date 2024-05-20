@@ -4,7 +4,7 @@ require "sym_differ/graphing/view"
 require "sym_differ/graphing/expression_graph_view"
 require "sym_differ/graphing/axis_view"
 
-require "sym_differ/differentiation_graph/expression_path_scaler"
+require "sym_differ/graphing/expression_path_scaler"
 
 module SymDiffer
   module DifferentiationGraph
@@ -138,7 +138,7 @@ module SymDiffer
       end
 
       def expression_path_scaler
-        @expression_path_scaler ||= ExpressionPathScaler.new(100)
+        @expression_path_scaler ||= Graphing::ExpressionPathScaler.new(100)
       end
 
       def stringify_expression(expression)

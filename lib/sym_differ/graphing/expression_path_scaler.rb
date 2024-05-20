@@ -3,7 +3,7 @@
 require "sym_differ/numerical_analysis/evaluation_point"
 
 module SymDiffer
-  module DifferentiationGraph
+  module Graphing
     # Resizes the provided expression path's points so that all points can fit in a square of size = @target_size
     # and exposes the underlying scaling operation that's performed on each value as a separate method.
     class ExpressionPathScaler

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/differentiation_graph/expression_path_scaler"
+require "sym_differ/graphing/expression_path_scaler"
 
-RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathScaler do
+RSpec.describe SymDiffer::Graphing::ExpressionPathScaler do
   describe "#scale_to_target_sized_square" do
     subject(:scale_to_target_sized_square) do
       described_class
