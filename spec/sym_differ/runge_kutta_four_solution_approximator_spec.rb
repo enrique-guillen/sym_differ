@@ -6,7 +6,7 @@ require "sym_differ/runge_kutta_four_solution_approximator"
 require "sym_differ/first_order_differential_equation_solution/equation_parameters"
 
 require "sym_differ/numerical_analysis/step_range"
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
@@ -118,7 +118,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
 
     define_method(:build_step_range) do |range|

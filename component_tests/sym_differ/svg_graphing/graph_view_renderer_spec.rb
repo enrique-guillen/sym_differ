@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/svg_graphing/graph_view_renderer"
 
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 require "sym_differ/svg_graphing/view"
 
 RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
@@ -96,7 +96,7 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
 
     define_method(:view) do |show_total_area_aid, original_view, curve_stylings|

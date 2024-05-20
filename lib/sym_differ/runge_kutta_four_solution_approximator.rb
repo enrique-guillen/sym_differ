@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/numerical_analysis/step_range"
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 require "forwardable"
 
 module SymDiffer
@@ -108,10 +108,6 @@ module SymDiffer
       point.ordinate
     end
 
-    def build_evaluation_point(abscissa, ordinate)
-      EvaluationPoint.new(abscissa, ordinate)
-    end
-
     def step_range_minimum(step_range)
       step_range.minimum
     end
@@ -126,6 +122,10 @@ module SymDiffer
 
     def step_range_last_element(step_range)
       step_range.last_element
+    end
+
+    def build_evaluation_point(abscissa, ordinate)
+      NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
 
     def build_step_range(range)

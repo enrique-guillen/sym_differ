@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/get_first_order_differential_equation_approximation_interactor"
 
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 
 RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor do
   describe "#approximate_solution" do
@@ -53,7 +53,7 @@ RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteract
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end

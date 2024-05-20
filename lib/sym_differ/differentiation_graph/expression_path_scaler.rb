@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 
 module SymDiffer
   module DifferentiationGraph
@@ -33,7 +33,7 @@ module SymDiffer
       end
 
       def build_evaluation_point(abscissa, ordinate)
-        EvaluationPoint.new(abscissa, ordinate)
+        NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
       end
     end
   end

@@ -4,6 +4,7 @@ require "spec_helper"
 require "sym_differ/differentiation_graph/expression_graph_parameters_calculator"
 
 require "sym_differ/numerical_analysis/step_range"
+require "sym_differ/numerical_analysis/evaluation_point"
 
 RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalculator do
   describe "#generate" do
@@ -78,6 +79,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
   end
 
   define_method(:evaluation_point) do |abscissa, ordinate|
-    SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+    SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
   end
 end

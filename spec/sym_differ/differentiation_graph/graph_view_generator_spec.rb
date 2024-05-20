@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/differentiation_graph/graph_view_generator"
 
-require "sym_differ/evaluation_point"
+require "sym_differ/numerical_analysis/evaluation_point"
 
 RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
   describe "#generate" do
@@ -120,7 +120,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|
-      SymDiffer::EvaluationPoint.new(abscissa, ordinate)
+      SymDiffer::NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
     end
   end
 end
