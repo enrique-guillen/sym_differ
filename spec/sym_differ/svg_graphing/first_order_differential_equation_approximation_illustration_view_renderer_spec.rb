@@ -1,23 +1,21 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
+require "sym_differ/svg_graphing/first_order_differential_equation_approximation_illustration_view_renderer"
 
 require "sym_differ/svg_graphing/view"
 
-RSpec.describe SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer do
+RSpec.describe SymDiffer::SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer do
   describe "#render" do
     subject(:render) do
       described_class.new(underlying_renderer).render(original_view)
     end
 
+    before { allow(underlying_renderer).to receive(:render).and_return(rendered_view) }
+
     let(:underlying_renderer) { double(:underlying_renderer) }
     let(:original_view) { double(:original_view) }
     let(:rendered_view) { double(:rendered_view) }
-
-    before do
-      allow(underlying_renderer).to receive(:render).and_return(rendered_view)
-    end
 
     it { is_expected.to eq(rendered_view) }
 
