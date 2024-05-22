@@ -63,6 +63,7 @@ detectors:
       # introducing the EquationParameters object.
       - "SymDiffer::FirstOrderDifferentialEquationApproximator#approximate_solution"
       - "SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor#approximate_solution"
+      - "SymDiffer::DifferentialEquationApproximationIllustrator#illustrate_approximation"
 
   Attribute:
     exclude:
@@ -93,3 +94,4 @@ detectors:
       # There are many configurable behaviors and parameters to the approximation process. The tech debt is not
       # significantly high at the time of writing this.
       - "SymDiffer::FirstOrderDifferentialEquationApproximator"
+      - "SymDiffer::DifferentialEquationApproximationIllustrator"
