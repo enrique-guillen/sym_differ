@@ -65,10 +65,6 @@ module SymDiffer
         expression_path_scaler.scale_along_axis(value, axis_distance)
       end
 
-      def max_ordinate_value
-        expression_graph_parameters[:max_ordinate_value]
-      end
-
       def abscissa_distance
         expression_graph_parameters[:abscissa_distance]
       end
