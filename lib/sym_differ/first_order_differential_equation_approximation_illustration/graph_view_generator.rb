@@ -62,10 +62,6 @@ module SymDiffer
         (0..10).map { |index| starting_value + (numeric_gap * index) }
       end
 
-      def round_number_label(number)
-        number.round(3)
-      end
-
       def max_ordinate_value
         expression_graph_parameters[:max_ordinate_value]
       end
