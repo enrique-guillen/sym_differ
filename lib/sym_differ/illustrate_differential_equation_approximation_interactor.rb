@@ -6,6 +6,7 @@ require "sym_differ/runge_kutta_four_solution_approximator"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"
 require "sym_differ/differential_equation_approximation_illustrator"
+require "sym_differ/expression_evaluator_visitor"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of the approximation to a solution for the given
