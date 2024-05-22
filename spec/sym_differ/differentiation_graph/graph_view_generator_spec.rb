@@ -116,7 +116,8 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
           abscissa_axis: have_attributes(name: "x", origin: -10.0,
                                          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
           ordinate_axis: have_attributes(name: "y", origin: 0.0,
-                                         number_labels: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+                                         number_labels: [0.0, 0.1, 0.2, 0.30000000000000004, 0.4, 0.5,
+                                                         0.6000000000000001, 0.7000000000000001, 0.8, 0.9, 1.0])
         )
       end
     end

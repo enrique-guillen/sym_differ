@@ -59,7 +59,7 @@ module SymDiffer
       end
 
       def produce_10_number_labels(starting_value, numeric_gap)
-        (0..10).map { |index| round_number_label(starting_value + (numeric_gap * index)) }
+        (0..10).map { |index| starting_value + (numeric_gap * index) }
       end
 
       def round_number_label(number)
