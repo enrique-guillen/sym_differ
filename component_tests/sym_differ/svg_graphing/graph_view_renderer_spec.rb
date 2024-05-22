@@ -18,40 +18,114 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       view(true, original_view, curve_stylings)
     end
 
-    let(:original_view) do
-      double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph, derivative_expression_graph])
+    context "when curves = f(x), f'(x), labels in -10..10,-20...100 range" do
+      let(:original_view) do
+        double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph, derivative_expression_graph])
+      end
+
+      let(:curve_stylings) do
+        [{ "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" },
+         { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" }]
+      end
+
+      let(:abscissa_axis) do
+        double(:abscissa_axis,
+               name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
+      end
+
+      let(:ordinate_axis) do
+        double(:ordinate_axis,
+               name: "y", origin: 49,
+               number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
+      end
+
+      let(:expression_graph) do
+        double(:expression_graph,
+               text: "Expression: f(x)",
+               path: expression_path,
+               style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
+      end
+
+      let(:derivative_expression_graph) do
+        double(:d_expression_graph,
+               text: "Derivative: f'(x)",
+               path: derivative_expression_path,
+               style: { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" })
+      end
+
+      context "when the expression paths have 15 and 2 points respectively" do
+        let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
+
+        let(:derivative_expression_path) do
+          [-26, 25].map { |i| evaluation_point(i, i * 2) }
+        end
+
+        it "can be stored in test artifacts after execution" do
+          expect { render }.not_to raise_error
+          write_test_artifact_path(prefix_with_class_name("low_precision_path.svg"), render)
+        end
+      end
+
+      context "when the expression paths have 30 and 2 points respectively" do
+        let(:expression_path) do
+          [-7, -6.5,
+           -6, -5.5,
+           -5, -4.5,
+           -4, -3.5,
+           -3, -2.5,
+           -2, -1.5,
+           -1, -0.5,
+           0, 0.5,
+           1, 1.5,
+           2, 2.5,
+           3, 3.5,
+           4, 4.5,
+           5, 5.5,
+           6, 6.5,
+           7].map { |i| evaluation_point(i, i**2) }
+        end
+
+        let(:derivative_expression_path) do
+          [-26, 25].map { |i| evaluation_point(i, i * 2) }
+        end
+
+        it "can be stored in test artifacts after execution" do
+          expect { render }.not_to raise_error
+          write_test_artifact_path(prefix_with_class_name("high_precision_path.svg"), render)
+        end
+      end
     end
 
-    let(:curve_stylings) do
-      [{ "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" },
-       { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" }]
-    end
+    context "when curves = f(x), f'(x), labels in -10_0000.0..10_0000.0,-10_0000.0..10_0000.0 range" do
+      let(:original_view) do
+        double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph])
+      end
 
-    let(:abscissa_axis) do
-      double(:abscissa_axis,
-             name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
-    end
+      let(:curve_stylings) do
+        ["fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1"]
+      end
 
-    let(:ordinate_axis) do
-      double(:ordinate_axis,
-             name: "y", origin: 49, number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
-    end
+      let(:abscissa_axis) do
+        double(:abscissa_axis,
+               name: "x",
+               origin: 50,
+               number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10].map { |n| Float(n * 10_000) })
+      end
 
-    let(:expression_graph) do
-      double(:expression_graph,
-             text: "Expression: f(x)",
-             path: expression_path,
-             style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
-    end
+      let(:ordinate_axis) do
+        double(:ordinate_axis,
+               name: "y",
+               origin: 49,
+               number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10].map { |n| Float(n * 10_000) })
+      end
 
-    let(:derivative_expression_graph) do
-      double(:d_expression_graph,
-             text: "Derivative: f'(x)",
-             path: derivative_expression_path,
-             style: { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" })
-    end
+      let(:expression_graph) do
+        double(:expression_graph,
+               text: "Expression: f(x)",
+               path: expression_path,
+               style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
+      end
 
-    context "when the expression paths have 15 and 2 points respectively" do
       let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
 
       let(:derivative_expression_path) do
@@ -60,36 +134,7 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
       it "can be stored in test artifacts after execution" do
         expect { render }.not_to raise_error
-        write_test_artifact_path(prefix_with_class_name("low_precision_path.svg"), render)
-      end
-    end
-
-    context "when the expression paths have 30 and 2 points respectively" do
-      let(:expression_path) do
-        [-7, -6.5,
-         -6, -5.5,
-         -5, -4.5,
-         -4, -3.5,
-         -3, -2.5,
-         -2, -1.5,
-         -1, -0.5,
-         0, 0.5,
-         1, 1.5,
-         2, 2.5,
-         3, 3.5,
-         4, 4.5,
-         5, 5.5,
-         6, 6.5,
-         7].map { |i| evaluation_point(i, i**2) }
-      end
-
-      let(:derivative_expression_path) do
-        [-26, 25].map { |i| evaluation_point(i, i * 2) }
-      end
-
-      it "can be stored in test artifacts after execution" do
-        expect { render }.not_to raise_error
-        write_test_artifact_path(prefix_with_class_name("high_precision_path.svg"), render)
+        write_test_artifact_path(prefix_with_class_name("low_precision_path_long_number_labels.svg"), render)
       end
     end
 

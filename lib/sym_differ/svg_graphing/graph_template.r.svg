@@ -29,78 +29,85 @@
 
 
 
-  <% view.original_view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
-    <text x="0"
-          y="<%= calculate_y_placement_of_ordinate_label(index) %>"
-          transform="translate(60, 100)">
-      <%= label %>
-    </text>
+  <!-- Axis and number labels  -->
+    <% view.original_view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
+      <text x="0"
+            y="<%= calculate_y_placement_of_ordinate_label(index) %>"
+            transform="translate(90, 100)"
+            text-anchor="end">
+        <%= (label.to_s.size) > 7 ? ("%.1e" % label) : label %>
+      </text>
 
+      <path
+        d="M 0   <%= calculate_y_placement_of_ordinate_gridline(index) %>
+           L 700 <%= calculate_y_placement_of_ordinate_gridline(index) %>"
+        style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
+        transform = "translate(100, 100)"
+      />
+    <% end %>
+
+
+
+
+    <% view.original_view.abscissa_axis.number_labels.each_with_index do |label, index| %>
+      <text x="<%= calculate_x_placement_of_abscissa_label(index) %>"
+            y="0"
+            transform="translate(100, 820)"
+            text-anchor="middle">
+        <%= (label.to_s.size) > 7 ? ("%.1e" % label) : label %>
+      </text>
+
+      <path
+        d="M <%= calculate_x_placement_of_abscissa_gridline(index) %> 0
+           L <%= calculate_x_placement_of_abscissa_gridline(index) %> 700"
+        style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
+        transform = "translate(100, 100)"
+      />
+    <% end %>
+
+
+
+
+  <!-- Graph perimeter  -->
     <path
-      d="M 0   <%= calculate_y_placement_of_ordinate_gridline(index) %>
-         L 700 <%= calculate_y_placement_of_ordinate_gridline(index) %>"
-      style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
-      transform = "translate(100, 100)"
-    />
-  <% end %>
-
-
-
-
-  <% view.original_view.abscissa_axis.number_labels.each_with_index do |label, index| %>
-    <text x="<%= calculate_x_placement_of_abscissa_label(index) %>" y="0" transform="translate(90, 820)">
-      <%= label %>
-    </text>
-
-    <path
-      d="M <%= calculate_x_placement_of_abscissa_gridline(index) %> 0
-         L <%= calculate_x_placement_of_abscissa_gridline(index) %> 700"
-      style="fill:none; stroke:#000000; stroke-width:0.8985; stroke-dasharray:5,5"
-      transform = "translate(100, 100)"
-    />
-  <% end %>
-
-
-
-
-  <path
-    id="graph-perimeter"
-    d="M 0,   0
-         700, 0
-         700, 700
-         0,   700
-         Z"
-    style="
-      fill:none;
-      stroke:#000000;
-      stroke-width:0.8985;
-      stroke-linecap:butt;
-      stroke-linejoin:miter;
-      stroke-miterlimit:10;
-      stroke-opacity:1
-    "
-    transform="translate(100, 100)"
-  />
-
-
-
-  <% view.original_view.curves.each_with_index do |curve, index| %>
-    <path
-      id="curve-number-<%= index %>"
-      d="
-        M <%= join_expression_point(curve.path.first) %>
-        L <% curve.path.each do |expression_data_point| %>
-            <%= join_expression_point(expression_data_point) %>
-          <% end %>
+      id="graph-perimeter"
+      d="M 0,   0
+           700, 0
+           700, 700
+           0,   700
+           Z"
+      style="
+        fill:none;
+        stroke:#000000;
+        stroke-width:0.8985;
+        stroke-linecap:butt;
+        stroke-linejoin:miter;
+        stroke-miterlimit:10;
+        stroke-opacity:1
       "
-      style="<%= cssify_style(view.curve_stylings[index]) %>"
-      transform="
-        translate(<%= 100 + multiply_by_grid_unit_size(view.original_view.abscissa_axis.origin) %>,
-                  <%= 100 + multiply_by_grid_unit_size(view.original_view.ordinate_axis.origin) %>)
-        scale(<%= grid_unit_size %>)
-      "
+      transform="translate(100, 100)"
     />
-  <% end %>
+
+
+
+  <!-- Curves  -->
+    <% view.original_view.curves.each_with_index do |curve, index| %>
+      <path
+        id="curve-number-<%= index %>"
+        d="
+          M <%= join_expression_point(curve.path.first) %>
+          L <% curve.path.each do |expression_data_point| %>
+              <%= join_expression_point(expression_data_point) %>
+            <% end %>
+        "
+        style="<%= cssify_style(view.curve_stylings[index]) %>"
+        transform="
+          translate(<%= 100 + multiply_by_grid_unit_size(view.original_view.abscissa_axis.origin) %>,
+                    <%= 100 + multiply_by_grid_unit_size(view.original_view.ordinate_axis.origin) %>)
+          scale(<%= grid_unit_size %>)
+        "
+      />
+    <% end %>
 
 
 
