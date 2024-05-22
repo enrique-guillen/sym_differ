@@ -4,8 +4,6 @@ require "sym_differ/graphing/view"
 require "sym_differ/graphing/expression_graph_view"
 require "sym_differ/graphing/axis_view"
 
-require "sym_differ/graphing/expression_path_scaler"
-
 module SymDiffer
   module DifferentiationGraph
     # Generates the view of the graphs for an expression and its derivative.
@@ -84,10 +82,6 @@ module SymDiffer
         (0..10).map { |i| starting_value + (numeric_gap * i) }
       end
 
-      def round_number_label(number)
-        number.round(3)
-      end
-
       def expression_path
         expression_graph_parameters[:expression_path]
       end
@@ -108,21 +102,6 @@ module SymDiffer
         expression_graph_parameters[:ordinate_distance]
       end
 
-      def abscissa_axis_distance
-        20
-      end
-
-      def scale_expression_path_to_100_unit_square(expression_path,
-                                                   axis_distance_1 = abscissa_axis_distance,
-                                                   axis_distance_2 = ordinate_distance)
-        expression_path_scaler
-          .scale_to_target_sized_square(expression_path, axis_distance_1, axis_distance_2)
-      end
-
-      def scale_value_along_100_unit_axis(value, axis_distance)
-        expression_path_scaler.scale_along_axis(value, axis_distance)
-      end
-
       def new_view(*)
         Graphing::View.new(*)
       end
@@ -133,10 +112,6 @@ module SymDiffer
 
       def new_axis_view(*)
         Graphing::AxisView.new(*)
-      end
-
-      def expression_path_scaler
-        @expression_path_scaler ||= Graphing::ExpressionPathScaler.new(100)
       end
 
       def stringify_expression(expression)
