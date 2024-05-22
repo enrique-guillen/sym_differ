@@ -1,0 +1,123 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "sym_differ/svg_graphing/view_builder"
+
+require "sym_differ/graphing/view"
+require "sym_differ/graphing/axis_view"
+require "sym_differ/graphing/expression_graph_view"
+
+RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
+  describe "#build" do
+    subject(:build) do
+      described_class.new.build(original_view, curve_stylings)
+    end
+
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
+
+    let(:curve_stylings) { [build_curve_styling("blue", "0.5985")] }
+
+    context "when the expression graph has different ordinate values" do
+      let(:original_view) do
+        build_view(
+          axis_view("t", [-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0], -1.0), # ?
+          axis_view("y", [1.0, 1.16, 1.32, 1.48, 1.640, 1.8, 1.96, 2.12, 2.280, 2.44, 2.6], 2.6),
+          [expression_graph_view(
+            "Expression funtext",
+            [create_evaluation_point(-1.0, 1.0), create_evaluation_point(0.0, 2.6)]
+          )],
+          abscissa_distance: 1.0,
+          ordinate_distance: 1.6,
+          min_abscissa_value: -1.0,
+          max_ordinate_value: 2.6
+        )
+      end
+
+      let(:scaled_approximation_expression_path) do
+        [same_evaluation_point_as(create_evaluation_point(-100.0, 62.5)),
+         same_evaluation_point_as(create_evaluation_point(0.0, 162.5))]
+      end
+
+      it "returns the expected originval_view.curves" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            curves: a_collection_containing_exactly(
+              an_object_having_attributes(text: "Expression funtext",
+                                          path: a_collection_containing_exactly(*scaled_approximation_expression_path))
+            )
+          )
+        )
+      end
+
+      it "returns the expected original_view.abscissa_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            abscissa_axis: have_attributes(name: "t", origin: 100.0,
+                                           number_labels: include(-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, 0.0))
+          )
+        )
+      end
+
+      it "returns the expected original_view.ordinate_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            ordinate_axis: have_attributes(name: "y", origin: 162.5,
+                                           number_labels: [1.0, 1.16, 1.32, 1.48, 1.640,
+                                                           1.8, 1.96, 2.12, 2.280, 2.44, 2.6])
+          )
+        )
+      end
+
+      it "returns the expected curve stylings" do
+        expect(build).to have_attributes(curve_stylings:)
+      end
+    end
+
+    context "when the expression graph has the same ordinate values" do
+      let(:original_view) do
+        build_view(
+          axis_view("t", [-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0], -1.0), # ?
+          axis_view("y", [2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6], 2.6),
+          [expression_graph_view(
+            "Expression funtext",
+            [create_evaluation_point(-1.0, 1.0), create_evaluation_point(0.0, 2.6)]
+          )],
+          abscissa_distance: 1.0,
+          ordinate_distance: 0.0,
+          min_abscissa_value: -1.0,
+          max_ordinate_value: 2.6
+        )
+      end
+
+      it "returns the expected original_view.ordinate_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            ordinate_axis: have_attributes(name: "y", origin: 102.6,
+                                           number_labels: [2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6])
+          )
+        )
+      end
+    end
+
+    define_method(:build_view) do |abscissa_axis, ordinate_axis, curves, expression_graph_parameters|
+      SymDiffer::Graphing::View.new(
+        abscissa_axis,
+        ordinate_axis,
+        curves,
+        expression_graph_parameters
+      )
+    end
+
+    define_method(:axis_view) do |name, number_labels, origin|
+      SymDiffer::Graphing::AxisView.new(name, number_labels, origin)
+    end
+
+    define_method(:expression_graph_view) do |text, path|
+      SymDiffer::Graphing::ExpressionGraphView.new(text, path)
+    end
+
+    define_method(:build_curve_styling) do |color, width|
+      { "fill" => "none", "stroke" => color, "stroke-width" => width, "stroke-opacity" => "1" }
+    end
+  end
+end
