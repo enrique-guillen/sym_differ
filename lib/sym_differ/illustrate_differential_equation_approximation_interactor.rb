@@ -14,7 +14,7 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 
-    def initialize(view_renderer = FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new)
+    def initialize(view_renderer = SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new)
       @view_renderer = view_renderer
     end
 

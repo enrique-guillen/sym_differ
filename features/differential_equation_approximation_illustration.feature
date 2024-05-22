@@ -14,50 +14,50 @@ Feature: Illustrate Differential Equation Approximation as SVG
 
     Scenario: The user requests the approximation of y' = x, y(0.0) = 1, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = x
-      And the initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
-      And the y-variable name of the approximation is set to y
-      And the t-variable name of the approximation is set to x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
 
-      When the user requests the image
+      When the illustration is requested
 
-      Then the image is retrieved successfully
+      Then the image is stored with filename: dy_equals_x_iv_0__1.svg
 
     Scenario: The user requests the approximation of y' = y, y(0.0) = 1, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = y
-      And the initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
-      And the y-variable name of the approximation is set to y
-      And the t-variable name of the approximation is set to x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
 
-      When the user requests the image
+      When the illustration is requested
 
-      Then the image is retrieved successfully
+      Then the image is stored with filename: dy_equals_y_iv_0__0.svg
 
     Scenario: The user requests the approximation of y' = x - y, y(0.0) = 1, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = x - y
-      And the initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
-      And the y-variable name of the approximation is set to y
-      And the t-variable name of the approximation is set to x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
 
-      When the user requests the image
+      When the illustration is requested
 
-      Then the image is retrieved successfully
+      Then the image is stored with filename: dy_equals_x_minus_y_iv_0__1.svg
 
     Scenario: The user requests the approximation of y' = x + 1, y(0.0) = 0.0, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = x + 1
-      And the initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
-      And the y-variable name of the approximation is set to y
-      And the t-variable name of the approximation is set to x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
 
-      When the user requests the image
+      When the illustration is requested
 
-      Then the image is retrieved successfully
+      Then the image is stored with filename: dy_equals_x_plus_y_iv_0__0.svg
 
     Scenario: The user requests the approximation of y' = x * x + 1, y(0.0) = 1.0, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = x * x + 1
-      And the initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
-      And the y-variable name of the approximation is set to y
-      And the t-variable name of the approximation is set to x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
 
-      When the user requests the image
+      When the illustration is requested
 
-      Then the image is retrieved successfully
+      Then the image is stored with filename: dy_equals_x_times_x_plus_1_iv_0__0.svg

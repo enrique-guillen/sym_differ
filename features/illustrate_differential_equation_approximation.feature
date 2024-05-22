@@ -14,9 +14,9 @@ Feature: Illustrate Differential Equation Approximation
       And the user sets the approximation illustration's y-variable name to y
       And the user sets the approximation illustration's t-variable name to x
 
-      When the user requests the image
+      When the user requests the approximation's illustration
 
-      Then the image is retrieved successfully
+      Then the approximation's illustration is retrieved successfully
 
   Rule: The expression and parameter must be valid.
 
@@ -26,9 +26,9 @@ Feature: Illustrate Differential Equation Approximation
       And the user sets the approximation illustration's y-variable name to y
       And the user sets the approximation illustration's t-variable name to x
 
-      When the user requests the image
+      When the user requests the approximation's illustration
 
-      Then the image is not retrieved successfully
+      Then the approximation's illustration is not retrieved successfully
 
     Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var="123invalid", t-var="x"
       Given the user wants the approximation illustration of the equation y_function' = y
@@ -36,9 +36,9 @@ Feature: Illustrate Differential Equation Approximation
       And the user sets the approximation illustration's y-variable name to 123invalid
       And the user sets the approximation illustration's t-variable name to x
 
-      When the user requests the image
+      When the user requests the approximation's illustration
 
-      Then the image is not retrieved successfully
+      Then the approximation's illustration is not retrieved successfully
 
     Scenario: The user requests the approximation of y_function' = y, y(0.0) = 1.0, y-var="y", t-var="123invalid"
       Given the user wants the approximation illustration of the equation y_function' = y
@@ -46,9 +46,9 @@ Feature: Illustrate Differential Equation Approximation
       And the user sets the approximation illustration's y-variable name to x
       And the user sets the approximation illustration's t-variable name to 123invalid
 
-      When the user requests the image
+      When the user requests the approximation's illustration
 
-      Then the image is not retrieved successfully
+      Then the approximation's illustration is not retrieved successfully
 
   Rule: The y-variable name, and t-variable name, may be omitted, and will default to "y" & "t" respectively.
 
@@ -58,6 +58,6 @@ Feature: Illustrate Differential Equation Approximation
       And the user sets the approximation illustration's y-variable name to ~empty~
       And the user sets the approximation illustration's t-variable name to ~empty~
 
-      When the user requests the image
+      When the user requests the approximation's illustration
 
-      Then the image is retrieved successfully
+      Then the approximation's illustration is retrieved successfully

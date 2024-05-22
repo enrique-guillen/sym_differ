@@ -64,6 +64,7 @@ detectors:
       - "SymDiffer::FirstOrderDifferentialEquationApproximator#approximate_solution"
       - "SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor#approximate_solution"
       - "SymDiffer::DifferentialEquationApproximationIllustrator#illustrate_approximation"
+      - "SymDiffer::IllustrateDifferentialEquationApproximationInteractor#illustrate_approximation"
 
   Attribute:
     exclude:
