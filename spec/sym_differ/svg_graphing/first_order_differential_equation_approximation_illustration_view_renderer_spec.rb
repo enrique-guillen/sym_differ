@@ -8,26 +8,33 @@ require "sym_differ/svg_graphing/view"
 RSpec.describe SymDiffer::SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer do
   describe "#render" do
     subject(:render) do
-      described_class.new(underlying_renderer).render(original_view)
+      described_class
+        .new(underlying_renderer, view_builder)
+        .render(original_view)
     end
 
-    before { allow(underlying_renderer).to receive(:render).and_return(rendered_view) }
+    before do
+      allow(view_builder)
+        .to receive(:build)
+        .with(original_view, all(a_kind_of(Hash)))
+        .and_return(built_view)
+
+      allow(underlying_renderer).to receive(:render).and_return(rendered_view)
+    end
 
     let(:underlying_renderer) { double(:underlying_renderer) }
+    let(:view_builder) { double(:view_builder) }
     let(:original_view) { double(:original_view) }
+
+    let(:built_view) { double(:built_view) }
     let(:rendered_view) { double(:rendered_view) }
 
     it { is_expected.to eq(rendered_view) }
 
-    it "returns the expected SvgGraphing::View" do
+    it "renders the view" do
       render
 
-      expect(underlying_renderer)
-        .to have_received(:render)
-        .with(
-          a_kind_of(SymDiffer::SvgGraphing::View)
-            .and(have_attributes(show_total_area_aid: false, original_view:, curve_stylings: all(a_kind_of(Hash))))
-        )
+      expect(underlying_renderer).to have_received(:render).with(built_view)
     end
   end
 end

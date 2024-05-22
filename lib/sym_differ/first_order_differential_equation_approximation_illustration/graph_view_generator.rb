@@ -4,8 +4,6 @@ require "sym_differ/graphing/view"
 require "sym_differ/graphing/axis_view"
 require "sym_differ/graphing/expression_graph_view"
 
-require "sym_differ/graphing/expression_path_scaler"
-
 require "forwardable"
 
 module SymDiffer
@@ -28,7 +26,7 @@ module SymDiffer
 
         approximation_graph_view = generate_expression_graph_view(approximation_expression_path)
 
-        new_view(abscissa_axis_view, ordinate_axis_view, [approximation_graph_view])
+        new_view(abscissa_axis_view, ordinate_axis_view, [approximation_graph_view], expression_graph_parameters)
       end
 
       private
@@ -36,33 +34,28 @@ module SymDiffer
       attr_reader :equation_parameters, :expression_graph_parameters
 
       def generate_abscissa_axis_view
-        number_labels = produce_10_number_labels(min_abscissa_value, abscissa_distance / 10.0)
+        numeric_gap = abscissa_distance / 10.0
+        number_labels = produce_10_number_labels(min_abscissa_value, numeric_gap)
 
-        origin = -scale_value_along_100_unit_axis(min_abscissa_value, abscissa_distance)
+        origin = min_abscissa_value
 
         new_axis_view(variable_name, number_labels, origin)
       end
 
       def generate_ordinate_axis_view
-        distance_of_axis_to_draw, vertical_starting_point =
-          ordinate_distance.zero? ? [1.0, 1.0] : [ordinate_distance, max_ordinate_value]
+        distance_of_axis_to_draw = ordinate_distance.zero? ? 1.0 : ordinate_distance
 
         numeric_gap = distance_of_axis_to_draw / 10.0
         number_labels = produce_10_number_labels(min_ordinate_value, numeric_gap)
 
-        origin = scale_value_along_100_unit_axis(vertical_starting_point, distance_of_axis_to_draw)
-        (origin += max_ordinate_value) if ordinate_distance.zero?
-
-        new_axis_view(undetermined_function_name, number_labels, origin)
+        new_axis_view(undetermined_function_name, number_labels, max_ordinate_value)
       end
 
       def generate_expression_graph_view(approximation_expression_path)
         stringified_expression = stringify_expression(expression)
         title = "Expression: #{stringified_expression}"
 
-        scaled_expression_path = scale_path_to_target_sized_square(approximation_expression_path)
-
-        new_expression_graph_view(title, scaled_expression_path)
+        new_expression_graph_view(title, approximation_expression_path)
       end
 
       def produce_10_number_labels(starting_value, numeric_gap)
@@ -85,10 +78,6 @@ module SymDiffer
         expression_graph_parameters[:ordinate_distance]
       end
 
-      def max_abscissa_value
-        expression_graph_parameters[:max_abscissa_value]
-      end
-
       def min_abscissa_value
         expression_graph_parameters[:min_abscissa_value]
       end
@@ -101,15 +90,6 @@ module SymDiffer
         @expression_stringifier.stringify(expression)
       end
 
-      def scale_value_along_100_unit_axis(value, axis_distance)
-        expression_path_scaler.scale_along_axis(value, axis_distance)
-      end
-
-      def scale_path_to_target_sized_square(expression_path)
-        expression_path_scaler
-          .scale_to_target_sized_square(expression_path, abscissa_distance, ordinate_distance)
-      end
-
       def new_view(*)
         Graphing::View.new(*)
       end
@@ -120,10 +100,6 @@ module SymDiffer
 
       def new_expression_graph_view(*)
         Graphing::ExpressionGraphView.new(*)
-      end
-
-      def expression_path_scaler
-        @expression_path_scaler ||= Graphing::ExpressionPathScaler.new(100)
       end
 
       def_delegators :equation_parameters, :undetermined_function_name, :variable_name, :expression

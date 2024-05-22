@@ -47,15 +47,15 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
       end
 
       let(:scaled_approximation_expression_path) do
-        [same_evaluation_point_as(create_evaluation_point(-100.0, 62.5)),
-         same_evaluation_point_as(create_evaluation_point(0.0, 162.5))]
+        [same_evaluation_point_as(create_evaluation_point(-1.0, 1.0)),
+         same_evaluation_point_as(create_evaluation_point(0.0, 2.6))]
       end
 
       it "returns the expected view" do
         expect(generate).to have_attributes(
-          abscissa_axis: have_attributes(name: "t", origin: 100.0,
+          abscissa_axis: have_attributes(name: "t", origin: -1.0,
                                          number_labels: include(-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, 0.0)),
-          ordinate_axis: have_attributes(name: "y", origin: 162.5,
+          ordinate_axis: have_attributes(name: "y", origin: 2.6,
                                          number_labels: [1.0, 1.16, 1.32, 1.48, 1.640,
                                                          1.8, 1.96, 2.12, 2.280, 2.44, 2.6]),
           curves: a_collection_containing_exactly(
@@ -82,17 +82,17 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
       end
 
       let(:scaled_approximation_expression_path) do
-        [same_evaluation_point_as(create_evaluation_point(-100.0, 2.6)),
+        [same_evaluation_point_as(create_evaluation_point(-1.0, 2.6)),
          same_evaluation_point_as(create_evaluation_point(0.0, 2.6))]
       end
 
       it "returns the expected view" do
         expect(generate).to have_attributes(
-          abscissa_axis: have_attributes(name: "t", origin: 100.0,
+          abscissa_axis: have_attributes(name: "t", origin: -1.0,
                                          number_labels: a_collection_including(
                                            -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, 0.0
                                          )),
-          ordinate_axis: have_attributes(name: "y", origin: 102.6,
+          ordinate_axis: have_attributes(name: "y", origin: 2.6,
                                          number_labels: [2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6]),
           curves: a_collection_containing_exactly(
             an_object_having_attributes(text: "Expression: y",
