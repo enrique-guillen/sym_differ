@@ -75,7 +75,7 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             abscissa_axis: an_object_having_attributes(
               name: "x",
               number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
-              origin: 50
+              origin: -10.0
             )
           )
         )
@@ -89,7 +89,7 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             ordinate_axis: an_object_having_attributes(
               name: "y",
               number_labels: [-20.0, -16.0, -12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0, 16.0, 20.0],
-              origin: 50
+              origin: 20.0
             )
           )
         )
@@ -103,8 +103,8 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             curves: a_collection_including(
               an_object_having_attributes(
                 text: "Expression: x + x",
-                path: [same_evaluation_point_as(evaluation_point(-50.0, -50.0)),
-                       same_evaluation_point_as(evaluation_point(50.0, 50.0))]
+                path: [same_evaluation_point_as(evaluation_point(-10.0, -20.0)),
+                       same_evaluation_point_as(evaluation_point(10.0, 20.0))]
               )
             )
           )
@@ -119,8 +119,8 @@ RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
             curves: a_collection_including(
               an_object_having_attributes(
                 text: "Derivative: 2",
-                path: [same_evaluation_point_as(evaluation_point(-50.0, 5.0)),
-                       same_evaluation_point_as(evaluation_point(50.0, 5.0))]
+                path: [same_evaluation_point_as(evaluation_point(-10.0, 2.0)),
+                       same_evaluation_point_as(evaluation_point(10.0, 2.0))]
               )
             )
           )

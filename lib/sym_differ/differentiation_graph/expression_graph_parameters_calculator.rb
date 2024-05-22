@@ -14,14 +14,32 @@ module SymDiffer
         expression_path = generate_expression_path(expression, @step_range)
         derivative_expression_path = generate_expression_path(derivative_expression, @step_range)
 
+        build_expression_path_parameters(expression_path, derivative_expression_path)
+          .merge(generate_abscissa_parameters(expression_path, derivative_expression_path))
+          .merge(generate_ordinate_parameters(expression_path, derivative_expression_path))
+      end
+
+      private
+
+      def build_expression_path_parameters(expression_path, derivative_expression_path)
+        { expression_path:, derivative_expression_path: }
+      end
+
+      def generate_abscissa_parameters(expression_path, derivative_expression_path)
+        max_abscissa_value = max_abscissa_value_from_expression_paths(expression_path, derivative_expression_path)
+        min_abscissa_value = min_abscissa_value_from_expression_paths(expression_path, derivative_expression_path)
+        abscissa_distance = max_abscissa_value - min_abscissa_value
+
+        { max_abscissa_value:, min_abscissa_value:, abscissa_distance: }
+      end
+
+      def generate_ordinate_parameters(expression_path, derivative_expression_path)
         max_ordinate_value = max_value_from_expression_paths(expression_path, derivative_expression_path)
         min_ordinate_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
         ordinate_distance = max_ordinate_value - min_ordinate_value
 
-        { expression_path:, derivative_expression_path:, max_ordinate_value:, min_ordinate_value:, ordinate_distance: }
+        { max_ordinate_value:, min_ordinate_value:, ordinate_distance: }
       end
-
-      private
 
       def max_value_from_expression_paths(*paths)
         paths
@@ -32,6 +50,18 @@ module SymDiffer
       def min_value_from_expression_paths(*paths)
         paths
           .flat_map { |path| path.map(&:ordinate) }
+          .min
+      end
+
+      def max_abscissa_value_from_expression_paths(*paths)
+        paths
+          .flat_map { |path| path.map(&:abscissa) }
+          .max
+      end
+
+      def min_abscissa_value_from_expression_paths(*paths)
+        paths
+          .flat_map { |path| path.map(&:abscissa) }
           .min
       end
 

@@ -44,12 +44,14 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
       end
 
       let(:scaled_path) do
-        [create_evaluation_point(-50.0, -50.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 50.0)]
+        [create_evaluation_point(-10.0, -1000.0),
+         create_evaluation_point(0.0, 0.0),
+         create_evaluation_point(10.0, 1000.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
       let(:scaled_derivative_path) do
-        [create_evaluation_point(-50.0, 10.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 10.0)]
+        [create_evaluation_point(-10.0, 200.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(10.0, 200.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
@@ -63,10 +65,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
                                                path: a_collection_containing_exactly(*scaled_path)),
                    an_object_having_attributes(text: "Derivative: defun(x)",
                                                path: a_collection_containing_exactly(*scaled_derivative_path))],
-          abscissa_axis: have_attributes(name: "x", origin: 50,
+          abscissa_axis: have_attributes(name: "x", origin: -10.0,
                                          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
           ordinate_axis:
-            have_attributes(name: "y", origin: 50.0,
+            have_attributes(name: "y", origin: 1000.0,
                             number_labels: [-1000.0, -800.0, -600.0, -400.0, -200.0, 0.0,
                                             200.0, 400.0, 600.0, 800.0, 1000.0])
         )
@@ -93,12 +95,12 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
       end
 
       let(:scaled_path) do
-        [create_evaluation_point(-50.0, -0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 0.0)]
+        [create_evaluation_point(-10.0, -0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(10.0, 0.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
       let(:scaled_derivative_path) do
-        [create_evaluation_point(-50.0, 0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(50.0, 0.0)]
+        [create_evaluation_point(-10.0, 0.0), create_evaluation_point(0.0, 0.0), create_evaluation_point(10.0, 0.0)]
           .map { |p| same_evaluation_point_as(p) }
       end
 
@@ -111,9 +113,9 @@ RSpec.describe SymDiffer::DifferentiationGraph::GraphViewGenerator do
           curves: [an_object_having_attributes(text: "Expression: fun(x)",
                                                path: a_collection_containing_exactly(*scaled_path)),
                    an_object_having_attributes(path: a_collection_containing_exactly(*scaled_derivative_path))],
-          abscissa_axis: have_attributes(name: "x", origin: 50,
+          abscissa_axis: have_attributes(name: "x", origin: -10.0,
                                          number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0]),
-          ordinate_axis: have_attributes(name: "y", origin: 100.0,
+          ordinate_axis: have_attributes(name: "y", origin: 0.0,
                                          number_labels: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
         )
       end

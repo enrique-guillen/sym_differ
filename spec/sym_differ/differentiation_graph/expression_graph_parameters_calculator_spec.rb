@@ -80,6 +80,9 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
       expect(generate).to include(
         expression_path: a_collection_containing_exactly(*path),
         derivative_expression_path: a_collection_containing_exactly(*derivative_path),
+        min_abscissa_value: -10.0,
+        max_abscissa_value: 10.0,
+        abscissa_distance: 20.0,
         max_ordinate_value: 1000.0,
         min_ordinate_value: -1000.0,
         ordinate_distance: 2000.0

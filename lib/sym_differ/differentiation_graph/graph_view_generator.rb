@@ -30,7 +30,8 @@ module SymDiffer
         derivative_expression_graph_view =
           generate_derivative_expression_graph_view(derivative_expression, new_derivative_expression_path)
 
-        new_view(abscissa_axis_view, ordinate_axis_view, [expression_graph_view, derivative_expression_graph_view])
+        new_view(abscissa_axis_view, ordinate_axis_view, [expression_graph_view, derivative_expression_graph_view],
+                 expression_graph_parameters)
       end
 
       private
@@ -47,34 +48,31 @@ module SymDiffer
 
       def generate_original_expression_graph_view(expression, expression_path)
         stringified_expression = "Expression: #{stringify_expression(expression)}"
-        scaled_expression_path = scale_expression_path_to_100_unit_square(expression_path)
 
-        new_expression_graph_view(stringified_expression, scaled_expression_path)
+        new_expression_graph_view(stringified_expression, expression_path)
       end
 
       def generate_derivative_expression_graph_view(expression, expression_path)
         stringified_expression = "Derivative: #{stringify_expression(expression)}"
-        scaled_expression_path = scale_expression_path_to_100_unit_square(expression_path)
 
-        new_expression_graph_view(stringified_expression, scaled_expression_path)
+        new_expression_graph_view(stringified_expression, expression_path)
       end
 
       def abscissas_labels_and_positioning
-        distance_of_axis_to_draw = 20
+        distance_of_axis_to_draw = 20.0
 
-        origin_abscissa = scale_value_along_100_unit_axis(10, distance_of_axis_to_draw)
+        origin_abscissa = 10.0
 
         abscissa_label_gap = distance_of_axis_to_draw / 10.0
         abscissa_number_labels = produce_10_number_labels(-10, abscissa_label_gap)
 
-        [abscissa_number_labels, origin_abscissa]
+        [abscissa_number_labels, -origin_abscissa]
       end
 
       def ordinate_labels_and_positioning
         distance_of_axis_to_draw = ordinate_distance.zero? ? 1.0 : ordinate_distance
-        maximum_value_of_axis_to_draw = ordinate_distance.zero? ? 1 : max_value
 
-        origin_ordinate = scale_value_along_100_unit_axis(maximum_value_of_axis_to_draw, distance_of_axis_to_draw)
+        origin_ordinate = max_value
 
         ordinate_label_gap = distance_of_axis_to_draw / 10.0
         ordinate_number_labels = produce_10_number_labels(min_value, ordinate_label_gap)
