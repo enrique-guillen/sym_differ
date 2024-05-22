@@ -128,10 +128,6 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
       let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
 
-      let(:derivative_expression_path) do
-        [-26, 25].map { |i| evaluation_point(i, i * 2) }
-      end
-
       it "can be stored in test artifacts after execution" do
         expect { render }.not_to raise_error
         write_test_artifact_path(prefix_with_class_name("low_precision_path_long_number_labels.svg"), render)
