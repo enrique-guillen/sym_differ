@@ -162,11 +162,53 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
     context "when the expression text to parse is '(1) + 2'" do
       let(:expression_text) { "(1) + 2" }
 
-      it "returns a structure representing 1 * 2" do
+      it "returns a structure representing 1 + 2" do
         expression = parse
 
         expect(expression).to be_same_as(
           sum_expression(constant_expression(1), constant_expression(2))
+        )
+      end
+    end
+
+    context "when the expression text to parse is '(sine(x) + 2)' (clarification)" do
+      let(:expression_text) { "(sine(x) + 2)" }
+
+      it "returns a structure representing sine(x) + 2" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          sum_expression(sine_expression(variable_expression("x")), constant_expression(2))
+        )
+      end
+    end
+
+    context "when the expression text to parse is '(sine(x) * x) * 2' (clarification)" do
+      let(:expression_text) { "(sine(x) * x) * 2" }
+
+      it "returns a structure representing (sine(x) * x) * 2" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          multiplicate_expression(
+            multiplicate_expression(sine_expression(variable_expression("x")), variable_expression("x")),
+            constant_expression(2)
+          )
+        )
+      end
+    end
+
+    context "when the expression text to parse is 'sine(x) * (x * 2)' (clarification)" do
+      let(:expression_text) { "sine(x) * (x * 2)" }
+
+      it "returns a structure representing sine(x) * (x * 2)" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          multiplicate_expression(
+            sine_expression(variable_expression("x")),
+            multiplicate_expression(variable_expression("x"), constant_expression(2))
+          )
         )
       end
     end
