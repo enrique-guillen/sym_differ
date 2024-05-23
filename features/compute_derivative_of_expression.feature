@@ -187,3 +187,13 @@ Feature: Compute the symbolic derivative of a given expression.
 
       Then the derivative expression is -1 * sine(x * x) * (x + x)
       Then (@wip)the derivative expression is -sine(x * x) * (x + x)
+
+  Rule: The expression f(x) can have any type of expression nested within parenthesis.
+
+    Scenario: The derivative of sine(x) * (x + 2), with respect to x, is requested.
+      Given the expression to differentiate is sine(x) * (x + 2)
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is cosine(x) * (x + 2) + sine(x)
