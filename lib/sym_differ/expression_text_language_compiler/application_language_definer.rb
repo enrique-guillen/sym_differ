@@ -65,7 +65,10 @@ module SymDiffer
       end
 
       def post_multiplication_token_checkers
-        [constant_token_checker, identifier_token_checker, sum_token_checker, subtraction_token_checker]
+        [
+          constant_token_checker, identifier_token_checker, sum_token_checker, subtraction_token_checker,
+          parens_token_checker
+        ]
       end
 
       def post_sum_token_checkers
@@ -77,10 +80,7 @@ module SymDiffer
 
       def post_subtraction_token_checkers
         [
-          constant_token_checker,
-          identifier_token_checker,
-          subtraction_token_checker,
-          sum_token_checker,
+          constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker,
           parens_token_checker
         ]
       end
