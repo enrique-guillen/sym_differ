@@ -62,6 +62,16 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
 
+    context "when the expression text to parse is '-'" do
+      let(:expression_text) { "-" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        )
+      end
+    end
+
     context "when the expression text to parse is '1 + sine(x)'" do
       let(:expression_text) { "1 + sine(x)" }
 
@@ -119,6 +129,42 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
         expect(expression).to be_same_as(
           sum_expression(constant_expression(1), constant_expression(2))
+        )
+      end
+    end
+
+    context "when the expression text to parse is 'x - 1'" do
+      let(:expression_text) { "x - 1" }
+
+      it "returns a structure representing x - 1" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          subtract_expression(variable_expression("x"), constant_expression(1))
+        )
+      end
+    end
+
+    context "when the expression text to parse is '--1'" do
+      let(:expression_text) { "--1" }
+
+      it "returns a structure representing -- 1" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          negate_expression(negate_expression(constant_expression(1)))
+        )
+      end
+    end
+
+    context "when the expression text to parse is 'x + --1'" do
+      let(:expression_text) { "x + --1" }
+
+      it "returns a structure representing x + --1" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          sum_expression(variable_expression("x"), negate_expression(negate_expression(constant_expression(1))))
         )
       end
     end

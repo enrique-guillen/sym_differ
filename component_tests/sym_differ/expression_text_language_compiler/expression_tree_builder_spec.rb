@@ -9,7 +9,6 @@ require "sym_differ/expression_text_language_compiler/command_and_expression_sta
 
 require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/parens_token_checker"
@@ -32,54 +31,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     let(:checkers_by_role) do
       {
-        initial_token_checkers: [
-          constant_token_checker,
-          identifier_token_checker,
-          subtraction_token_checker,
-          sum_token_checker
-        ],
-        post_constant_token_checkers: [
-          subtraction_token_checker,
-          sum_token_checker,
-          multiplication_token_checker,
-          parens_token_checker
-        ],
-        post_identifier_token_checkers: [
-          subtraction_token_checker,
-          sum_token_checker,
-          multiplication_token_checker,
-          parens_token_checker
-        ],
-        post_multiplication_token_checkers: [
-          constant_token_checker,
-          identifier_token_checker,
-          sum_token_checker,
-          subtraction_token_checker
-        ],
-        post_sum_token_checkers: [
-          constant_token_checker,
-          identifier_token_checker,
-          subtraction_token_checker,
-          sum_token_checker
-        ],
-        post_subtraction_token_checkers: [
-          constant_token_checker,
-          identifier_token_checker,
-          subtraction_token_checker,
-          sum_token_checker
-        ],
-        post_opening_parenthesis: [
-          identifier_token_checker,
-          constant_token_checker,
-          subtraction_token_checker,
-          sum_token_checker
-        ],
-        post_closing_parenthesis: [
-          subtraction_token_checker,
-          sum_token_checker,
-          multiplication_token_checker,
-          parens_token_checker
-        ]
+        initial_token_checkers: [constant_token_checker, identifier_token_checker, sum_token_checker],
+        post_constant_token_checkers: [sum_token_checker, multiplication_token_checker, parens_token_checker],
+        post_identifier_token_checkers: [sum_token_checker, multiplication_token_checker, parens_token_checker],
+        post_multiplication_token_checkers: [constant_token_checker, identifier_token_checker, sum_token_checker],
+        post_sum_token_checkers: [constant_token_checker, identifier_token_checker, sum_token_checker],
+        post_opening_parenthesis: [identifier_token_checker, constant_token_checker, sum_token_checker],
+        post_closing_parenthesis: [sum_token_checker, multiplication_token_checker, parens_token_checker]
       }.freeze
     end
 
@@ -95,10 +53,6 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
     let(:sum_token_checker) do
       SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker.new(expression_factory)
-    end
-
-    let(:subtraction_token_checker) do
-      SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker.new(expression_factory)
     end
 
     let(:multiplication_token_checker) do
@@ -125,16 +79,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
-    context "when the tokens list is +" do
-      let(:tokens) { [operator_token("+")] }
-
-      it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
-      end
-    end
-
-    context "when the tokens list is -" do
-      let(:tokens) { [operator_token("-")] }
+    context "when the tokens list is *" do
+      let(:tokens) { [operator_token("*")] }
 
       it "raises an invalid syntax error" do
         expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
@@ -167,36 +113,26 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       end
     end
 
-    context "when the tokens list is x - 1" do
-      let(:tokens) { [identifier_token("x"), operator_token("-"), constant_token(1)] }
+    context "when the tokens list is ++1" do
+      let(:tokens) { [operator_token("+"), operator_token("+"), constant_token(1)] }
 
-      it "returns a Sum Expression x + x" do
+      it "returns a PositiveExpression ++1" do
         expect(build).to be_same_as(
-          subtract_expression(variable_expression("x"), constant_expression(1))
+          positive_expression(positive_expression(constant_expression(1)))
         )
       end
     end
 
-    context "when the tokens list is --1" do
-      let(:tokens) { [operator_token("-"), operator_token("-"), constant_token(1)] }
-
-      it "returns a NegateExpression --1" do
-        expect(build).to be_same_as(
-          negate_expression(negate_expression(constant_expression(1)))
-        )
-      end
-    end
-
-    context "when the tokens list is x + --1 (clarification)" do
+    context "when the tokens list is x + ++1 (clarification)" do
       let(:tokens) do
-        [identifier_token("x"), operator_token("+"), operator_token("-"), operator_token("-"), constant_token(1)]
+        [identifier_token("x"), operator_token("+"), operator_token("+"), operator_token("+"), constant_token(1)]
       end
 
       it "returns a SumExpression x, --1" do
         expect(build).to be_same_as(
           sum_expression(
             variable_expression("x"),
-            negate_expression(negate_expression(constant_expression(1)))
+            positive_expression(positive_expression(constant_expression(1)))
           )
         )
       end
@@ -209,14 +145,6 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
 
       it "raises an invalid syntax error" do
         expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
-      end
-    end
-
-    context "when the tokens list is +x" do
-      let(:tokens) { [operator_token("+"), identifier_token("x")] }
-
-      it "returns a PositiveExpression" do
-        expect(build).to be_same_as(positive_expression(variable_expression("x")))
       end
     end
 
