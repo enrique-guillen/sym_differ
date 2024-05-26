@@ -19,7 +19,7 @@ module SymDiffer
 
         private
 
-        RECOGNIZED_OPERATOR = %w[+ - *].freeze
+        RECOGNIZED_OPERATOR = %w[+ - * /].freeze
         private_constant :RECOGNIZED_OPERATOR
 
         def character_recognized?(character)
