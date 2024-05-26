@@ -197,3 +197,29 @@ Feature: Compute the symbolic derivative of a given expression.
       When the expression is computed
 
       Then the derivative expression is cosine(x) * (x + 2) + sine(x)
+
+  Rule: The derivative of f(x) = a(x)/b(x) is f'(x) = (a'(x) * b(x) - a(x) * b'(x))/(b(x) ^ 2).
+    Scenario: The derivative of 1 / sine(x), with respect to x, is requested.
+      Given the expression to differentiate is 1 / sine(x)
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then the derivative expression is cosine(x) / (sine(x) ^ 2)
+
+    Scenario: The derivative of sine(x) / 2, with respect to x, is requested.
+      Given the expression to differentiate is sine(x) / 2
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then the derivative expression is (2 * cosine(x)) / 4
+      Then (@wip) the derivative expression is cosine(x) / 2
+
+    Scenario: The derivative of sine(x) / x, with respect to x, is requested.
+      Given the expression to differentiate is sine(x) / x
+      And the variable of the expression to differentiate with is x
+
+      When (@wip) the expression is computed
+
+      Then the derivative expression is ((cosine(x) * x) - sine(x)) / (x ^ 2)
