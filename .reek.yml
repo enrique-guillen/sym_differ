@@ -50,12 +50,13 @@ detectors:
       # We decided to take on the tech debt incurred by the 4 parameters of update_evaluation_stack_based_on_token and
       # it should be refactored.
       - "SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder#update_evaluation_stack_based_on_token"
-      # We decided to take on the tech debt incurred by the 4 parameters of build_command_type_stack_item and it should
-      # be refactored.
+      # We decided to take on the tech debt incurred by the 4 parameters of build_command_type_stack_item, perhaps the
+      # hashes can be converted structs.
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker#build_command_type_stack_item"
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker#build_command_type_stack_item"
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker#build_command_type_stack_item"
       - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::SumTokenChecker#build_command_type_stack_item"
+      - "SymDiffer::ExpressionTextLanguageCompiler::Checkers::DivisionTokenChecker#build_command_type_stack_item"
       # There are many configurable behaviors and parameters to the visualization process and output of the graphs
       # produced by this class. The tech debt is not significantly high at the time of writing this.
       - "SymDiffer::ExpressionAndDerivativeExpressionVisualizer#initialize"
