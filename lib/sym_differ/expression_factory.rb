@@ -10,49 +10,54 @@ require "sym_differ/expressions/multiplicate_expression"
 require "sym_differ/expressions/sine_expression"
 require "sym_differ/expressions/cosine_expression"
 require "sym_differ/expressions/derivative_expression"
+require "sym_differ/expressions/divide_expression"
 
 module SymDiffer
   # Implements an interface that allows the Factory users instantiate expressions regardless of the implementation
   # of the Expressions, e.g., the module and class names.
   class ExpressionFactory
-    def create_constant_expression(value)
-      Expressions::ConstantExpression.new(value)
+    def create_constant_expression(*)
+      Expressions::ConstantExpression.new(*)
     end
 
-    def create_variable_expression(name)
-      Expressions::VariableExpression.new(name)
+    def create_variable_expression(*)
+      Expressions::VariableExpression.new(*)
     end
 
-    def create_sum_expression(expression_a, expression_b)
-      Expressions::SumExpression.new(expression_a, expression_b)
+    def create_sum_expression(*)
+      Expressions::SumExpression.new(*)
     end
 
-    def create_subtract_expression(minuend, subtrahend)
-      Expressions::SubtractExpression.new(minuend, subtrahend)
+    def create_subtract_expression(*)
+      Expressions::SubtractExpression.new(*)
     end
 
-    def create_negate_expression(negated_expression)
-      Expressions::NegateExpression.new(negated_expression)
+    def create_negate_expression(*)
+      Expressions::NegateExpression.new(*)
     end
 
-    def create_positive_expression(summand)
-      Expressions::PositiveExpression.new(summand)
+    def create_positive_expression(*)
+      Expressions::PositiveExpression.new(*)
     end
 
-    def create_multiplicate_expression(multiplicand, multiplier)
-      Expressions::MultiplicateExpression.new(multiplicand, multiplier)
+    def create_multiplicate_expression(*)
+      Expressions::MultiplicateExpression.new(*)
     end
 
-    def create_sine_expression(angle_expression)
-      Expressions::SineExpression.new(angle_expression)
+    def create_sine_expression(*)
+      Expressions::SineExpression.new(*)
     end
 
-    def create_cosine_expression(angle_expression)
-      Expressions::CosineExpression.new(angle_expression)
+    def create_cosine_expression(*)
+      Expressions::CosineExpression.new(*)
     end
 
-    def create_derivative_expression(underived_expression, variable)
-      Expressions::DerivativeExpression.new(underived_expression, variable)
+    def create_derivative_expression(*)
+      Expressions::DerivativeExpression.new(*)
+    end
+
+    def create_divide_expression(*)
+      Expressions::DivideExpression.new(*)
     end
   end
 end
