@@ -74,6 +74,12 @@ Metrics/CyclomaticComplexity:
   # We've decided to address the complexity of #reduction_analysis in the future via the Visitor pattern or similar.
   - "lib/sym_differ/expression_reducer.rb"
 
+Metrics/MethodLength:
+  Exclude:
+  # One method that returns a dynamically-calculated Hash that establishes the relationship between token types and
+  # each entry in the Hash is in a key: method_name form; it's not necessary to refactor this right away.
+  - "lib/sym_differ/expression_text_language_compiler/application_language_definer.rb"
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
