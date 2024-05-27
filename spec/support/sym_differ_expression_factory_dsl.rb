@@ -10,44 +10,48 @@ module Support
       SymDiffer::ExpressionFactory.new
     end
 
-    def constant_expression(value)
-      expression_factory.create_constant_expression(value)
+    def constant_expression(*)
+      expression_factory.create_constant_expression(*)
     end
 
-    def variable_expression(name)
-      expression_factory.create_variable_expression(name)
+    def variable_expression(*)
+      expression_factory.create_variable_expression(*)
     end
 
-    def sum_expression(expression_a, expression_b)
-      expression_factory.create_sum_expression(expression_a, expression_b)
+    def sum_expression(*)
+      expression_factory.create_sum_expression(*)
     end
 
-    def subtract_expression(expression_a, expression_b)
-      expression_factory.create_subtract_expression(expression_a, expression_b)
+    def subtract_expression(*)
+      expression_factory.create_subtract_expression(*)
     end
 
-    def negate_expression(negated_expression)
-      expression_factory.create_negate_expression(negated_expression)
+    def negate_expression(*)
+      expression_factory.create_negate_expression(*)
     end
 
-    def positive_expression(summand)
-      expression_factory.create_positive_expression(summand)
+    def positive_expression(*)
+      expression_factory.create_positive_expression(*)
     end
 
-    def multiplicate_expression(multiplicand, multiplier)
-      expression_factory.create_multiplicate_expression(multiplicand, multiplier)
+    def multiplicate_expression(*)
+      expression_factory.create_multiplicate_expression(*)
     end
 
-    def sine_expression(angle_expression)
-      expression_factory.create_sine_expression(angle_expression)
+    def sine_expression(*)
+      expression_factory.create_sine_expression(*)
     end
 
-    def cosine_expression(angle_expression)
-      expression_factory.create_cosine_expression(angle_expression)
+    def cosine_expression(*)
+      expression_factory.create_cosine_expression(*)
     end
 
-    def derivative_expression(underived_expression, variable)
-      expression_factory.create_derivative_expression(underived_expression, variable)
+    def derivative_expression(*)
+      expression_factory.create_derivative_expression(*)
+    end
+
+    def divide_expression(*)
+      expression_factory.create_divide_expression(*)
     end
   end
 end

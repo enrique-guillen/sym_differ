@@ -140,7 +140,7 @@ RSpec.describe SymDiffer::ExpressionFactory do
     end
   end
 
-  describe "#create_derivative_expression" do
+  describe "#create_divide_expression" do
     subject(:create_divide_expression) do
       described_class.new.create_divide_expression(numerator, denominator)
     end
