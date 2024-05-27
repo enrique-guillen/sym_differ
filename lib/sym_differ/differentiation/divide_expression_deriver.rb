@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module SymDiffer
   module Differentiation
     # Computes the expresion that represents the derivative of the division of two functions.
     class DivideExpressionDeriver
+      extend Forwardable
+
       def initialize(expression_factory, deriver)
         @expression_factory = expression_factory
         @deriver = deriver
@@ -23,29 +27,13 @@ module SymDiffer
 
       private
 
-      def create_divide_expression(*)
-        @expression_factory.create_divide_expression(*)
-      end
-
-      def create_subtract_expression(*)
-        @expression_factory.create_subtract_expression(*)
-      end
-
-      def create_multiplicate_expression(*)
-        @expression_factory.create_multiplicate_expression(*)
-      end
-
       def derive_expression(expression)
         expression.accept(@deriver)
       end
 
-      def create_exponentiate_expression(*)
-        @expression_factory.create_exponentiate_expression(*)
-      end
-
-      def create_constant_expression(*)
-        @expression_factory.create_constant_expression(*)
-      end
+      def_delegators :@expression_factory,
+                     :create_divide_expression, :create_subtract_expression, :create_multiplicate_expression,
+                     :create_exponentiate_expression, :create_constant_expression
     end
   end
 end
