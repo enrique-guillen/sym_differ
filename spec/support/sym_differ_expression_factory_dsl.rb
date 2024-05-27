@@ -53,5 +53,9 @@ module Support
     def divide_expression(*)
       expression_factory.create_divide_expression(*)
     end
+
+    def exponentiate_expression(*)
+      expression_factory.create_exponentiate_expression(*)
+    end
   end
 end
