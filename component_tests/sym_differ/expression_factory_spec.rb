@@ -13,6 +13,7 @@ require "sym_differ/expressions/sine_expression"
 require "sym_differ/expressions/cosine_expression"
 require "sym_differ/expressions/derivative_expression"
 require "sym_differ/expressions/divide_expression"
+require "sym_differ/expressions/exponentiate_expression"
 
 RSpec.describe SymDiffer::ExpressionFactory do
   describe "#create_constant_expression" do
@@ -152,6 +153,21 @@ RSpec.describe SymDiffer::ExpressionFactory do
       expect(create_divide_expression)
         .to be_a_kind_of(SymDiffer::Expressions::DivideExpression)
         .and have_attributes(numerator:, denominator:)
+    end
+  end
+
+  describe "#create_exponentiate_expression" do
+    subject(:create_exponentiate_expression) do
+      described_class.new.create_exponentiate_expression(base, power)
+    end
+
+    let(:base) { double(:base) }
+    let(:power) { double(:power) }
+
+    it "returns a DerivativeExpression" do
+      expect(create_exponentiate_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::ExponentiateExpression)
+        .and have_attributes(base:, power:)
     end
   end
 end

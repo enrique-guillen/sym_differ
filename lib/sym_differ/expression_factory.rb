@@ -59,5 +59,9 @@ module SymDiffer
     def create_divide_expression(*)
       Expressions::DivideExpression.new(*)
     end
+
+    def create_exponentiate_expression(*)
+      Expressions::ExponentiateExpression.new(*)
+    end
   end
 end
