@@ -288,4 +288,38 @@ RSpec.describe SymDiffer::StringifierVisitor do
       it { is_expected.to eq("(num / den)") }
     end
   end
+
+  describe "#visit_exponentiate_expression" do
+    subject(:visit_exponentiate_expression) do
+      printing_visitor.visit_exponentiate_expression(expression)
+    end
+
+    before do
+      allow(base)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
+        .and_return("base")
+
+      allow(power)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
+        .and_return("power")
+    end
+
+    let(:expression) { exponentiate_expression(base, power) }
+    let(:base) { double(:base) }
+    let(:power) { double(:power) }
+
+    context "when printing_visitor's parenthesize_infix_expressions flag is off" do
+      let(:printing_visitor) { described_class.new }
+
+      it { is_expected.to eq("base ^ power") }
+    end
+
+    context "when printing_visitor's parenthesize_infix_expressions flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
+
+      it { is_expected.to eq("(base ^ power)") }
+    end
+  end
 end

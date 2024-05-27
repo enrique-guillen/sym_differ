@@ -101,6 +101,19 @@ module SymDiffer
       result
     end
 
+    def visit_exponentiate_expression(expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
+
+      stringified_base = stringify_expression(expression.base, visitor: nested_visitor)
+      stringified_power = stringify_expression(expression.power, visitor: nested_visitor)
+
+      result = join_with_caret(stringified_base, stringified_power)
+
+      (result = surround_in_parenthesis(result)) if should_parenthesize_infix_expression?
+
+      result
+    end
+
     private
 
     def prefix_with_dash(expression)
@@ -141,6 +154,10 @@ module SymDiffer
 
     def join_with_slash(expression_a, expression_b)
       join_expressions_with_infix_operator("/", expression_a, expression_b)
+    end
+
+    def join_with_caret(expression_a, expression_b)
+      join_expressions_with_infix_operator("^", expression_a, expression_b)
     end
 
     def join_expressions_with_infix_operator(operator, expression_a, expression_b)
