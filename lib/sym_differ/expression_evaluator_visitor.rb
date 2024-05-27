@@ -10,6 +10,8 @@ module SymDiffer
 
     def evaluate(expression)
       evaluate_expression(expression)
+    rescue ZeroDivisionError
+      :undefined
     end
 
     def visit_constant_expression(expression)
@@ -51,6 +53,13 @@ module SymDiffer
     def visit_multiplicate_expression(expression)
       evaluate_expression(expression.multiplicand) *
         evaluate_expression(expression.multiplier)
+    end
+
+    def visit_divide_expression(expression)
+      Rational(
+        evaluate_expression(expression.numerator),
+        evaluate_expression(expression.denominator)
+      )
     end
 
     private

@@ -6,6 +6,26 @@ require "sym_differ/expression_evaluator_visitor"
 RSpec.describe SymDiffer::ExpressionEvaluatorVisitor do
   let(:expression_factory) { sym_differ_expression_factory }
 
+  describe "#evaluate" do
+    subject(:evaluate) do
+      described_class
+        .new({})
+        .evaluate(expression)
+    end
+
+    context "when the expression is 1/0" do
+      let(:expression) { divide_expression(constant_expression(1), constant_expression(0)) }
+
+      it { is_expected.to eq(:undefined) }
+    end
+
+    context "when the expression is 1/1" do
+      let(:expression) { divide_expression(constant_expression(1), constant_expression(1)) }
+
+      it { is_expected.to eq(Rational(1, 1)) }
+    end
+  end
+
   describe "#visit_constant_expression" do
     subject(:visit_constant_expression) do
       described_class
@@ -203,5 +223,32 @@ RSpec.describe SymDiffer::ExpressionEvaluatorVisitor do
     let(:multiplier) { double(:multiplier) }
 
     it { is_expected.to eq(6) }
+  end
+
+  describe "#visit_divide_expression" do
+    subject(:visit_divide_expression) do
+      visitor.visit_divide_expression(expression)
+    end
+
+    before do
+      allow(numerator)
+        .to receive(:accept)
+        .with(visitor)
+        .and_return(2)
+
+      allow(denominator)
+        .to receive(:accept)
+        .with(visitor)
+        .and_return(3)
+    end
+
+    let(:visitor) { described_class.new(variable_values) }
+
+    let(:expression) { divide_expression(numerator, denominator) }
+    let(:variable_values) { { "x" => 5 } }
+    let(:numerator) { double(:numerator) }
+    let(:denominator) { double(:denominator) }
+
+    it { is_expected.to eq(Rational(2, 3)) }
   end
 end
