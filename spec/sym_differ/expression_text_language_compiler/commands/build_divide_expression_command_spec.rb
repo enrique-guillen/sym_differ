@@ -15,6 +15,6 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildDivideE
     let(:numerator) { expression_test_double(:numerator) }
     let(:denominator) { expression_test_double(:denominator) }
 
-    it { is_expected.to be_same_as(SymDiffer::Expressions::DivideExpression.new(numerator, denominator)) }
+    it { is_expected.to be_same_as(divide_expression(numerator, denominator)) }
   end
 end
