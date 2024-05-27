@@ -246,6 +246,36 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is '((1+2))'" do
+      let(:expression_text) { "((1+2))" }
+
+      it "returns a structure representing 1 + 2" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          sum_expression(
+            constant_expression(1),
+            constant_expression(2)
+          )
+        )
+      end
+    end
+
+    xcontext "when the expression text to parse is '1/2'" do
+      let(:expression_text) { "1/2" }
+
+      it "returns a structure representing 1 / 2" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          divide_expression(
+            constant_expression(1),
+            constant_expression(2)
+          )
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do
