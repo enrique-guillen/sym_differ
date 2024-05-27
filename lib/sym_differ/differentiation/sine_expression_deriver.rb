@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module SymDiffer
   module Differentiation
     # Computes the expression that represents the derivative of the trigonometric Sine function.
     class SineExpressionDeriver
+      extend Forwardable
+
       def initialize(expression_factory, differentiation_visitor)
         @expression_factory = expression_factory
         @differentiation_visitor = differentiation_visitor
@@ -25,17 +29,11 @@ module SymDiffer
         )
       end
 
-      def create_multiplicate_expression(multiplicand, multiplier)
-        @expression_factory.create_multiplicate_expression(multiplicand, multiplier)
-      end
-
-      def create_cosine_expression(angle_expression)
-        @expression_factory.create_cosine_expression(angle_expression)
-      end
-
       def derive_expression(expression)
         expression.accept(@differentiation_visitor)
       end
+
+      def_delegators :@expression_factory, :create_multiplicate_expression, :create_cosine_expression
     end
   end
 end
