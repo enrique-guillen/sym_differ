@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_text_language_compiler/commands/build_divide_expression_command"
+
 module SymDiffer
   module ExpressionTextLanguageCompiler
     module Checkers
