@@ -59,6 +59,10 @@ module SymDiffer
         cosine_expression_deriver.derive(expression)
       end
 
+      def visit_divide_expression(expression)
+        divide_expression_deriver.derive(expression)
+      end
+
       def visit_abstract_expression(expression)
         create_derivative_expression(expression, create_variable_expression(@variable))
       end
@@ -99,6 +103,10 @@ module SymDiffer
 
       def cosine_expression_deriver
         @cosine_expression_deriver ||= CosineExpressionDeriver.new(@expression_factory, self)
+      end
+
+      def divide_expression_deriver
+        @divide_expression_deriver ||= DivideExpressionDeriver.new(@expression_factory, self)
       end
 
       def create_derivative_expression(expression, variable)

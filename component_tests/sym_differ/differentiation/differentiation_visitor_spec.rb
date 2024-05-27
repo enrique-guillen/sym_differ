@@ -171,6 +171,33 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_divide_expression" do
+    subject(:visit_divide_expression) do
+      visitor.visit_divide_expression(expression)
+    end
+
+    let(:expression) { divide_expression(numerator_expression, denominator_expression) }
+    let(:variable) { "x" }
+
+    let(:numerator_expression) { sine_expression(variable_expression("x")) }
+    let(:denominator_expression) { variable_expression("x") }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_divide_expression).to be_same_as(
+        divide_expression(
+          subtract_expression(
+            multiplicate_expression(
+              multiplicate_expression(cosine_expression(variable_expression("x")), constant_expression(1)),
+              variable_expression("x")
+            ),
+            multiplicate_expression(sine_expression(variable_expression("x")), constant_expression(1))
+          ),
+          exponentiate_expression(variable_expression("x"), constant_expression(2))
+        )
+      )
+    end
+  end
+
   describe "#visit_abstract_expression" do
     subject(:visit_abstract_expression) do
       visitor.visit_abstract_expression(expression)
