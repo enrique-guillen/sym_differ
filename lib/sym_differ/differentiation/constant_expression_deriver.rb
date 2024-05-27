@@ -16,8 +16,6 @@ module SymDiffer
         create_constant_expression(0)
       end
 
-      private
-
       def_delegators :@expression_factory, :create_constant_expression
     end
   end
