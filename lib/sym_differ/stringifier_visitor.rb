@@ -3,11 +3,11 @@
 module SymDiffer
   # Methods for displaying all the elements of an expression into a single inline string.
   class StringifierVisitor
-    def initialize(parenthesize_infix_expressions_once: false)
-      @parenthesize_infix_expressions_once = parenthesize_infix_expressions_once
+    def initialize(parenthesize_infix_expressions: false)
+      @parenthesize_infix_expressions = parenthesize_infix_expressions
     end
 
-    attr_reader :parenthesize_infix_expressions_once
+    attr_reader :parenthesize_infix_expressions
 
     def stringify(expression)
       expression.accept(self)
@@ -22,7 +22,7 @@ module SymDiffer
     end
 
     def visit_negate_expression(expression)
-      nested_visitor = build_visitor(parenthesize_infix_expressions_once: true)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
       stringified_negated_expression = stringify_expression(expression.negated_expression, visitor: nested_visitor)
 
@@ -30,8 +30,7 @@ module SymDiffer
     end
 
     def visit_sum_expression(expression)
-      nested_visitor =
-        should_parenthesize_infix_expression? ? build_visitor(parenthesize_infix_expressions_once: false) : self
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
       stringified_expression_a = stringify_expression(expression.expression_a, visitor: nested_visitor)
       stringified_expression_b = stringify_expression(expression.expression_b, visitor: nested_visitor)
@@ -43,13 +42,10 @@ module SymDiffer
     end
 
     def visit_subtract_expression(expression)
-      minuend_visitor =
-        should_parenthesize_infix_expression? ? build_visitor(parenthesize_infix_expressions_once: false) : self
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
-      subtrahend_visitor = build_visitor(parenthesize_infix_expressions_once: true)
-
-      stringified_minuend = stringify_expression(expression.minuend, visitor: minuend_visitor)
-      stringified_subtrahend = stringify_expression(expression.subtrahend, visitor: subtrahend_visitor)
+      stringified_minuend = stringify_expression(expression.minuend, visitor: nested_visitor)
+      stringified_subtrahend = stringify_expression(expression.subtrahend, visitor: nested_visitor)
       result = join_with_dash(stringified_minuend, stringified_subtrahend)
 
       (result = surround_in_parenthesis(result)) if should_parenthesize_infix_expression?
@@ -58,7 +54,7 @@ module SymDiffer
     end
 
     def visit_multiplicate_expression(expression)
-      nested_visitor = build_visitor(parenthesize_infix_expressions_once: true)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
       stringified_multiplicand = stringify_expression(expression.multiplicand, visitor: nested_visitor)
       stringified_multiplier = stringify_expression(expression.multiplier, visitor: nested_visitor)
@@ -71,25 +67,29 @@ module SymDiffer
     end
 
     def visit_derivative_expression(expression)
-      stringified_underived_expression = stringify_expression(expression.underived_expression)
-      stringified_variable_expression = stringify_expression(expression.variable)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: false)
+
+      stringified_underived_expression = stringify_expression(expression.underived_expression, visitor: nested_visitor)
+      stringified_variable_expression = stringify_expression(expression.variable, visitor: nested_visitor)
       stringified_arguments = join_with_commas(stringified_underived_expression, stringified_variable_expression)
 
       join_with_derivative_as_function_name(stringified_arguments)
     end
 
     def visit_sine_expression(expression)
-      stringified_angle_expression = stringify_expression(expression.angle_expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: false)
+      stringified_angle_expression = stringify_expression(expression.angle_expression, visitor: nested_visitor)
       join_with_sine_as_function_name(stringified_angle_expression)
     end
 
     def visit_cosine_expression(expression)
-      stringified_angle_expression = stringify_expression(expression.angle_expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: false)
+      stringified_angle_expression = stringify_expression(expression.angle_expression, visitor: nested_visitor)
       join_with_cosine_as_function_name(stringified_angle_expression)
     end
 
     def visit_divide_expression(expression)
-      nested_visitor = build_visitor(parenthesize_infix_expressions_once: true)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
       stringified_numerator = stringify_expression(expression.numerator, visitor: nested_visitor)
       stringified_denominator = stringify_expression(expression.denominator, visitor: nested_visitor)
@@ -156,11 +156,11 @@ module SymDiffer
     end
 
     def should_parenthesize_infix_expression?
-      @parenthesize_infix_expressions_once
+      @parenthesize_infix_expressions
     end
 
-    def build_visitor(parenthesize_infix_expressions_once: false)
-      self.class.new(parenthesize_infix_expressions_once:)
+    def build_visitor(parenthesize_infix_expressions: false)
+      self.class.new(parenthesize_infix_expressions:)
     end
   end
 end

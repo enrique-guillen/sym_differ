@@ -114,7 +114,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is 2 * x + 2 * x
+      Then the derivative expression is (2 * x) + (2 * x)
       And (@wip) the derivative expression is 4x
 
     Scenario: The derivative of x - x * x - x * x, with respect to x, is requested.
@@ -123,7 +123,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is -(x + x) - (x + x) + 1
+      Then the derivative expression is (-(x + x) - (x + x)) + 1
       And (@wip) the derivative expression is 1 - 4x
 
     Scenario: The derivative of 2 * x - 2 * x, with respect to x, is requested.
@@ -185,7 +185,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is -1 * sine(x * x) * (x + x)
+      Then the derivative expression is -1 * (sine(x * x) * (x + x))
       Then (@wip)the derivative expression is -sine(x * x) * (x + x)
 
   Rule: The expression f(x) can have any type of expression nested within parenthesis.

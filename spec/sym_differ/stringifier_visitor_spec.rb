@@ -37,7 +37,7 @@ RSpec.describe SymDiffer::StringifierVisitor do
       before do
         allow(negated_expression)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
           .and_return("subexp")
       end
 
@@ -54,19 +54,19 @@ RSpec.describe SymDiffer::StringifierVisitor do
       printing_visitor.visit_sum_expression(expression)
     end
 
-    let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once:) }
+    let(:printing_visitor) { described_class.new(parenthesize_infix_expressions:) }
 
     context "when the expression to stringify is exp_a + exp_b" do
       before do
         allow(expression_a)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
           .and_return("exp_a")
 
         allow(expression_b)
           .to receive(:accept)
           .with(printing_visitor)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
           .and_return("exp_b")
       end
 
@@ -74,45 +74,17 @@ RSpec.describe SymDiffer::StringifierVisitor do
       let(:expression_a) { double(:expression_a) }
       let(:expression_b) { double(:expression_b) }
 
-      context "when parenthesize_infix_expressions_once=false" do
-        let(:parenthesize_infix_expressions_once) { false }
+      context "when parenthesize_infix_expressions=false" do
+        let(:parenthesize_infix_expressions) { false }
 
         it { is_expected.to eq("exp_a + exp_b") }
       end
 
-      context "when parenthesize_infix_expressions_once=true" do
-        let(:parenthesize_infix_expressions_once) { true }
+      context "when parenthesize_infix_expressions=true" do
+        let(:parenthesize_infix_expressions) { true }
 
         it { is_expected.to eq("(exp_a + exp_b)") }
       end
-    end
-
-    context "when the expression to stringify is exp_a + exp_b + exp_c and parenthesize_infix_expressions_once=true" do
-      before do
-        allow(expression_a)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("exp_a")
-
-        allow(expression_b_1)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("exp_b_1")
-
-        allow(expression_b_2)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("exp_b_2")
-      end
-
-      let(:parenthesize_infix_expressions_once) { true }
-
-      let(:expression) { sum_expression(expression_a, sum_expression(expression_b_1, expression_b_2)) }
-      let(:expression_a) { double(:expression_a) }
-      let(:expression_b_1) { double(:expression_b_1) }
-      let(:expression_b_2) { double(:expression_b_2) }
-
-      it { is_expected.to eq("(exp_a + exp_b_1 + exp_b_2)") }
     end
   end
 
@@ -121,21 +93,20 @@ RSpec.describe SymDiffer::StringifierVisitor do
       printing_visitor.visit_subtract_expression(expression)
     end
 
-    let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once:) }
-    let(:parenthesize_infix_expressions_once) { false }
+    before do
+      allow(minuend)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
+        .and_return("exp_a")
+
+      allow(subtrahend)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
+        .and_return("exp_b")
+    end
 
     context "when the subtrahend is an arbitrary expression" do
-      before do
-        allow(minuend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("exp_a")
-
-        allow(subtrahend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
-          .and_return("exp_b")
-      end
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: false) }
 
       let(:expression) { subtract_expression(minuend, subtrahend) }
       let(:minuend) { double(:minuend) }
@@ -144,95 +115,15 @@ RSpec.describe SymDiffer::StringifierVisitor do
       it { is_expected.to eq("exp_a - exp_b") }
     end
 
-    context "when the right hand expression (subtrahend) is another subtraction expression" do
-      before do
-        allow(minuend).to receive(:accept).with(printing_visitor).and_return("minuend")
-
-        allow(right_minuend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("right_minuend")
-
-        allow(right_subtrahend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
-          .and_return("right_subtrahend")
-      end
+    context "when parenthesize_infix_expressions: true" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
 
       let(:expression) { subtract_expression(minuend, subtrahend) }
 
       let(:minuend) { double(:minuend) }
-      let(:subtrahend) { subtract_expression(right_minuend, right_subtrahend) }
-
-      let(:right_minuend) { double(:right_minuend) }
-      let(:right_subtrahend) { double(:right_subtrahend) }
-
-      it { is_expected.to eq("minuend - (right_minuend - right_subtrahend)") }
-    end
-
-    context "when the expression is <SubtractExpression:<SubTractExpression:<x, <SubtractExpression:<x,x>>>,<x>>" do
-      before do
-        allow(subtrahend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
-          .and_return("subtrahend")
-
-        allow(left_minuend)
-          .to receive(:accept)
-          .with(printing_visitor)
-          .and_return("left_minuend")
-
-        allow(left_right_minuend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("left_right_minuend")
-
-        allow(left_right_subtrahend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
-          .and_return("left_right_subtrahend")
-      end
-
-      let(:expression) { subtract_expression(minuend, subtrahend) }
-
-      let(:minuend) { subtract_expression(left_minuend, left_subtrahend) }
       let(:subtrahend) { double(:subtrahend) }
 
-      let(:left_minuend) { double(:left_minuend) }
-      let(:left_subtrahend) { subtract_expression(left_right_minuend, left_right_subtrahend) }
-
-      let(:left_right_minuend) { double(:left_right_minuend) }
-      let(:left_right_subtrahend) { double(:left_right_subtrahend) }
-
-      it { is_expected.to eq("left_minuend - (left_right_minuend - left_right_subtrahend) - subtrahend") }
-    end
-
-    context "when the expression to stringify is exp_a - exp_b - exp_c and parenthesize_infix_expressions_once=true" do
-      before do
-        allow(minuend)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("minuend")
-
-        allow(subtrahend_1)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: false))
-          .and_return("subtrahend_1")
-
-        allow(subtrahend_2)
-          .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
-          .and_return("subtrahend_2")
-      end
-
-      let(:parenthesize_infix_expressions_once) { true }
-
-      let(:expression) { subtract_expression(minuend, subtract_expression(subtrahend_1, subtrahend_2)) }
-      let(:minuend) { double(:minuend) }
-      let(:subtrahend_1) { double(:subtrahend_1) }
-      let(:subtrahend_2) { double(:subtrahend_2) }
-
-      it { is_expected.to eq("(minuend - (subtrahend_1 - subtrahend_2))") }
+      it { is_expected.to eq("(exp_a - exp_b)") }
     end
   end
 
@@ -247,12 +138,12 @@ RSpec.describe SymDiffer::StringifierVisitor do
       before do
         allow(multiplicand)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
           .and_return("multiplicand")
 
         allow(multiplier)
           .to receive(:accept)
-          .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
           .and_return("multiplier")
       end
 
@@ -261,14 +152,14 @@ RSpec.describe SymDiffer::StringifierVisitor do
       let(:multiplicand) { double(:multiplicand) }
       let(:multiplier) { double(:multiplier) }
 
-      context "when printing_visitor's parenthesize_infix_expressions_once flag is off" do
+      context "when printing_visitor's parenthesize_infix_expressions flag is off" do
         let(:printing_visitor) { described_class.new }
 
         it { is_expected.to eq("multiplicand * multiplier") }
       end
 
-      context "when printing_visitor's parenthesize_infix_expressions_once flag is on" do
-        let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once: true) }
+      context "when printing_visitor's parenthesize_infix_expressions flag is on" do
+        let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
 
         it { is_expected.to eq("(multiplicand * multiplier)") }
       end
@@ -280,15 +171,29 @@ RSpec.describe SymDiffer::StringifierVisitor do
       printing_visitor.visit_derivative_expression(expression)
     end
 
-    before { allow(underived_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+    before do
+      allow(underived_expression)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: false))
+        .and_return("exp")
+    end
 
-    let(:printing_visitor) { described_class.new }
     let(:expression) { derivative_expression(underived_expression, variable) }
 
     let(:underived_expression) { double(:underived_expression) }
     let(:variable) { variable_expression("var") }
 
-    it { is_expected.to eq("derivative(exp, var)") }
+    context "when the parenthesize_infix_expressions flag is off" do
+      let(:printing_visitor) { described_class.new }
+
+      it { is_expected.to eq("derivative(exp, var)") }
+    end
+
+    context "when the parenthesize_infix_expressions flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
+
+      it { is_expected.to eq("derivative(exp, var)") }
+    end
   end
 
   describe "#visit_sine_expression" do
@@ -296,14 +201,28 @@ RSpec.describe SymDiffer::StringifierVisitor do
       printing_visitor.visit_sine_expression(expression)
     end
 
-    before { allow(angle_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+    before do
+      allow(angle_expression)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: false))
+        .and_return("exp")
+    end
 
-    let(:printing_visitor) { described_class.new }
     let(:expression) { sine_expression(angle_expression) }
 
     let(:angle_expression) { double(:underived_expression) }
 
-    it { is_expected.to eq("sine(exp)") }
+    context "when the parenthesize_infix_expressions flag is off" do
+      let(:printing_visitor) { described_class.new }
+
+      it { is_expected.to eq("sine(exp)") }
+    end
+
+    context "when the parenthesize_infix_expressions flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
+
+      it { is_expected.to eq("sine(exp)") }
+    end
   end
 
   describe "#visit_cosine_expression" do
@@ -311,14 +230,28 @@ RSpec.describe SymDiffer::StringifierVisitor do
       printing_visitor.visit_cosine_expression(expression)
     end
 
-    before { allow(angle_expression).to receive(:accept).with(printing_visitor).and_return("exp") }
+    before do
+      allow(angle_expression)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: false))
+        .and_return("exp")
+    end
 
-    let(:printing_visitor) { described_class.new }
     let(:expression) { cosine_expression(angle_expression) }
 
     let(:angle_expression) { double(:underived_expression) }
 
-    it { is_expected.to eq("cosine(exp)") }
+    context "when the parenthesize_infix_expressions flag is off" do
+      let(:printing_visitor) { described_class.new }
+
+      it { is_expected.to eq("cosine(exp)") }
+    end
+
+    context "when the parenthesize_infix_expressions flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
+
+      it { is_expected.to eq("cosine(exp)") }
+    end
   end
 
   describe "#visit_divide_expression" do
@@ -329,12 +262,12 @@ RSpec.describe SymDiffer::StringifierVisitor do
     before do
       allow(numerator)
         .to receive(:accept)
-        .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
         .and_return("num")
 
       allow(denominator)
         .to receive(:accept)
-        .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+        .with(an_object_having_attributes(parenthesize_infix_expressions: true))
         .and_return("den")
     end
 
@@ -343,14 +276,14 @@ RSpec.describe SymDiffer::StringifierVisitor do
     let(:numerator) { double(:numerator) }
     let(:denominator) { double(:denominator) }
 
-    context "when printing_visitor's parenthesize_infix_expressions_once flag is off" do
+    context "when printing_visitor's parenthesize_infix_expressions flag is off" do
       let(:printing_visitor) { described_class.new }
 
       it { is_expected.to eq("num / den") }
     end
 
-    context "when printing_visitor's parenthesize_infix_expressions_once flag is on" do
-      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once: true) }
+    context "when printing_visitor's parenthesize_infix_expressions flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions: true) }
 
       it { is_expected.to eq("(num / den)") }
     end
