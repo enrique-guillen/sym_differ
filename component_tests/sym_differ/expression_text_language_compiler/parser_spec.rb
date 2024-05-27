@@ -286,6 +286,16 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is '1/'" do
+      let(:expression_text) { "1/" }
+
+      it "raises InvalidSyntaxError" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do
