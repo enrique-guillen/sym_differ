@@ -69,18 +69,32 @@ module SymDiffer
     def visit_derivative_expression(expression)
       stringified_underived_expression = stringify_expression(expression.underived_expression)
       stringified_variable_expression = stringify_expression(expression.variable)
+      stringified_arguments = join_with_commas(stringified_underived_expression, stringified_variable_expression)
 
-      join_function_name_and_arguments(
-        "derivative", join_with_commas(stringified_underived_expression, stringified_variable_expression)
-      )
+      join_with_derivative_as_function_name(stringified_arguments)
     end
 
     def visit_sine_expression(expression)
-      join_function_name_and_arguments("sine", stringify_expression(expression.angle_expression))
+      stringified_angle_expression = stringify_expression(expression.angle_expression)
+      join_with_sine_as_function_name(stringified_angle_expression)
     end
 
     def visit_cosine_expression(expression)
-      join_function_name_and_arguments("cosine", stringify_expression(expression.angle_expression))
+      stringified_angle_expression = stringify_expression(expression.angle_expression)
+      join_with_cosine_as_function_name(stringified_angle_expression)
+    end
+
+    def visit_divide_expression(expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions_once: true)
+
+      stringified_numerator = stringify_expression(expression.numerator, visitor: nested_visitor)
+      stringified_denominator = stringify_expression(expression.denominator, visitor: nested_visitor)
+
+      result = join_with_slash(stringified_numerator, stringified_denominator)
+
+      (result = surround_in_parenthesis(result)) if should_parenthesize_infix_expression?
+
+      result
     end
 
     private
@@ -90,11 +104,11 @@ module SymDiffer
     end
 
     def join_with_plus_sign(expression_a, expression_b)
-      "#{expression_a} + #{expression_b}"
+      join_expressions_with_infix_operator("+", expression_a, expression_b)
     end
 
     def join_with_dash(expression_a, expression_b)
-      "#{expression_a} - #{expression_b}"
+      join_expressions_with_infix_operator("-", expression_a, expression_b)
     end
 
     def surround_in_parenthesis(expression)
@@ -102,11 +116,31 @@ module SymDiffer
     end
 
     def join_with_asterisk(expression_a, expression_b)
-      "#{expression_a} * #{expression_b}"
+      join_expressions_with_infix_operator("*", expression_a, expression_b)
+    end
+
+    def join_with_derivative_as_function_name(arguments)
+      join_function_name_and_arguments("derivative", arguments)
+    end
+
+    def join_with_sine_as_function_name(arguments)
+      join_function_name_and_arguments("sine", arguments)
+    end
+
+    def join_with_cosine_as_function_name(arguments)
+      join_function_name_and_arguments("cosine", arguments)
     end
 
     def join_function_name_and_arguments(function_name, arguments)
       "#{function_name}(#{arguments})"
+    end
+
+    def join_with_slash(expression_a, expression_b)
+      join_expressions_with_infix_operator("/", expression_a, expression_b)
+    end
+
+    def join_expressions_with_infix_operator(operator, expression_a, expression_b)
+      "#{expression_a} #{operator} #{expression_b}"
     end
 
     def join_with_commas(*argument_list)

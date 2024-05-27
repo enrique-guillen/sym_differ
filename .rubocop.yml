@@ -2,6 +2,10 @@ require:
 - rubocop-rspec
 - rubocop-performance
 
+# No need to enable Rails.
+RSpec/Rails:
+  Enabled: false
+
 # Disable verified doubles as we want units and their corresponding tests to be fully self-contained, as opposed to
 # referencing a concrete implementation class outside of the unit and test.
 RSpec/VerifiedDoubles:
@@ -56,11 +60,12 @@ Performance/MethodObjectAsBlock:
     - "spec/**/**"
     - "lib/sym_differ/differentiation_graph/graph_view_generator.rb"
 
-# We've decided to accept the technical debt of these files temporally.
 Metrics/ClassLength:
   Exclude:
+  # We don't see the need to split these files at the moment.
   - "lib/sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer.rb"
   - "lib/sym_differ/expression_reducer.rb"
+  - "lib/sym_differ/stringifier_visitor.rb"
 
 Metrics/ParameterLists:
   Enabled: true
@@ -350,8 +355,6 @@ RSpec/SubjectDeclaration:
   Enabled: true
 RSpec/VerifiedDoubleReference:
   Enabled: true
-RSpec/Rails:
-  Enabled: false
 Performance/AncestorsInclude:
   Enabled: true
 Performance/BigDecimalWithNumericArgument:

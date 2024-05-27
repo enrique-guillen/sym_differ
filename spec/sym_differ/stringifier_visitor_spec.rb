@@ -310,4 +310,39 @@ RSpec.describe SymDiffer::StringifierVisitor do
 
     it { is_expected.to eq("cosine(exp)") }
   end
+
+  describe "#visit_divide_expression" do
+    subject(:visit_divide_expression) do
+      printing_visitor.visit_divide_expression(expression)
+    end
+
+    before do
+      allow(numerator)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+        .and_return("num")
+
+      allow(denominator)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions_once: true))
+        .and_return("den")
+    end
+
+    let(:expression) { divide_expression(numerator, denominator) }
+
+    let(:numerator) { double(:numerator) }
+    let(:denominator) { double(:denominator) }
+
+    context "when printing_visitor's parenthesize_infix_expressions_once flag is off" do
+      let(:printing_visitor) { described_class.new }
+
+      it { is_expected.to eq("num / den") }
+    end
+
+    context "when printing_visitor's parenthesize_infix_expressions_once flag is on" do
+      let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once: true) }
+
+      it { is_expected.to eq("(num / den)") }
+    end
+  end
 end

@@ -11,6 +11,7 @@ require "sym_differ/expressions/sine_expression"
 require "sym_differ/expressions/cosine_expression"
 require "sym_differ/expressions/derivative_expression"
 require "sym_differ/expressions/divide_expression"
+require "sym_differ/expressions/exponentiate_expression"
 
 module SymDiffer
   # Implements an interface that allows the Factory users instantiate expressions regardless of the implementation
