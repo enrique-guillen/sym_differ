@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module SymDiffer
   module Differentiation
     # Computes the expresion that represents the derivative of an identity function.
     class VariableExpressionDeriver
+      extend Forwardable
+
       def initialize(expression_factory)
         @expression_factory = expression_factory
       end
@@ -17,16 +21,14 @@ module SymDiffer
       private
 
       def build_constant_one
-        build_constant_expression(1)
+        create_constant_expression(1)
       end
 
       def build_constant_zero
-        build_constant_expression(0)
+        create_constant_expression(0)
       end
 
-      def build_constant_expression(value)
-        @expression_factory.create_constant_expression(value)
-      end
+      def_delegators :@expression_factory, :create_constant_expression
     end
   end
 end
