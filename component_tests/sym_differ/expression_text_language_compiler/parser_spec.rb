@@ -262,7 +262,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
       end
     end
 
-    xcontext "when the expression text to parse is '1/2'" do
+    context "when the expression text to parse is '1/2'" do
       let(:expression_text) { "1/2" }
 
       it "returns a structure representing 1 / 2" do

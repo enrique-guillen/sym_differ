@@ -42,6 +42,7 @@ module SymDiffer
           post_multiplication_token_checkers: sub_expression_starters,
           post_sum_token_checkers: sub_expression_starters,
           post_subtraction_token_checkers: sub_expression_starters,
+          post_division_token_checkers: sub_expression_starters,
           post_opening_parenthesis: sub_expression_starters,
           post_closing_parenthesis: possible_infix_operators
         }.freeze
@@ -61,7 +62,10 @@ module SymDiffer
       end
 
       def possible_infix_operators
-        [multiplication_token_checker, parens_token_checker, subtraction_token_checker, sum_token_checker]
+        [
+          multiplication_token_checker, parens_token_checker, subtraction_token_checker, sum_token_checker,
+          division_token_checker
+        ]
       end
 
       def parens_token_extractor
