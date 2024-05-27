@@ -323,5 +323,17 @@ RSpec.describe SymDiffer::ExpressionReducer do
         )
       end
     end
+
+    context "when the expression is (1 + 1) / (2 + 2)" do
+      let(:expression) { divide_expression(expression_a, expression_b) }
+      let(:expression_a) { sum_expression(constant_expression(1), constant_expression(1)) }
+      let(:expression_b) { sum_expression(constant_expression(2), constant_expression(2)) }
+
+      it "returns 2 / 4" do
+        expect(reduce).to be_same_as(
+          divide_expression(constant_expression(2), constant_expression(4))
+        )
+      end
+    end
   end
 end

@@ -15,6 +15,7 @@ require "sym_differ/expression_reduction/positive_expression_reducer"
 require "sym_differ/expression_reduction/sum_expression_reducer"
 require "sym_differ/expression_reduction/subtract_expression_reducer"
 require "sym_differ/expression_reduction/multiplicate_expression_reducer"
+require "sym_differ/expression_reduction/divide_expression_reducer"
 
 module SymDiffer
   # Reduces the terms in the provided expression.
@@ -35,6 +36,7 @@ module SymDiffer
         reduction_analysis_of_expression_if_positive_expression(expression) ||
         reduction_analysis_of_expression_if_sum_expression(expression) ||
         reduction_analysis_of_expression_if_multiplicate_expression(expression) ||
+        reduction_analysis_of_expression_if_divide_expression(expression) ||
         default_reduction_analysis(expression)
     end
 
@@ -68,6 +70,10 @@ module SymDiffer
       reduction_analysis_of_multiplicate(expression) if multiplicate_expression?(expression)
     end
 
+    def reduction_analysis_of_expression_if_divide_expression(expression)
+      reduction_analysis_of_divide(expression) if divide_expression?(expression)
+    end
+
     def default_reduction_analysis(expression)
       { reduced_expression: expression, sum_partition: [0, expression], factor_partition: [1, expression] }
     end
@@ -98,6 +104,10 @@ module SymDiffer
 
     def reduction_analysis_of_multiplicate(expression)
       multiplicate_expression_reducer.reduce(expression)
+    end
+
+    def reduction_analysis_of_divide(expression)
+      divide_expression_reducer.reduce(expression)
     end
 
     def negate_expression_reducer
@@ -135,6 +145,11 @@ module SymDiffer
         ExpressionReduction::MultiplicateExpressionReducer.new(@expression_factory, self)
     end
 
+    def divide_expression_reducer
+      @divide_expression_reducer ||=
+        ExpressionReduction::DivideExpressionReducer.new(@expression_factory, self)
+    end
+
     def positive_expression?(expression)
       expression.is_a?(Expressions::PositiveExpression)
     end
@@ -145,6 +160,10 @@ module SymDiffer
 
     def multiplicate_expression?(expression)
       expression.is_a?(Expressions::MultiplicateExpression)
+    end
+
+    def divide_expression?(expression)
+      expression.is_a?(Expressions::DivideExpression)
     end
 
     def subtract_expression?(expression)
