@@ -63,7 +63,11 @@ module SymDiffer
       stringified_multiplicand = stringify_expression(expression.multiplicand, visitor: nested_visitor)
       stringified_multiplier = stringify_expression(expression.multiplier, visitor: nested_visitor)
 
-      join_with_asterisk(stringified_multiplicand, stringified_multiplier)
+      result = join_with_asterisk(stringified_multiplicand, stringified_multiplier)
+
+      (result = surround_in_parenthesis(result)) if should_parenthesize_infix_expression?
+
+      result
     end
 
     def visit_derivative_expression(expression)

@@ -261,7 +261,17 @@ RSpec.describe SymDiffer::StringifierVisitor do
       let(:multiplicand) { double(:multiplicand) }
       let(:multiplier) { double(:multiplier) }
 
-      it { is_expected.to eq("multiplicand * multiplier") }
+      context "when printing_visitor's parenthesize_infix_expressions_once flag is off" do
+        let(:printing_visitor) { described_class.new }
+
+        it { is_expected.to eq("multiplicand * multiplier") }
+      end
+
+      context "when printing_visitor's parenthesize_infix_expressions_once flag is on" do
+        let(:printing_visitor) { described_class.new(parenthesize_infix_expressions_once: true) }
+
+        it { is_expected.to eq("(multiplicand * multiplier)") }
+      end
     end
   end
 
