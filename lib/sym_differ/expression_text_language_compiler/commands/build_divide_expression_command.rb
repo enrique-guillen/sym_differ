@@ -11,7 +11,13 @@ module SymDiffer
 
         def execute(arguments)
           numerator, denominator = arguments
-          SymDiffer::Expressions::DivideExpression.new(numerator, denominator)
+          create_divide_expression(numerator, denominator)
+        end
+
+        private
+
+        def create_divide_expression(*)
+          @expression_factory.create_divide_expression(*)
         end
       end
     end

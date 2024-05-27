@@ -9,7 +9,9 @@ require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::DivisionTokenChecker do
   describe "#check" do
     subject(:check) do
-      described_class.new.check(token)
+      described_class
+        .new(expression_factory)
+        .check(token)
     end
 
     let(:expression_factory) { double(:expression_factory) }

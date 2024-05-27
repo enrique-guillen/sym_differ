@@ -5,6 +5,10 @@ module SymDiffer
     module Checkers
       # Checks the provided token and pushes a BuildDivideExpressionCommand into the commands stack if applicable.
       class DivisionTokenChecker
+        def initialize(expression_factory)
+          @expression_factory = expression_factory
+        end
+
         def check(token)
           return build_not_handled_response unless division_token?(token)
 
