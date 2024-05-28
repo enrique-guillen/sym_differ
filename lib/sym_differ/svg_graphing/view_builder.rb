@@ -30,7 +30,7 @@ module SymDiffer
 
         graphing_view = new_graphing_view(abscissa_axis, ordinate_axis, curves)
 
-        new_view(false, graphing_view)
+        new_view(false, abscissa_axis, ordinate_axis, curves)
       end
 
       private
@@ -117,7 +117,7 @@ module SymDiffer
       end
 
       def new_axis_view(*)
-        Graphing::AxisView.new(*)
+        SvgGraphing::AxisView.new(*)
       end
 
       def expression_path_scaler

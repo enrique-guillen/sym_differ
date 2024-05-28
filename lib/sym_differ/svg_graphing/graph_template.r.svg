@@ -6,7 +6,7 @@
 
 
   <!-- Legend  -->
-    <% view.original_view.curves.each_with_index do |curve, index| %>
+    <% view.curves.each_with_index do |curve, index| %>
       <circle cx="0"
               cy="<%= index * 30 %>"
               r="5"
@@ -28,18 +28,18 @@
 
   <!-- Axis names  -->
     <text x="20" y="450" font-size="1.5em" font-style="italic" id="ordinate-name" font-family="Cantarell">
-      <%= view.original_view.ordinate_axis.name %>
+      <%= view.ordinate_axis.name %>
     </text>
 
     <text x="450" y="880" font-size="1.5em" font-style="italic" id="abscissa-name" font-family="Cantarell">
-      <%= view.original_view.abscissa_axis.name %>
+      <%= view.abscissa_axis.name %>
     </text>
 
 
 
 
   <!-- Axis and number labels  -->
-    <% view.original_view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
+    <% view.ordinate_axis.number_labels.reverse.each_with_index do |label, index| %>
       <text x="0"
             y="<%= calculate_y_placement_of_ordinate_label(index) %>"
             transform="translate(90, 100)"
@@ -58,7 +58,7 @@
 
 
 
-    <% view.original_view.abscissa_axis.number_labels.each_with_index do |label, index| %>
+    <% view.abscissa_axis.number_labels.each_with_index do |label, index| %>
       <text x="<%= calculate_x_placement_of_abscissa_label(index) %>"
             y="0"
             transform="translate(100, 820)"
@@ -100,7 +100,7 @@
 
 
   <!-- Curves  -->
-    <% view.original_view.curves.each_with_index do |curve, index| %>
+    <% view.curves.each_with_index do |curve, index| %>
       <path
         id="curve-number-<%= index %>"
         d="
@@ -111,8 +111,8 @@
         "
         style="<%= cssify_style(curve.style) %>"
         transform="
-          translate(<%= 100 + multiply_by_grid_unit_size(view.original_view.abscissa_axis.origin) %>,
-                    <%= 100 + multiply_by_grid_unit_size(view.original_view.ordinate_axis.origin) %>)
+          translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
+                    <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
           scale(<%= grid_unit_size %>)
         "
       />

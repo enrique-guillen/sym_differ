@@ -14,13 +14,9 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
-    let(:svg_view) { view(true, original_view) }
+    let(:svg_view) { view(true, abscissa_axis, ordinate_axis, curves) }
 
     context "when curves = f(x), f'(x), labels in -10..10,-20...100 range" do
-      let(:original_view) do
-        double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph, derivative_expression_graph])
-      end
-
       let(:abscissa_axis) do
         double(:abscissa_axis,
                name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
@@ -30,6 +26,10 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
         double(:ordinate_axis,
                name: "y", origin: 49,
                number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
+      end
+
+      let(:curves) do
+        [expression_graph, derivative_expression_graph]
       end
 
       let(:expression_graph) do
@@ -115,8 +115,8 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       create_evaluation_point(abscissa, ordinate)
     end
 
-    define_method(:view) do |show_total_area_aid, original_view|
-      SymDiffer::SvgGraphing::View.new(show_total_area_aid, original_view)
+    define_method(:view) do |show_total_area_aid, abscissa_axis, ordinate_axis, curves|
+      SymDiffer::SvgGraphing::View.new(show_total_area_aid, abscissa_axis, ordinate_axis, curves)
     end
   end
 end
