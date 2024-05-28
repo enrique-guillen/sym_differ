@@ -2,7 +2,9 @@
 
 module SymDiffer
   module SvgGraphing
-    # View representing the expression curve and derivative expression curve on the same image.
-    View = Struct.new(:show_total_area_aid, :original_view, :curve_stylings)
+    ExpressionGraphView = Struct.new(:text, :path, :style)
+
+    # View representing many expression curves on same image.
+    View = Struct.new(:show_total_area_aid, :original_view)
   end
 end

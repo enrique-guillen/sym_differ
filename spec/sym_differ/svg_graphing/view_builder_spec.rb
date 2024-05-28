@@ -36,19 +36,24 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
       end
 
       let(:scaled_approximation_expression_path) do
+        an_object_having_attributes(
+          evaluation_points: a_collection_containing_exactly(*scaled_approximation_evaluation_points)
+        )
+      end
+
+      let(:scaled_approximation_evaluation_points) do
         [same_evaluation_point_as(create_evaluation_point(-100.0, 62.5)),
          same_evaluation_point_as(create_evaluation_point(0.0, 162.5))]
       end
 
-      it "returns the expected originval_view.curves" do
+      it "returns the expected original_view.curves" do
         expect(build).to have_attributes(
           original_view: an_object_having_attributes(
             curves: a_collection_containing_exactly(
               an_object_having_attributes(
                 text: "Expression funtext",
-                path: an_object_having_attributes(
-                  evaluation_points: a_collection_containing_exactly(*scaled_approximation_expression_path)
-                )
+                path: scaled_approximation_expression_path,
+                style: build_curve_styling("blue", "0.5985")
               )
             )
           )
@@ -72,10 +77,6 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
                                                            1.8, 1.96, 2.12, 2.280, 2.44, 2.6])
           )
         )
-      end
-
-      it "returns the expected curve stylings" do
-        expect(build).to have_attributes(curve_stylings:)
       end
     end
 

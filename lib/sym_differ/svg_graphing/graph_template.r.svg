@@ -10,7 +10,7 @@
       <circle cx="0"
               cy="<%= index * 30 %>"
               r="5"
-              fill="<%= view.curve_stylings[index]["stroke"] %>"
+              fill="<%= curve.style["stroke"] %>"
               transform="translate(20, 20)" />
 
       <text x="0"
@@ -109,7 +109,7 @@
               <%= join_expression_point(expression_data_point) %>
             <% end %>
         "
-        style="<%= cssify_style(view.curve_stylings[index]) %>"
+        style="<%= cssify_style(curve.style) %>"
         transform="
           translate(<%= 100 + multiply_by_grid_unit_size(view.original_view.abscissa_axis.origin) %>,
                     <%= 100 + multiply_by_grid_unit_size(view.original_view.ordinate_axis.origin) %>)

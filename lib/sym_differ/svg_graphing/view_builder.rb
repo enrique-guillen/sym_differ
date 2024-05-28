@@ -22,6 +22,7 @@ module SymDiffer
 
       def build(original_view, curve_stylings)
         @original_view = original_view
+        @curve_stylings = curve_stylings
 
         abscissa_axis = generate_abscissa_axis_view
         ordinate_axis = generate_ordinate_axis_view
@@ -29,7 +30,7 @@ module SymDiffer
 
         graphing_view = new_graphing_view(abscissa_axis, ordinate_axis, curves)
 
-        new_view(false, graphing_view, curve_stylings)
+        new_view(false, graphing_view)
       end
 
       private
@@ -52,9 +53,9 @@ module SymDiffer
       end
 
       def calculate_new_curves
-        original_view.curves.map do |expression_graph_view|
+        original_view.curves.each_with_index.map do |expression_graph_view, index|
           path = scale_path_to_target_sized_square(expression_graph_view.path)
-          new_expression_graph_view(expression_graph_view.text, path)
+          new_expression_graph_view(expression_graph_view.text, path, @curve_stylings[index])
         end
       end
 
@@ -78,7 +79,7 @@ module SymDiffer
       end
 
       def new_view(*)
-        View.new(*)
+        SvgGraphing::View.new(*)
       end
 
       def new_graphing_view(*)
@@ -86,7 +87,7 @@ module SymDiffer
       end
 
       def new_expression_graph_view(*)
-        Graphing::ExpressionGraphView.new(*)
+        SvgGraphing::ExpressionGraphView.new(*)
       end
 
       def new_axis_view(*)

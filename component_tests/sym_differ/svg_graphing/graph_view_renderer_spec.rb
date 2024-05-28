@@ -14,18 +14,11 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
-    let(:svg_view) do
-      view(true, original_view, curve_stylings)
-    end
+    let(:svg_view) { view(true, original_view) }
 
     context "when curves = f(x), f'(x), labels in -10..10,-20...100 range" do
       let(:original_view) do
         double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph, derivative_expression_graph])
-      end
-
-      let(:curve_stylings) do
-        [{ "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" },
-         { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" }]
       end
 
       let(:abscissa_axis) do
@@ -119,10 +112,6 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
         double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph])
       end
 
-      let(:curve_stylings) do
-        ["fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1"]
-      end
-
       let(:abscissa_axis) do
         double(:abscissa_axis,
                name: "x",
@@ -161,8 +150,8 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       create_evaluation_point(abscissa, ordinate)
     end
 
-    define_method(:view) do |show_total_area_aid, original_view, curve_stylings|
-      SymDiffer::SvgGraphing::View.new(show_total_area_aid, original_view, curve_stylings)
+    define_method(:view) do |show_total_area_aid, original_view|
+      SymDiffer::SvgGraphing::View.new(show_total_area_aid, original_view)
     end
   end
 end
