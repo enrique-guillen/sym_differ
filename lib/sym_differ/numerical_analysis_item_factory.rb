@@ -2,6 +2,7 @@
 
 require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis/evaluation_point"
+require "sym_differ/numerical_analysis/expression_path"
 
 module SymDiffer
   # Builds parameters and output objects of numerical analysis processes.
@@ -12,6 +13,10 @@ module SymDiffer
 
     def create_evaluation_point(abscissa, ordinate)
       NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
+    end
+
+    def create_expression_path(evaluation_points)
+      NumericalAnalysis::ExpressionPath.new(evaluation_points)
     end
   end
 end
