@@ -12,7 +12,27 @@ Feature: Illustrate Differential Equation Approximation as SVG
 
   Rule: As long as the parameters are valid, the approximation's illustration can be generated.
 
-    Scenario: The user requests the approximation of y' = x, y(0.0) = 1, y-var="y", t-var="x"
+    Scenario: The user requests the approximation of y' = 1, y(0.0) = 1, y-var="y", t-var="x"
+      Given the approximation illustration is requested of the equation y' = 0
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 1.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
+
+      When the illustration is requested
+
+      Then the image is stored with filename: dy_equals_0_iv_0__1.svg
+
+    Scenario: The user requests the approximation of y' = 1, y(0.0) = 0, y-var="y", t-var="x"
+      Given the approximation illustration is requested of the equation y' = 1
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
+
+      When the illustration is requested
+
+      Then the image is stored with filename: dy_equals_1_iv_0__1.svg
+
+    Scenario: The user requests the approximation of y' = x, y(0.0) = 0, y-var="y", t-var="x"
       Given the approximation illustration is requested of the equation y' = x
       And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (0.0, 0.0)
       And the approximation illustration's y-variable name of the approximation is set to y
