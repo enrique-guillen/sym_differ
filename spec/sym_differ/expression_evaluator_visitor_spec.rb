@@ -251,4 +251,30 @@ RSpec.describe SymDiffer::ExpressionEvaluatorVisitor do
 
     it { is_expected.to eq(Rational(2, 3)) }
   end
+
+  describe "#visit_exponentiate_expression" do
+    subject(:visit_exponentiate_expression) do
+      visitor.visit_exponentiate_expression(expression)
+    end
+
+    before do
+      allow(base)
+        .to receive(:accept)
+        .with(visitor)
+        .and_return(2)
+
+      allow(power)
+        .to receive(:accept)
+        .with(visitor)
+        .and_return(3)
+    end
+
+    let(:visitor) { described_class.new({}) }
+
+    let(:expression) { exponentiate_expression(base, power) }
+    let(:base) { double(:base) }
+    let(:power) { double(:power) }
+
+    it { is_expected }
+  end
 end

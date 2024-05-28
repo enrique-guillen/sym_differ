@@ -62,6 +62,10 @@ module SymDiffer
       )
     end
 
+    def visit_exponentiate_expression(expression)
+      evaluate_expression(expression.base)**evaluate_expression(expression.power)
+    end
+
     private
 
     def evaluate_expression(expression)
