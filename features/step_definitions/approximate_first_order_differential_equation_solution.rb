@@ -60,6 +60,8 @@ Then("some of the values of the approximation are:") do |docstring|
     expected_evaluation_points.map { |point| an_object_having_attributes(abscissa: point[0], ordinate: point[1]) }
 
   expect(@response).to have_attributes(
-    approximated_solution: a_collection_including(*expected_evaluation_point_matchers)
+    approximated_solution: an_object_having_attributes(
+      evaluation_points: a_collection_including(*expected_evaluation_point_matchers)
+    )
   )
 end

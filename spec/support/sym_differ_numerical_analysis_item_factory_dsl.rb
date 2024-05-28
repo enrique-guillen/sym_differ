@@ -17,5 +17,9 @@ module Support
     def create_evaluation_point(*)
       numerical_analysis_item_factory.create_evaluation_point(*)
     end
+
+    def create_expression_path(*)
+      numerical_analysis_item_factory.create_expression_path(*)
+    end
   end
 end

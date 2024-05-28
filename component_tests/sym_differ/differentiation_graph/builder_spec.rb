@@ -23,10 +23,13 @@ RSpec.describe SymDiffer::DifferentiationGraph::Builder do
 
     let(:expression_path_generator) do
       SymDiffer::DifferentiationGraph::ExpressionPathGenerator
-        .new(0.125, expression_evaluator_builder_class.new)
+        .new(0.125, expression_evaluator_builder_class.new, numerical_analysis_item_factory)
     end
 
-    let(:view_renderer) { SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new }
+    let(:view_renderer) do
+      SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new(numerical_analysis_item_factory)
+    end
+
     let(:step_range) { create_step_range(-10..10) }
 
     let(:expression_evaluator_builder_class) do

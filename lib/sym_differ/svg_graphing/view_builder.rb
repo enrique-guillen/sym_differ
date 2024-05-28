@@ -16,6 +16,10 @@ module SymDiffer
     class ViewBuilder
       extend Forwardable
 
+      def initialize(numerical_analysis_item_factory)
+        @numerical_analysis_item_factory = numerical_analysis_item_factory
+      end
+
       def build(original_view, curve_stylings)
         @original_view = original_view
 
@@ -90,7 +94,8 @@ module SymDiffer
       end
 
       def expression_path_scaler
-        @expression_path_scaler ||= Graphing::ExpressionPathScaler.new(100)
+        @expression_path_scaler ||=
+          Graphing::ExpressionPathScaler.new(100, @numerical_analysis_item_factory)
       end
 
       def_delegators :original_view, :ordinate_axis, :expression_graph_parameters

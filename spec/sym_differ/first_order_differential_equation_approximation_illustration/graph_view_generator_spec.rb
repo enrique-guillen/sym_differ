@@ -33,10 +33,10 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
 
     context "when expression_graph_parameters[:ordinate_distance] != 0" do
       let(:approximation_expression_path) do
-        [
-          create_evaluation_point(-1.0, 1.0),
-          create_evaluation_point(0.0, 2.6)
-        ]
+        create_expression_path(
+          [create_evaluation_point(-1.0, 1.0),
+           create_evaluation_point(0.0, 2.6)]
+        )
       end
 
       let(:expression_graph_parameters) do
@@ -51,16 +51,34 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
          same_evaluation_point_as(create_evaluation_point(0.0, 2.6))]
       end
 
-      it "returns the expected view" do
+      it "returns the expected curves" do
         expect(generate).to have_attributes(
-          abscissa_axis: have_attributes(name: "t", origin: -1.0,
-                                         number_labels: include(-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, 0.0)),
-          ordinate_axis: have_attributes(name: "y", origin: 2.6,
-                                         number_labels: [1.0, 1.16, 1.32, 1.48, 1.6400000000000001,
-                                                         1.8, 1.96, 2.12, 2.2800000000000002, 2.44, 2.6]),
           curves: a_collection_containing_exactly(
-            an_object_having_attributes(text: "Expression: y",
-                                        path: a_collection_containing_exactly(*scaled_approximation_expression_path))
+            an_object_having_attributes(
+              text: "Expression: y",
+              path: an_object_having_attributes(
+                evaluation_points: a_collection_containing_exactly(*scaled_approximation_expression_path)
+              )
+            )
+          )
+        )
+      end
+
+      it "returns the expected abscissa axis" do
+        expect(generate).to have_attributes(
+          abscissa_axis: an_object_having_attributes(
+            name: "t", origin: -1.0,
+            number_labels: include(-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, 0.0)
+          )
+        )
+      end
+
+      it "returns the expected ordinate axis" do
+        expect(generate).to have_attributes(
+          ordinate_axis: an_object_having_attributes(
+            name: "y", origin: 2.6,
+            number_labels: [1.0, 1.16, 1.32, 1.48, 1.6400000000000001,
+                            1.8, 1.96, 2.12, 2.2800000000000002, 2.44, 2.6]
           )
         )
       end
@@ -68,10 +86,10 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
 
     context "when expression_graph_parameters[:ordinate_distance] = 0" do
       let(:approximation_expression_path) do
-        [
-          create_evaluation_point(-1.0, 2.6),
-          create_evaluation_point(0.0, 2.6)
-        ]
+        create_expression_path(
+          [create_evaluation_point(-1.0, 2.6),
+           create_evaluation_point(0.0, 2.6)]
+        )
       end
 
       let(:expression_graph_parameters) do
@@ -112,8 +130,12 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
       it "returns the expected curves" do
         expect(generate).to have_attributes(
           curves: a_collection_containing_exactly(
-            an_object_having_attributes(text: "Expression: y",
-                                        path: a_collection_containing_exactly(*scaled_approximation_expression_path))
+            an_object_having_attributes(
+              text: "Expression: y",
+              path: an_object_having_attributes(
+                evaluation_points: a_collection_containing_exactly(*scaled_approximation_expression_path)
+              )
+            )
           )
         )
       end

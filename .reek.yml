@@ -97,3 +97,5 @@ detectors:
       # significantly high at the time of writing this.
       - "SymDiffer::FirstOrderDifferentialEquationApproximator"
       - "SymDiffer::DifferentialEquationApproximationIllustrator"
+      # I think it makes sense to keep most of the instance variables in the class below in a single place.
+      - "SymDiffer::DifferentiationGraph::ExpressionPathGenerator"

@@ -104,7 +104,7 @@
       <path
         id="curve-number-<%= index %>"
         d="
-          M <%= join_expression_point(curve.path.first) %>
+          M <%= join_expression_point(curve.path.first_evaluation_point) %>
           L <% curve.path.each do |expression_data_point| %>
               <%= join_expression_point(expression_data_point) %>
             <% end %>

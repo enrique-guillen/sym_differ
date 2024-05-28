@@ -10,7 +10,9 @@ require "sym_differ/graphing/expression_graph_view"
 RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
   describe "#build" do
     subject(:build) do
-      described_class.new.build(original_view, curve_stylings)
+      described_class
+        .new(numerical_analysis_item_factory)
+        .build(original_view, curve_stylings)
     end
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
@@ -42,8 +44,12 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
         expect(build).to have_attributes(
           original_view: an_object_having_attributes(
             curves: a_collection_containing_exactly(
-              an_object_having_attributes(text: "Expression funtext",
-                                          path: a_collection_containing_exactly(*scaled_approximation_expression_path))
+              an_object_having_attributes(
+                text: "Expression funtext",
+                path: an_object_having_attributes(
+                  evaluation_points: a_collection_containing_exactly(*scaled_approximation_expression_path)
+                )
+              )
             )
           )
         )

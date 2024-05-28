@@ -9,7 +9,7 @@ RSpec.describe SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer do
   describe "#render" do
     subject(:render) do
       described_class
-        .new(underlying_renderer, view_builder)
+        .new(numerical_analysis_item_factory, underlying_renderer, view_builder)
         .render(original_view)
     end
 
@@ -21,6 +21,8 @@ RSpec.describe SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer do
 
       allow(underlying_renderer).to receive(:render).and_return(rendered_view)
     end
+
+    let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:underlying_renderer) { double(:underlying_renderer) }
     let(:view_builder) { double(:view_builder) }

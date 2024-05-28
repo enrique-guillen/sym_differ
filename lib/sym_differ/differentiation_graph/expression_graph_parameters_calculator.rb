@@ -43,25 +43,25 @@ module SymDiffer
 
       def max_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&:ordinate) }
+          .flat_map(&:max_ordinate_value)
           .max
       end
 
       def min_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&:ordinate) }
+          .flat_map(&:min_ordinate_value)
           .min
       end
 
       def max_abscissa_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&:abscissa) }
+          .flat_map(&:max_abscissa_value)
           .max
       end
 
       def min_abscissa_value_from_expression_paths(*paths)
         paths
-          .flat_map { |path| path.map(&:abscissa) }
+          .flat_map(&:min_abscissa_value)
           .min
       end
 

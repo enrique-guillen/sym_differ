@@ -2,6 +2,7 @@
 
 require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis/evaluation_point"
+require "sym_differ/numerical_analysis/expression_path"
 require "forwardable"
 
 module SymDiffer
@@ -9,14 +10,19 @@ module SymDiffer
   class RungeKuttaFourSolutionApproximator
     extend Forwardable
 
-    def initialize(expression_evaluator, step_size)
+    def initialize(expression_evaluator, step_size, numerical_analysis_item_factory)
       @expression_evaluator = expression_evaluator
       @step_size = step_size
+      @numerical_analysis_item_factory = numerical_analysis_item_factory
     end
 
     def approximate_solution(equation_parameters, step_range)
       @equation_parameters = equation_parameters
-      approximate_solution_for_step_range(step_range, [build_evaluation_point(*equation_initial_coordinates)])
+
+      initial_coordinates_evaluation_point = create_evaluation_point(*equation_initial_coordinates)
+      starting_expression_path = create_expression_path([initial_coordinates_evaluation_point])
+
+      approximate_solution_for_step_range(step_range, starting_expression_path)
     end
 
     private
@@ -26,7 +32,7 @@ module SymDiffer
 
       current_abscissa = step_range_minimum(step_range)
       next_value = calculate_next_value(evaluation_path, current_abscissa)
-      next_evaluation_point = build_evaluation_point(current_abscissa, next_value)
+      next_evaluation_point = create_evaluation_point(current_abscissa, next_value)
 
       next_step_range = cut_front_of_step_range(step_range)
       next_evaluation_path = add_point_to_evaluation_path(evaluation_path, next_evaluation_point)
@@ -53,7 +59,7 @@ module SymDiffer
     def cut_front_of_step_range(step_range)
       new_minimum_value = step_range_minimum(step_range) + @step_size
       maximum_value = step_range_maximum(step_range)
-      build_step_range(new_minimum_value..maximum_value)
+      create_step_range(new_minimum_value..maximum_value)
     end
 
     def k1_sum_component(base_y_function_value, current_abscissa)
@@ -97,11 +103,11 @@ module SymDiffer
     end
 
     def add_point_to_evaluation_path(evaluation_path, point)
-      evaluation_path + [point]
+      evaluation_path.add_evaluation_point(point)
     end
 
     def last_point_of_evaluation_path(path)
-      path.last
+      path.last_evaluation_point
     end
 
     def access_ordinate_of_evaluation_point(point)
@@ -124,13 +130,8 @@ module SymDiffer
       step_range.last_element
     end
 
-    def build_evaluation_point(abscissa, ordinate)
-      NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
-    end
-
-    def build_step_range(range)
-      NumericalAnalysis::StepRange.new(range)
-    end
+    def_delegators :@numerical_analysis_item_factory,
+                   :create_evaluation_point, :create_step_range, :create_expression_path
 
     %w[expression variable_name undetermined_function_name initial_coordinates]
       .each { |method_name| def_delegator :equation_parameters, method_name, "equation_#{method_name}" }

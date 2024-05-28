@@ -54,9 +54,19 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       end
 
       context "when the expression paths have 15 and 2 points respectively" do
-        let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
+        let(:expression_path) do
+          create_expression_path(evaluation_points)
+        end
+
+        let(:evaluation_points) do
+          (-7..7).map { |i| evaluation_point(i, i**2) }
+        end
 
         let(:derivative_expression_path) do
+          create_expression_path(derivative_evaluation_points)
+        end
+
+        let(:derivative_evaluation_points) do
           [-26, 25].map { |i| evaluation_point(i, i * 2) }
         end
 
@@ -68,6 +78,10 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
       context "when the expression paths have 30 and 2 points respectively" do
         let(:expression_path) do
+          create_expression_path(evaluation_points)
+        end
+
+        let(:evaluation_points) do
           [-7, -6.5,
            -6, -5.5,
            -5, -4.5,
@@ -86,6 +100,10 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
         end
 
         let(:derivative_expression_path) do
+          create_expression_path(derivative_evaluation_points)
+        end
+
+        let(:derivative_evaluation_points) do
           [-26, 25].map { |i| evaluation_point(i, i * 2) }
         end
 
@@ -126,7 +144,8 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
                style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
       end
 
-      let(:expression_path) { (-7..7).map { |i| evaluation_point(i, i**2) } }
+      let(:expression_path) { create_expression_path(evaluation_points) }
+      let(:evaluation_points) { (-7..7).map { |i| evaluation_point(i, i**2) } }
 
       it "can be stored in test artifacts after execution" do
         expect { render }.not_to raise_error

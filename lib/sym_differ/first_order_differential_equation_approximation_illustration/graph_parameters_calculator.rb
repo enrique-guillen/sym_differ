@@ -32,11 +32,11 @@ module SymDiffer
       end
 
       def extract_ordinates(expression_path)
-        expression_path.map(&:ordinate)
+        expression_path.each.map(&:ordinate)
       end
 
       def extract_abscissas(expression_path)
-        expression_path.map(&:abscissa)
+        expression_path.each.map(&:abscissa)
       end
     end
   end

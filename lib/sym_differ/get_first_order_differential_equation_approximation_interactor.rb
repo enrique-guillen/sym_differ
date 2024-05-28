@@ -51,7 +51,8 @@ module SymDiffer
     end
 
     def runge_kutta_four_solution_approximator
-      RungeKuttaFourSolutionApproximator.new(expression_evaluator_adapter, 0.125)
+      RungeKuttaFourSolutionApproximator
+        .new(expression_evaluator_adapter, 0.125, numerical_analysis_item_factory)
     end
 
     def expression_factory
@@ -60,6 +61,10 @@ module SymDiffer
 
     def expression_evaluator_adapter
       ExpressionEvaluatorAdapter.new
+    end
+
+    def numerical_analysis_item_factory
+      NumericalAnalysisItemFactory.new
     end
 
     # Adapts the ExpressionEvaluatorVisitor interface to the one expected by the first ODE solution approximator.

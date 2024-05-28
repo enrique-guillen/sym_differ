@@ -15,13 +15,17 @@ require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
 require "sym_differ/numerical_analysis/step_range"
 
+require "sym_differ/numerical_analysis_item_factory"
+
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
   class VisualizeExpressionAndDerivativeExpressionInteractor
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 
-    def initialize(view_renderer = SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new)
+    def initialize(
+      view_renderer = SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new(numerical_analysis_item_factory)
+    )
       @view_renderer = view_renderer
     end
 
@@ -63,7 +67,8 @@ module SymDiffer
     end
 
     def expression_path_generator
-      SymDiffer::DifferentiationGraph::ExpressionPathGenerator.new(0.125, expression_evaluator_builder)
+      SymDiffer::DifferentiationGraph::ExpressionPathGenerator
+        .new(0.125, expression_evaluator_builder, numerical_analysis_item_factory)
     end
 
     def build_step_range(range)
@@ -75,7 +80,11 @@ module SymDiffer
     end
 
     def expression_factory
-      @expression_factory = ExpressionFactory.new
+      @expression_factory ||= ExpressionFactory.new
+    end
+
+    def numerical_analysis_item_factory
+      @numerical_analysis_item_factory ||= NumericalAnalysisItemFactory.new
     end
 
     # Builds an instance of an ExpressionEvaluator that will evaluate the expression with the variables set at the

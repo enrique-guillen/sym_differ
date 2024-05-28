@@ -14,9 +14,9 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:approximation_expression_path) do
-      [
-        create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)
-      ]
+      create_expression_path(
+        [create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)]
+      )
     end
 
     it "returns the expected parameters" do

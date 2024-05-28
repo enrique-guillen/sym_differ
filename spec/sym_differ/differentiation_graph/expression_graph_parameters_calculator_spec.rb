@@ -15,12 +15,12 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
       allow(expression_path_generator)
         .to receive(:generate)
         .with(expression, variable, an_object_having_attributes(first_element: -10.0, last_element: 10.0))
-        .and_return(expected_expression_path)
+        .and_return(create_expression_path(expected_expression_path))
 
       allow(expression_path_generator)
         .to receive(:generate)
         .with(derivative_expression, variable, an_object_having_attributes(first_element: -10.0, last_element: 10.0))
-        .and_return(expected_derivative_expression_path)
+        .and_return(create_expression_path(expected_derivative_expression_path))
     end
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
@@ -78,8 +78,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
 
     it "has the expected attributes" do
       expect(generate).to include(
-        expression_path: a_collection_containing_exactly(*path),
-        derivative_expression_path: a_collection_containing_exactly(*derivative_path),
+        expression_path:
+          an_object_having_attributes(evaluation_points: a_collection_containing_exactly(*path)),
+        derivative_expression_path:
+          an_object_having_attributes(evaluation_points: a_collection_containing_exactly(*derivative_path)),
         min_abscissa_value: -10.0,
         max_abscissa_value: 10.0,
         abscissa_distance: 20.0,

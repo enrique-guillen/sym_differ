@@ -24,12 +24,14 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
     let(:expression_stringifier) { SymDiffer::StringifierVisitor.new }
 
     let(:view_renderer) do
-      SymDiffer::SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new
+      SymDiffer::SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new(
+        numerical_analysis_item_factory
+      )
     end
 
     let(:approximation_expression_path) do
       SymDiffer::RungeKuttaFourSolutionApproximator
-        .new(expression_evaluator_class.new, 0.125)
+        .new(expression_evaluator_class.new, 0.125, numerical_analysis_item_factory)
         .approximate_solution(equation_parameters, create_step_range(0.125..10.0))
     end
 

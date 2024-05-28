@@ -17,6 +17,22 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
     let(:rendered_view) { double(:rendered_view) }
 
     let(:expected_expression_path) do
+      an_object_having_attributes(
+        evaluation_points: a_collection_including(
+          *expected_evaluation_points.map(&method(:same_evaluation_point_as))
+        )
+      )
+    end
+
+    let(:expected_derivative_expression_path) do
+      an_object_having_attributes(
+        evaluation_points: a_collection_including(
+          *expected_derivative_evaluation_points.map(&method(:same_evaluation_point_as))
+        )
+      )
+    end
+
+    let(:expected_evaluation_points) do
       [
         evaluation_point(-10, -20.0), evaluation_point(-8.0, -16.0), evaluation_point(-6.0, -12.0),
         evaluation_point(-4.0, -8.0), evaluation_point(-2.0, -4.0), evaluation_point(0.0, 0.0),
@@ -25,7 +41,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
       ]
     end
 
-    let(:expected_derivative_expression_path) do
+    let(:expected_derivative_evaluation_points) do
       [
         evaluation_point(-10.0, 2.0), evaluation_point(-8.0, 2.0), evaluation_point(-6.0, 2.0),
         evaluation_point(-4.0, 2.0), evaluation_point(-2.0, 2.0), evaluation_point(0.0, 2.0),
@@ -68,10 +84,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
       expect(view_renderer).to have_received(:render).with(
         an_object_having_attributes(
           curves: a_collection_including(
-            an_object_having_attributes(
-              text: "Expression: 2 * x",
-              path: a_collection_including(*expected_expression_path.map(&method(:same_evaluation_point_as)))
-            )
+            an_object_having_attributes(text: "Expression: 2 * x", path: expected_expression_path)
           )
         )
       )
@@ -85,7 +98,7 @@ RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor d
           curves: a_collection_including(
             an_object_having_attributes(
               text: "Derivative: 2",
-              path: a_collection_including(*expected_derivative_expression_path.map(&method(:same_evaluation_point_as)))
+              path: expected_derivative_expression_path
             )
           )
         )

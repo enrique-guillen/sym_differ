@@ -26,6 +26,14 @@ RSpec.describe SymDiffer::IllustrateDifferentialEquationApproximationInteractor 
     context "when initial coordinates = 0.0, 1.0" do
       let(:initial_value_coordinates) { coordinates(0.0, 1.0) }
 
+      let(:expected_approximation_expression_path) do
+        an_object_having_attributes(
+          evaluation_points: a_collection_including(
+            *expected_evaluation_points.map(&method(:same_evaluation_point_as))
+          )
+        )
+      end
+
       let(:expected_evaluation_points) do
         [create_evaluation_point(0.0, 1.0), create_evaluation_point(0.125, 1.1271974540051117),
          create_evaluation_point(0.5, 1.6143585443928121), create_evaluation_point(1.0, 2.6061535098540802),
@@ -71,7 +79,7 @@ RSpec.describe SymDiffer::IllustrateDifferentialEquationApproximationInteractor 
             curves: a_collection_including(
               an_object_having_attributes(
                 text: "Expression: y",
-                path: a_collection_including(*expected_evaluation_points.map(&method(:same_evaluation_point_as)))
+                path: expected_approximation_expression_path
               )
             )
           )
@@ -95,6 +103,14 @@ RSpec.describe SymDiffer::IllustrateDifferentialEquationApproximationInteractor 
     context "when initial coordinates = 1.0, <Math::E>" do
       let(:initial_value_coordinates) { coordinates(1.0, Math::E) }
 
+      let(:expected_expression_path) do
+        an_object_having_attributes(
+          evaluation_points: a_collection_including(
+            *expected_evaluation_points.map(&method(:same_evaluation_point_as))
+          )
+        )
+      end
+
       let(:expected_evaluation_points) do
         [
           create_evaluation_point(1.0, 2.718281828459045),
@@ -115,10 +131,7 @@ RSpec.describe SymDiffer::IllustrateDifferentialEquationApproximationInteractor 
         expect(view_renderer).to have_received(:render).with(
           an_object_having_attributes(
             curves: a_collection_including(
-              an_object_having_attributes(
-                text: "Expression: y",
-                path: a_collection_including(*expected_evaluation_points.map(&method(:same_evaluation_point_as)))
-              )
+              an_object_having_attributes(text: "Expression: y", path: expected_expression_path)
             )
           )
         )

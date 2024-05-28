@@ -9,7 +9,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
     subject(:approximate_solution) do
       described_class
-        .new(expression_evaluator, step_size)
+        .new(expression_evaluator, step_size, numerical_analysis_item_factory)
         .approximate_solution(equation_parameters, step_range)
     end
 
@@ -44,7 +44,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
           ].map(&method(:same_evaluation_point_as))
         end
 
-        it { is_expected.to match_array(expected_solution_path) }
+        it { is_expected.to have_attributes(evaluation_points: match_array(expected_solution_path)) }
       end
 
       context "when step range = 0.25..1" do
@@ -60,7 +60,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
           ].map(&method(:same_evaluation_point_as))
         end
 
-        it { is_expected.to match_array(expected_solution_path) }
+        it { is_expected.to have_attributes(evaluation_points: match_array(expected_solution_path)) }
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
         ].map(&method(:same_evaluation_point_as))
       end
 
-      it { is_expected.to match_array(expected_solution_path) }
+      it { is_expected.to have_attributes(evaluation_points: match_array(expected_solution_path)) }
     end
 
     context "when the expression is y, initial coordinates (0, 1), step range = 0.125..1, step size 0.125" do
@@ -113,7 +113,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
         ].map(&method(:same_evaluation_point_as))
       end
 
-      it { is_expected.to match_array(expected_solution_path) }
+      it { is_expected.to have_attributes(evaluation_points: match_array(expected_solution_path)) }
     end
 
     define_method(:evaluation_point) do |abscissa, ordinate|

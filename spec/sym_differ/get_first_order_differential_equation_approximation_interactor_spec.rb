@@ -22,12 +22,14 @@ RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteract
 
       it "returns the expected approximate solution" do
         expect(approximate_solution).to have_attributes(
-          approximated_solution: a_collection_including(
-            same_evaluation_point_as(create_evaluation_point(0.0, 1.0)),
-            same_evaluation_point_as(create_evaluation_point(0.125, 1.1271974540051117)),
-            same_evaluation_point_as(create_evaluation_point(1.0, 2.6061535098540802)),
-            same_evaluation_point_as(create_evaluation_point(5.0, 120.22643420198703)),
-            same_evaluation_point_as(create_evaluation_point(10.0, 14_454.395480924717))
+          approximated_solution: an_object_having_attributes(
+            evaluation_points: a_collection_including(
+              same_evaluation_point_as(create_evaluation_point(0.0, 1.0)),
+              same_evaluation_point_as(create_evaluation_point(0.125, 1.1271974540051117)),
+              same_evaluation_point_as(create_evaluation_point(1.0, 2.6061535098540802)),
+              same_evaluation_point_as(create_evaluation_point(5.0, 120.22643420198703)),
+              same_evaluation_point_as(create_evaluation_point(10.0, 14_454.395480924717))
+            )
           )
         )
       end
@@ -38,11 +40,13 @@ RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteract
 
       it "returns the expected approximate solution" do
         expect(approximate_solution).to have_attributes(
-          approximated_solution: a_collection_including(
-            same_evaluation_point_as(create_evaluation_point(1.0, Math::E)),
-            same_evaluation_point_as(create_evaluation_point(1.125, 3.0640403563073955)),
-            same_evaluation_point_as(create_evaluation_point(6.0, 326.80933139168866)),
-            same_evaluation_point_as(create_evaluation_point(11.0, 39_291.120577158246))
+          approximated_solution: an_object_having_attributes(
+            evaluation_points: a_collection_including(
+              same_evaluation_point_as(create_evaluation_point(1.0, Math::E)),
+              same_evaluation_point_as(create_evaluation_point(1.125, 3.0640403563073955)),
+              same_evaluation_point_as(create_evaluation_point(6.0, 326.80933139168866)),
+              same_evaluation_point_as(create_evaluation_point(11.0, 39_291.120577158246))
+            )
           )
         )
       end

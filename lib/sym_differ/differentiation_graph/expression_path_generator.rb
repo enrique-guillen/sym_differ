@@ -2,27 +2,29 @@
 
 require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis/evaluation_point"
+require "sym_differ/numerical_analysis/expression_path"
 
 module SymDiffer
   module DifferentiationGraph
     # Generates a list of expression "points", coordinates representing the values of the given expression.
     class ExpressionPathGenerator
-      def initialize(step_size, expression_evaluator_builder)
+      def initialize(step_size, expression_evaluator_builder, numerical_analysis_item_factory)
         @step_size = step_size
         @expression_evaluator_builder = expression_evaluator_builder
+        @numerical_analysis_item_factory = numerical_analysis_item_factory
       end
 
       def generate(expression, variable_name, step_range)
         @expression = expression
         @variable_name = variable_name
-        build_expression_points_for_expression(step_range, [])
+        build_expression_points_for_expression(step_range, build_expression_path([]))
       end
 
       private
 
       attr_reader :expression, :variable_name
 
-      def build_expression_points_for_expression(step_range, expression_path = [])
+      def build_expression_points_for_expression(step_range, expression_path)
         return expression_path unless first_element_of_range(step_range) <= second_element_of_range(step_range)
 
         evaluation_point_for_current_step = evaluation_point_for_current_step(step_range)
@@ -47,19 +49,23 @@ module SymDiffer
       end
 
       def add_point_to_evaluation_path(path, point)
-        path + [point]
+        path.add_evaluation_point(point)
       end
 
       def evaluate_expression(step)
         @expression_evaluator_builder.build(variable_name => step).evaluate(expression)
       end
 
-      def build_evaluation_point(abscissa, ordinate)
-        NumericalAnalysis::EvaluationPoint.new(abscissa, ordinate)
+      def build_expression_path(*)
+        @numerical_analysis_item_factory.create_expression_path(*)
+      end
+
+      def build_evaluation_point(*)
+        @numerical_analysis_item_factory.create_evaluation_point(*)
       end
 
       def build_new_step_range(min, max)
-        NumericalAnalysis::StepRange.new(min..max)
+        @numerical_analysis_item_factory.create_step_range(min..max)
       end
 
       def first_element_of_range(step_range)

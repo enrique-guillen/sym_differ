@@ -8,7 +8,9 @@ module SymDiffer
     # Adapts this module's GraphViewRenderer to the DifferentiationGraph::View-based interface expected by the
     # differentiation graph submodule, and takes styling decisions that are specific to drawing SVGs.
     class DifferentiationGraphViewRenderer
-      def initialize(underlying_renderer = GraphViewRenderer.new, view_builder = ViewBuilder.new)
+      def initialize(numerical_analysis_item_factory,
+                     underlying_renderer = GraphViewRenderer.new,
+                     view_builder = ViewBuilder.new(numerical_analysis_item_factory))
         @underlying_renderer = underlying_renderer
         @view_builder = view_builder
       end

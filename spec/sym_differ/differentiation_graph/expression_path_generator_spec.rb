@@ -9,7 +9,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
   describe "#generate" do
     subject(:generate) do
       described_class
-        .new(step_size, expression_evaluator_builder)
+        .new(step_size, expression_evaluator_builder, numerical_analysis_item_factory)
         .generate(expression, variable_name, step_range)
     end
 
@@ -39,7 +39,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       let(:step_range) { create_step_range(2..1) }
 
       it "generates the expression path" do
-        expect(generate).to eq([])
+        expect(generate).to have_attributes(evaluation_points: [])
       end
     end
 
@@ -47,8 +47,10 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       let(:step_range) { create_step_range(1..1) }
 
       it "generates the expression path" do
-        expect(generate).to contain_exactly(
-          same_evaluation_point_as(create_evaluation_point(1, 30))
+        expect(generate).to have_attributes(
+          evaluation_points: a_collection_containing_exactly(
+            same_evaluation_point_as(create_evaluation_point(1, 30))
+          )
         )
       end
     end
@@ -57,10 +59,12 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       let(:step_range) { create_step_range(-1..1) }
 
       it "generates the expression path" do
-        expect(generate).to contain_exactly(
-          same_evaluation_point_as(create_evaluation_point(-1, 10)),
-          same_evaluation_point_as(create_evaluation_point(0, 20)),
-          same_evaluation_point_as(create_evaluation_point(1, 30))
+        expect(generate).to have_attributes(
+          evaluation_points: a_collection_containing_exactly(
+            same_evaluation_point_as(create_evaluation_point(-1, 10)),
+            same_evaluation_point_as(create_evaluation_point(0, 20)),
+            same_evaluation_point_as(create_evaluation_point(1, 30))
+          )
         )
       end
     end

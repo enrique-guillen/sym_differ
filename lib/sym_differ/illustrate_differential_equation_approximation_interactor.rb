@@ -9,6 +9,8 @@ require "sym_differ/differential_equation_approximation_illustrator"
 require "sym_differ/expression_evaluator_visitor"
 require "sym_differ/stringifier_visitor"
 
+require "sym_differ/numerical_analysis_item_factory"
+
 module SymDiffer
   # Implements the use case for a user getting the graph image of the approximation to a solution for the given
   # differential equation.
@@ -16,7 +18,11 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 
-    def initialize(view_renderer = SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new)
+    def initialize(
+      view_renderer = SvgGraphing::FirstOrderDifferentialEquationApproximationIllustrationViewRenderer.new(
+        numerical_analysis_item_factory
+      )
+    )
       @view_renderer = view_renderer
     end
 
@@ -50,7 +56,7 @@ module SymDiffer
     end
 
     def runge_kutta_four_solution_approximator
-      RungeKuttaFourSolutionApproximator.new(expression_evaluator_adapter, 0.125)
+      RungeKuttaFourSolutionApproximator.new(expression_evaluator_adapter, 0.125, numerical_analysis_item_factory)
     end
 
     def expression_factory
@@ -63,6 +69,10 @@ module SymDiffer
 
     def expression_evaluator_adapter
       ExpressionEvaluatorAdapter.new
+    end
+
+    def numerical_analysis_item_factory
+      NumericalAnalysisItemFactory.new
     end
 
     def build_step_range(range)
