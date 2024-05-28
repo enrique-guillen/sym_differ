@@ -79,15 +79,30 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
         .max_ordinate_value
     end
 
-    let(:evaluation_points) do
-      [
-        create_evaluation_point(1, 2),
-        create_evaluation_point(2, 3),
-        create_evaluation_point(10, 1)
-      ]
+    context "when evaluation points = <1, 2>, <2, 3>, <10, 1>" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(3) }
     end
 
-    it { is_expected.to eq(3) }
+    context "when evaluation points = <1, 2>, <2, 3>,<5,undefined>, <10, 1>" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(5, :undefined),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(3) }
+    end
   end
 
   describe "#min_ordinate_value" do
@@ -97,15 +112,30 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
         .min_ordinate_value
     end
 
-    let(:evaluation_points) do
-      [
-        create_evaluation_point(1, 2),
-        create_evaluation_point(2, 3),
-        create_evaluation_point(10, 1)
-      ]
+    context "when evaluation points = <1, 2>, <2, 3>, <10, 1>" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(1) }
     end
 
-    it { is_expected.to eq(1) }
+    context "when evaluation points = <1, 2>, <2, 3>, <3, undefined>, <10, 1>" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(3, :undefined),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(1) }
+    end
   end
 
   describe "#first_evaluation_point" do

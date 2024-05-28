@@ -30,11 +30,11 @@ module SymDiffer
       end
 
       def max_ordinate_value
-        @evaluation_points.map(&:ordinate).max
+        @evaluation_points.map(&:ordinate).reject { |o| o == :undefined }.max
       end
 
       def min_ordinate_value
-        @evaluation_points.map(&:ordinate).min
+        @evaluation_points.map(&:ordinate).reject { |o| o == :undefined }.min
       end
 
       def first_evaluation_point
