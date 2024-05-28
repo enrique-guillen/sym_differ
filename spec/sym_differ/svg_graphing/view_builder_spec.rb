@@ -106,6 +106,84 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
       end
     end
 
+    context "when the axis labels have more than 3 decimals after the point" do
+      let(:original_view) do
+        build_view(
+          axis_view("t", [-1.0, -0.9989, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0], -1.0), # ?
+          axis_view("y", [1.0, 1.16666, 1.32, 1.48, 1.640, 1.8, 1.96, 2.12, 2.280, 2.44, 2.6], 2.6),
+          [expression_graph_view(
+            "Expression funtext",
+            [create_evaluation_point(-1.0, 1.0), create_evaluation_point(0.0, 2.6)]
+          )],
+          abscissa_distance: 1.0,
+          ordinate_distance: 1.6,
+          min_abscissa_value: -1.0,
+          max_ordinate_value: 2.6
+        )
+      end
+
+      it "returns the expected original_view.abscissa_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            abscissa_axis: have_attributes(
+              name: "t", origin: 100.0,
+              number_labels: [-1.0, -0.999, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0]
+            )
+          )
+        )
+      end
+
+      it "returns the expected original_view.ordinate_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            ordinate_axis: have_attributes(
+              name: "y", origin: 162.5,
+              number_labels: [1.0, 1.167, 1.32, 1.48, 1.64, 1.8, 1.96, 2.12, 2.28, 2.44, 2.6]
+            )
+          )
+        )
+      end
+    end
+
+    context "when the rounded axis labels still have more than 7 characters total" do
+      let(:original_view) do
+        build_view(
+          axis_view("t", [-11_111.0, -0.9989, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0], -11_111.0),
+          axis_view("y", [1.0, 1.16666, 1.32, 1.48, 1.640, 1.8, 1.96, 2.12, 2.280, 22_222.5, 222_222.6], 222_222.6),
+          [expression_graph_view(
+            "Expression funtext",
+            [create_evaluation_point(-1.0, 1.0), create_evaluation_point(0.0, 2.6)]
+          )],
+          abscissa_distance: 1.0,
+          ordinate_distance: 1.6,
+          min_abscissa_value: -1.0,
+          max_ordinate_value: 2.6
+        )
+      end
+
+      it "returns the expected original_view.abscissa_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            abscissa_axis: have_attributes(
+              name: "t", origin: 1_111_100.0,
+              number_labels: ["-1.1e+04", -0.999, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0]
+            )
+          )
+        )
+      end
+
+      it "returns the expected original_view.ordinate_axis" do
+        expect(build).to have_attributes(
+          original_view: an_object_having_attributes(
+            ordinate_axis: have_attributes(
+              name: "y", origin: 13_888_912.5,
+              number_labels: [1.0, 1.167, 1.32, 1.48, 1.64, 1.8, 1.96, 2.12, 2.28, 22_222.5, "2.2e+05"]
+            )
+          )
+        )
+      end
+    end
+
     define_method(:build_view) do |abscissa_axis, ordinate_axis, curves, expression_graph_parameters|
       SymDiffer::Graphing::View.new(
         abscissa_axis,

@@ -107,41 +107,6 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       end
     end
 
-    context "when curves = f(x), f'(x), labels in -10_0000.0..10_0000.0,-10_0000.0..10_0000.0 range" do
-      let(:original_view) do
-        double(:original_view, abscissa_axis:, ordinate_axis:, curves: [expression_graph])
-      end
-
-      let(:abscissa_axis) do
-        double(:abscissa_axis,
-               name: "x",
-               origin: 50,
-               number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10].map { |n| Float(n * 10_000) })
-      end
-
-      let(:ordinate_axis) do
-        double(:ordinate_axis,
-               name: "y",
-               origin: 49,
-               number_labels: [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10].map { |n| Float(n * 10_000) })
-      end
-
-      let(:expression_graph) do
-        double(:expression_graph,
-               text: "Expression: f(x)",
-               path: expression_path,
-               style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
-      end
-
-      let(:expression_path) { create_expression_path(evaluation_points) }
-      let(:evaluation_points) { (-7..7).map { |i| evaluation_point(i, i**2) } }
-
-      it "can be stored in test artifacts after execution" do
-        expect { render }.not_to raise_error
-        write_test_artifact_path(prefix_with_class_name("low_precision_path_long_number_labels.svg"), render)
-      end
-    end
-
     define_method(:prefix_with_class_name) do |file_name|
       [filesystem_friendlify_class_name(described_class.name), file_name].join(".")
     end

@@ -44,7 +44,7 @@
             y="<%= calculate_y_placement_of_ordinate_label(index) %>"
             transform="translate(90, 100)"
             text-anchor="end">
-        <%= l = label.round(3); (l.to_s.size) > 7 ? ("%.1e" % l) : l %>
+        <%= label %>
       </text>
 
       <path
@@ -63,7 +63,7 @@
             y="0"
             transform="translate(100, 820)"
             text-anchor="middle">
-        <%= l = label.round(3); (l.to_s.size) > 7 ? ("%.1e" % l) : l %>
+        <%= label %>
       </text>
 
       <path
