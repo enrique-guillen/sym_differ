@@ -51,7 +51,7 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
           curves: a_collection_containing_exactly(
             an_object_having_attributes(
               text: "Expression funtext",
-              path: scaled_approximation_expression_path,
+              paths: [scaled_approximation_expression_path],
               style: build_curve_styling("blue", "0.5985")
             )
           )
@@ -63,7 +63,8 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
           abscissa_axis: an_object_having_attributes(
             name: "t",
             origin: 100.0,
-            number_labels: [-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0])
+            number_labels: [-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0]
+          )
         )
       end
 
@@ -171,6 +172,63 @@ RSpec.describe SymDiffer::SvgGraphing::ViewBuilder do
           ordinate_axis: an_object_having_attributes(
             name: "y", origin: 13_888_912.5,
             number_labels: [1.0, 1.167, 1.32, 1.48, 1.64, 1.8, 1.96, 2.12, 2.28, 22_222.5, "2.2e+05"]
+          )
+        )
+      end
+    end
+
+    context "when the expression graph has different defined+undefined ordinate values" do
+      let(:original_view) do
+        build_view(
+          axis_view("t", [-1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0], -1.0),
+          axis_view("y", [1.0, 1.16, 1.32, 1.48, 1.640, 1.8, 1.96, 2.12, 2.280, 2.44, 2.6], 2.6),
+          [expression_graph_view(
+            "Expression funtext",
+            [create_evaluation_point(-1.0, 1.0), create_evaluation_point(0.0, 1.4),
+             create_evaluation_point(0.5, :undefined),
+             create_evaluation_point(1.0, 2.0), create_evaluation_point(2.0, 2.6)]
+          )],
+          abscissa_distance: 1.0,
+          ordinate_distance: 1.6,
+          min_abscissa_value: -1.0,
+          max_ordinate_value: 2.6
+        )
+      end
+
+      let(:scaled_approximation_expression_path_1) do
+        an_object_having_attributes(
+          evaluation_points: a_collection_containing_exactly(
+            *scaled_approximation_evaluation_points_1
+          )
+        )
+      end
+
+      let(:scaled_approximation_expression_path_2) do
+        an_object_having_attributes(
+          evaluation_points: a_collection_containing_exactly(
+            *scaled_approximation_evaluation_points_2
+          )
+        )
+      end
+
+      let(:scaled_approximation_evaluation_points_1) do
+        [same_evaluation_point_as(create_evaluation_point(-100.0, 62.5)),
+         same_evaluation_point_as(create_evaluation_point(0.0, 87.5))]
+      end
+
+      let(:scaled_approximation_evaluation_points_2) do
+        [same_evaluation_point_as(create_evaluation_point(100.0, 125.0)),
+         same_evaluation_point_as(create_evaluation_point(200.0, 162.5))]
+      end
+
+      it "returns the expected curves" do
+        expect(build).to have_attributes(
+          curves: a_collection_containing_exactly(
+            an_object_having_attributes(
+              text: "Expression funtext",
+              paths: [scaled_approximation_expression_path_1, scaled_approximation_expression_path_2],
+              style: build_curve_styling("blue", "0.5985")
+            )
           )
         )
       end

@@ -16,18 +16,18 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
 
     let(:svg_view) { view(true, abscissa_axis, ordinate_axis, curves) }
 
+    let(:abscissa_axis) do
+      double(:abscissa_axis,
+             name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
+    end
+
+    let(:ordinate_axis) do
+      double(:ordinate_axis,
+             name: "y", origin: 49,
+             number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
+    end
+
     context "when curves = f(x), f'(x), labels in -10..10,-20...100 range" do
-      let(:abscissa_axis) do
-        double(:abscissa_axis,
-               name: "x", origin: 50, number_labels: [-10.0, -8.0, -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0, 8.0, 10.0])
-      end
-
-      let(:ordinate_axis) do
-        double(:ordinate_axis,
-               name: "y", origin: 49,
-               number_labels: [-20.0, -8.0, 4.0, 16.0, 28.0, 40.0, 52.0, 64.0, 76.0, 88.0, 100.0])
-      end
-
       let(:curves) do
         [expression_graph, derivative_expression_graph]
       end
@@ -35,14 +35,14 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
       let(:expression_graph) do
         double(:expression_graph,
                text: "Expression: f(x)",
-               path: expression_path,
+               paths: [expression_path],
                style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
       end
 
       let(:derivative_expression_graph) do
         double(:d_expression_graph,
                text: "Derivative: f'(x)",
-               path: derivative_expression_path,
+               paths: [derivative_expression_path],
                style: { "fill" => "none", "stroke" => "red", "stroke-width" => "0.3985", "stroke-opacity" => "1" })
       end
 
@@ -104,6 +104,33 @@ RSpec.describe SymDiffer::SvgGraphing::GraphViewRenderer do
           expect { render }.not_to raise_error
           write_test_artifact_path(prefix_with_class_name("high_precision_path.svg"), render)
         end
+      end
+    end
+
+    context "when curves = f(x), f'(x), discontinuities present" do
+      let(:curves) { [expression_graph] }
+
+      let(:expression_graph) do
+        double(:expression_graph,
+               text: "Expression: f(x)",
+               paths: [expression_path_1, expression_path_2],
+               style: { "fill" => "none", "stroke" => "blue", "stroke-width" => "0.5985", "stroke-opacity" => "1" })
+      end
+
+      let(:expression_path_1) { create_expression_path(evaluation_points_1) }
+      let(:expression_path_2) { create_expression_path(evaluation_points_2) }
+
+      let(:evaluation_points_1) do
+        (-7..-1).map { |i| evaluation_point(i, i**2) }
+      end
+
+      let(:evaluation_points_2) do
+        (1..7).map { |i| evaluation_point(i, i**2) }
+      end
+
+      it "can be stored in test artifacts after execution" do
+        expect { render }.not_to raise_error
+        write_test_artifact_path(prefix_with_class_name("discontinuities.svg"), render)
       end
     end
 

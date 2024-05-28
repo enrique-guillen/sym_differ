@@ -40,6 +40,31 @@ RSpec.describe SymDiffer::Graphing::ExpressionPathScaler do
       end
     end
 
+    context "when the ordinate distance is 95 and expression path includes undefined ordinates" do
+      let(:abscissa_axis_distance) { 20.0 }
+      let(:ordinate_axis_distance) { 95.0 }
+
+      let(:expression_path) do
+        create_expression_path(
+          [create_evaluation_point(-10.0, -60.0),
+           create_evaluation_point(0.0, 30.0),
+           create_evaluation_point(5.0, :undefined),
+           create_evaluation_point(10.0, 35.0)]
+        )
+      end
+
+      it "returns the evaluation points scaled down by the distance/100 factor" do
+        expect(scale_to_target_sized_square).to have_attributes(
+          evaluation_points: a_collection_containing_exactly(
+            same_evaluation_point_as(create_evaluation_point(-50.0, -63.1578947368421)),
+            same_evaluation_point_as(create_evaluation_point(0.0, 31.57894736842105)),
+            same_evaluation_point_as(create_evaluation_point(25.0, :undefined)),
+            same_evaluation_point_as(create_evaluation_point(50.0, 36.84210526315789))
+          )
+        )
+      end
+    end
+
     context "when the ordinate distance is 0" do
       let(:abscissa_axis_distance) { 20.0 }
       let(:ordinate_axis_distance) { 0.0 }

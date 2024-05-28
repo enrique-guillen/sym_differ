@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "sym_differ/numerical_analysis/step_range"
-require "sym_differ/numerical_analysis/evaluation_point"
-require "sym_differ/numerical_analysis/expression_path"
+require "forwardable"
 
 module SymDiffer
   module DifferentiationGraph
     # Generates a list of expression "points", coordinates representing the values of the given expression.
     class ExpressionPathGenerator
+      extend Forwardable
+
       def initialize(step_size, expression_evaluator_builder, numerical_analysis_item_factory)
         @step_size = step_size
         @expression_evaluator_builder = expression_evaluator_builder
@@ -17,7 +17,7 @@ module SymDiffer
       def generate(expression, variable_name, step_range)
         @expression = expression
         @variable_name = variable_name
-        build_expression_points_for_expression(step_range, build_expression_path([]))
+        build_expression_points_for_expression(step_range, create_expression_path([]))
       end
 
       private
@@ -38,14 +38,14 @@ module SymDiffer
       def evaluation_point_for_current_step(step_range)
         step = step_range_minimum(step_range)
         value = evaluate_expression(step)
-        build_evaluation_point(step, value)
+        create_evaluation_point(step, value)
       end
 
       def build_next_step_range(step_range)
-        build_new_step_range(
-          step_range_minimum(step_range) + @step_size,
-          step_range_maximum(step_range)
-        )
+        new_minimum = step_range_minimum(step_range) + @step_size
+        new_maximum = step_range_maximum(step_range)
+
+        create_step_range((new_minimum..new_maximum))
       end
 
       def add_point_to_evaluation_path(path, point)
@@ -54,18 +54,6 @@ module SymDiffer
 
       def evaluate_expression(step)
         @expression_evaluator_builder.build(variable_name => step).evaluate(expression)
-      end
-
-      def build_expression_path(*)
-        @numerical_analysis_item_factory.create_expression_path(*)
-      end
-
-      def build_evaluation_point(*)
-        @numerical_analysis_item_factory.create_evaluation_point(*)
-      end
-
-      def build_new_step_range(min, max)
-        @numerical_analysis_item_factory.create_step_range(min..max)
       end
 
       def first_element_of_range(step_range)
@@ -83,6 +71,9 @@ module SymDiffer
       def step_range_maximum(step_range)
         step_range.maximum
       end
+
+      def_delegators :@numerical_analysis_item_factory,
+                     :create_step_range, :create_evaluation_point, :create_expression_path
     end
   end
 end

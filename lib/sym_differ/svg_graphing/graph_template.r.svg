@@ -100,22 +100,23 @@
 
 
   <!-- Curves  -->
-    <% view.curves.each_with_index do |curve, index| %>
-      <path
-        id="curve-number-<%= index %>"
-        d="
-          M <%= join_expression_point(curve.path.first_evaluation_point) %>
-          L <% curve.path.each do |expression_data_point| %>
-              <%= join_expression_point(expression_data_point) %>
-            <% end %>
-        "
-        style="<%= cssify_style(curve.style) %>"
-        transform="
-          translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
-                    <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
-          scale(<%= grid_unit_size %>)
-        "
-      />
+    <% view.curves.each do |curve| %>
+      <% curve.paths.each do |path| %>
+        <path
+          d="
+            M <%= join_expression_point(path.first_evaluation_point) %>
+            L <% path.each do |expression_data_point| %>
+                <%= join_expression_point(expression_data_point) %>
+              <% end %>
+          "
+          style="<%= cssify_style(curve.style) %>"
+          transform="
+            translate(<%= 100 + multiply_by_grid_unit_size(view.abscissa_axis.origin) %>,
+                      <%= 100 + multiply_by_grid_unit_size(view.ordinate_axis.origin) %>)
+            scale(<%= grid_unit_size %>)
+          "
+        />
+      <% end %>
     <% end %>
 
 

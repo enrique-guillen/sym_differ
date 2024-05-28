@@ -28,8 +28,6 @@ module SymDiffer
         ordinate_axis = generate_ordinate_axis_view
         curves = calculate_new_curves
 
-        graphing_view = new_graphing_view(abscissa_axis, ordinate_axis, curves)
-
         new_view(false, abscissa_axis, ordinate_axis, curves)
       end
 
@@ -54,7 +52,8 @@ module SymDiffer
       def calculate_new_curves
         original_view.curves.each_with_index.map do |expression_graph_view, index|
           path = scale_path_to_target_sized_square(expression_graph_view.path)
-          new_expression_graph_view(expression_graph_view.text, path, access_style_for_curve(index))
+          paths = convert_path_into_svg_paths(path)
+          new_expression_graph_view(expression_graph_view.text, access_style_for_curve(index), paths)
         end
       end
 
@@ -78,6 +77,33 @@ module SymDiffer
                                             ordinate_axis_distance = ordinate_distance)
         expression_path_scaler
           .scale_to_target_sized_square(expression_path, abscissa_axis_distance, ordinate_axis_distance)
+      end
+
+      def convert_path_into_svg_paths(path)
+        path.each.reduce([new_empty_expression_path]) do |list, next_eval_point|
+          next add_expression_path_to_list(list, new_empty_expression_path) if next_eval_point.ordinate == :undefined
+
+          last_expression_path = last_expression_path_in_list(list)
+          new_last = last_expression_path.add_evaluation_point(next_eval_point)
+          replace_last_expression_path_in_list(list, new_last)
+        end
+      end
+
+      def new_empty_expression_path
+        create_expression_path([])
+      end
+
+      def add_expression_path_to_list(list, path)
+        list + [path]
+      end
+
+      def last_expression_path_in_list(expression_path_list)
+        expression_path_list.last
+      end
+
+      def replace_last_expression_path_in_list(list, path)
+        list_head = list[0, list.size - 1].to_a
+        list_head + [path]
       end
 
       def scale_value_along_100_unit_axis(value, axis_distance)
@@ -108,10 +134,6 @@ module SymDiffer
         SvgGraphing::View.new(*)
       end
 
-      def new_graphing_view(*)
-        Graphing::View.new(*)
-      end
-
       def new_expression_graph_view(*)
         SvgGraphing::ExpressionGraphView.new(*)
       end
@@ -126,6 +148,7 @@ module SymDiffer
       end
 
       def_delegators :original_view, :abscissa_axis, :ordinate_axis, :expression_graph_parameters
+      def_delegators :@numerical_analysis_item_factory, :create_expression_path
 
       attr_reader :original_view, :curve_stylings
     end

@@ -39,6 +39,8 @@ module SymDiffer
       end
 
       def _scale_along_axis(value, axis_distance)
+        return value if value == :undefined
+
         (axis_distance = @target_size) if axis_distance.zero?
 
         scale(value, @target_size / axis_distance.to_f)

@@ -3,7 +3,7 @@
 module SymDiffer
   module SvgGraphing
     # Represents an SVG Path shaped after the curve determined by an expression.
-    ExpressionGraphView = Struct.new(:text, :path, :style)
+    ExpressionGraphView = Struct.new(:text, :style, :paths)
 
     # View representing the axis labeling information and positioning of the curve within the different axis.
     AxisView = Struct.new(:name, :number_labels, :origin)
