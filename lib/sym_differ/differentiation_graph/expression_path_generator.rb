@@ -8,10 +8,11 @@ module SymDiffer
     class ExpressionPathGenerator
       extend Forwardable
 
-      def initialize(step_size, expression_evaluator_builder, numerical_analysis_item_factory)
+      def initialize(step_size, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_detector)
         @step_size = step_size
         @expression_evaluator_builder = expression_evaluator_builder
         @numerical_analysis_item_factory = numerical_analysis_item_factory
+        @discontinuities_detector = discontinuities_detector
       end
 
       def generate(expression, variable_name, step_range)
@@ -22,15 +23,16 @@ module SymDiffer
 
       private
 
-      attr_reader :expression, :variable_name
-
       def build_expression_points_for_expression(step_range, expression_path)
         return expression_path unless first_element_of_range(step_range) <= second_element_of_range(step_range)
 
         evaluation_point_for_current_step = evaluation_point_for_current_step(step_range)
+        discontinuous_point_for_current_step = discontinuity_points_for_current_range(step_range)
 
         new_step_range = build_next_step_range(step_range)
-        new_expression_path = add_point_to_evaluation_path(expression_path, evaluation_point_for_current_step)
+        new_evaluation_points = [evaluation_point_for_current_step, discontinuous_point_for_current_step].compact
+
+        new_expression_path = add_points_to_evaluation_path(expression_path, new_evaluation_points)
 
         build_expression_points_for_expression(new_step_range, new_expression_path)
       end
@@ -41,6 +43,11 @@ module SymDiffer
         create_evaluation_point(step, value)
       end
 
+      def discontinuity_points_for_current_range(step_range)
+        step_sized_range = build_step_sized_range(step_range)
+        find_discontinuity(expression, step_sized_range)
+      end
+
       def build_next_step_range(step_range)
         new_minimum = step_range_minimum(step_range) + @step_size
         new_maximum = step_range_maximum(step_range)
@@ -48,8 +55,15 @@ module SymDiffer
         create_step_range((new_minimum..new_maximum))
       end
 
-      def add_point_to_evaluation_path(path, point)
-        path.add_evaluation_point(point)
+      def build_step_sized_range(step_range)
+        new_minimum = step_range_minimum(step_range)
+        new_maximum = step_range_minimum(step_range) + @step_size
+
+        new_minimum..new_maximum
+      end
+
+      def add_points_to_evaluation_path(path, point)
+        path.add_evaluation_points(point)
       end
 
       def evaluate_expression(step)
@@ -72,8 +86,12 @@ module SymDiffer
         step_range.maximum
       end
 
+      def_delegator :@discontinuities_detector, :find, :find_discontinuity
+
       def_delegators :@numerical_analysis_item_factory,
                      :create_step_range, :create_evaluation_point, :create_expression_path
+
+      attr_reader :expression, :variable_name
     end
   end
 end

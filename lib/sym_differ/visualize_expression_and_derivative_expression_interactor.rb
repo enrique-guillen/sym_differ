@@ -68,7 +68,7 @@ module SymDiffer
 
     def expression_path_generator
       SymDiffer::DifferentiationGraph::ExpressionPathGenerator
-        .new(0.125, expression_evaluator_builder, numerical_analysis_item_factory)
+        .new(0.125, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_finder)
     end
 
     def build_step_range(range)
@@ -85,6 +85,12 @@ module SymDiffer
 
     def numerical_analysis_item_factory
       @numerical_analysis_item_factory ||= NumericalAnalysisItemFactory.new
+    end
+
+    def discontinuities_finder
+      @discontinuities_finder ||= Class.new do
+        def find(*); end
+      end.new
     end
 
     # Builds an instance of an ExpressionEvaluator that will evaluate the expression with the variables set at the

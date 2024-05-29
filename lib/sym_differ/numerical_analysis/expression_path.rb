@@ -21,6 +21,10 @@ module SymDiffer
         ExpressionPath.new(@evaluation_points + [point])
       end
 
+      def add_evaluation_points(points)
+        ExpressionPath.new(@evaluation_points + points)
+      end
+
       def max_abscissa_value
         @evaluation_points.map(&:abscissa).max
       end

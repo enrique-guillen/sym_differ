@@ -9,23 +9,17 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
   describe "#generate" do
     subject(:generate) do
       described_class
-        .new(step_size, expression_evaluator_builder, numerical_analysis_item_factory)
+        .new(step_size, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_detector)
         .generate(expression, variable_name, step_range)
     end
 
     before do
-      add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_1, "x" => -1)
-      add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_2, "x" => 0)
-      add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_3, "x" => 1)
-
-      map_evaluator_response(expression_evaluator_1, from: expression, to: 10)
-      map_evaluator_response(expression_evaluator_2, from: expression, to: 20)
-      map_evaluator_response(expression_evaluator_3, from: expression, to: 30)
+      allow(discontinuities_detector).to receive(:find).and_return(nil)
     end
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
-
     let(:expression_evaluator_builder) { double(:expression_evaluator_builder) }
+    let(:discontinuities_detector) { double(:discontinuities_detector) }
     let(:step_size) { 1 }
 
     let(:expression) { double(:expression) }
@@ -35,37 +29,71 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       let(:"expression_evaluator_#{i}") { double(:"expression_evaluator_#{i}") }
     end
 
-    context "when step range == 2..1" do
-      let(:step_range) { create_step_range(2..1) }
+    context "when expression evaluator returns (-1, 10), (0, 20), (10, 30)" do
+      before do
+        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_1, "x" => -1)
+        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_2, "x" => 0)
+        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_3, "x" => 1)
 
-      it "generates the expression path" do
-        expect(generate).to have_attributes(evaluation_points: [])
+        map_evaluator_response(expression_evaluator_1, from: expression, to: 10)
+        map_evaluator_response(expression_evaluator_2, from: expression, to: 20)
+        map_evaluator_response(expression_evaluator_3, from: expression, to: 30)
       end
-    end
 
-    context "when step_range == 1..1" do
-      let(:step_range) { create_step_range(1..1) }
+      context "when step range == 2..1" do
+        let(:step_range) { create_step_range(2..1) }
 
-      it "generates the expression path" do
-        expect(generate).to have_attributes(
-          evaluation_points: a_collection_containing_exactly(
-            same_evaluation_point_as(create_evaluation_point(1, 30))
-          )
-        )
+        it "generates the expression path" do
+          expect(generate).to have_attributes(evaluation_points: [])
+        end
       end
-    end
 
-    context "when step_range == -1..1" do
-      let(:step_range) { create_step_range(-1..1) }
+      context "when step_range == 1..1" do
+        let(:step_range) { create_step_range(1..1) }
 
-      it "generates the expression path" do
-        expect(generate).to have_attributes(
-          evaluation_points: a_collection_containing_exactly(
-            same_evaluation_point_as(create_evaluation_point(-1, 10)),
-            same_evaluation_point_as(create_evaluation_point(0, 20)),
-            same_evaluation_point_as(create_evaluation_point(1, 30))
+        it "generates the expression path" do
+          expect(generate).to have_attributes(
+            evaluation_points: a_collection_containing_exactly(
+              same_evaluation_point_as(create_evaluation_point(1, 30))
+            )
           )
-        )
+        end
+      end
+
+      context "when step_range == -1..1" do
+        let(:step_range) { create_step_range(-1..1) }
+
+        it "generates the expression path" do
+          expect(generate).to have_attributes(
+            evaluation_points: a_collection_containing_exactly(
+              same_evaluation_point_as(create_evaluation_point(-1, 10)),
+              same_evaluation_point_as(create_evaluation_point(0, 20)),
+              same_evaluation_point_as(create_evaluation_point(1, 30))
+            )
+          )
+        end
+      end
+
+      context "when 1 discontinuity exists in range -1..0" do
+        before do
+          allow(discontinuities_detector)
+            .to receive(:find)
+            .with(expression, -1..0)
+            .and_return(create_evaluation_point(-0.5, :undefined))
+        end
+
+        let(:step_range) { create_step_range(-1..1) }
+
+        it "generates the expression path" do
+          expect(generate).to have_attributes(
+            evaluation_points: a_collection_containing_exactly(
+              same_evaluation_point_as(create_evaluation_point(-1, 10)),
+              same_evaluation_point_as(create_evaluation_point(-0.5, :undefined)),
+              same_evaluation_point_as(create_evaluation_point(0, 20)),
+              same_evaluation_point_as(create_evaluation_point(1, 30))
+            )
+          )
+        end
       end
     end
 

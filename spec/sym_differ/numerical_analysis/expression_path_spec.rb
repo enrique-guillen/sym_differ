@@ -36,6 +36,26 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
     end
   end
 
+  describe "#add_evaluation_points" do
+    subject(:add_evaluation_points) do
+      described_class
+        .new(existing_evaluation_points)
+        .add_evaluation_points(new_evaluation_points)
+    end
+
+    let(:existing_evaluation_points) { [create_evaluation_point(1, 2)] }
+    let(:new_evaluation_points) { [create_evaluation_point(2, 3)] }
+
+    it "returns a Path with the new evaluation points" do
+      expect(add_evaluation_points).to have_attributes(
+        evaluation_points: [
+          same_evaluation_point_as(create_evaluation_point(1, 2)),
+          same_evaluation_point_as(create_evaluation_point(2, 3))
+        ]
+      )
+    end
+  end
+
   describe "#max_abscissa_value" do
     subject(:max_abscissa_value) do
       described_class
