@@ -322,4 +322,27 @@ RSpec.describe SymDiffer::StringifierVisitor do
       it { is_expected.to eq("(base ^ power)") }
     end
   end
+
+  describe "#visit_positive_expression" do
+    subject(:visit_positive_expression) do
+      printing_visitor
+        .visit_positive_expression(expression)
+    end
+
+    let(:printing_visitor) { described_class.new }
+
+    context "when the provided expression is +subexp" do
+      before do
+        allow(summand)
+          .to receive(:accept)
+          .with(an_object_having_attributes(parenthesize_infix_expressions: true))
+          .and_return("subexp")
+      end
+
+      let(:expression) { positive_expression(summand) }
+      let(:summand) { double(:summand) }
+
+      it { is_expected.to eq("+subexp") }
+    end
+  end
 end

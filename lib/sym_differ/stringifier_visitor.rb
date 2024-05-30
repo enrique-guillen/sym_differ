@@ -29,6 +29,14 @@ module SymDiffer
       prefix_with_dash(stringified_negated_expression)
     end
 
+    def visit_positive_expression(expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: true)
+
+      stringified_summand = stringify_expression(expression.summand, visitor: nested_visitor)
+
+      prefix_with_plus(stringified_summand)
+    end
+
     def visit_sum_expression(expression)
       nested_visitor = build_visitor(parenthesize_infix_expressions: true)
 
@@ -118,6 +126,10 @@ module SymDiffer
 
     def prefix_with_dash(expression)
       "-#{expression}"
+    end
+
+    def prefix_with_plus(expression)
+      "+#{expression}"
     end
 
     def join_with_plus_sign(expression_a, expression_b)
