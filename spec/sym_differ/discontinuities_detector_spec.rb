@@ -80,6 +80,18 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
 
         it { is_expected.to be_nil }
       end
+
+      context "when the first answer is nil and the second one is within the range (clarification)" do
+        before do
+          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+                                    to: nil)
+
+          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0],
+                                    to: 0.001)
+        end
+
+        it { is_expected.to be_same_as(create_evaluation_point(0.001, :undefined)) }
+      end
     end
 
     context "when expression walker yields twice and a discontinuity is found for first subexpression" do
@@ -101,6 +113,16 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
       let(:division_sub_expression_2) { double(:division_sub_expression_2) }
 
       it { is_expected.to be_same_as(create_evaluation_point(0.0625, :undefined)) }
+    end
+
+    context "when expression walker never yields (clarification)" do
+      before do
+        allow(expression_walker)
+          .to receive(:walk)
+          .with(expression, yield_at: %i[divisions])
+      end
+
+      it { is_expected.to be_nil }
     end
 
     define_method(:map_root_finder_responses) do |from:, to:, input: from, output: to|
