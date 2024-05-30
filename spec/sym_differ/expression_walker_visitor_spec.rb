@@ -165,6 +165,49 @@ RSpec.describe SymDiffer::ExpressionWalkerVisitor do
     end
   end
 
+  describe "#visit_subtract_expression" do
+    subject(:visit_subtract_expression) do
+      walker.visit_subtract_expression(expression, &method_to_yield)
+    end
+
+    before do
+      allow(minuend).to receive(:accept)
+      allow(subtrahend).to receive(:accept)
+    end
+
+    let(:expression) { subtract_expression(minuend, subtrahend) }
+    let(:minuend) { double(:minuend) }
+    let(:subtrahend) { double(:subtrahend) }
+
+    context "when yield_at_list does not include subtractions" do
+      let(:yield_at_list) { %i[] }
+
+      it "does not invoke the provided block with the provided expression" do
+        expect { |m| walker.visit_subtract_expression(expression, &m) }
+          .not_to yield_with_args(expression)
+      end
+
+      it "walks minuend with the provided block" do
+        visit_subtract_expression
+        expect(minuend).to have_received(:accept).with(walker, &method_to_yield)
+      end
+
+      it "walks subtrahend with the provided block" do
+        visit_subtract_expression
+        expect(subtrahend).to have_received(:accept).with(walker, &method_to_yield)
+      end
+    end
+
+    context "when yield_at_list includes subtractions" do
+      let(:yield_at_list) { %i[subtractions] }
+
+      it "does not invoke the provided block with the provided expression" do
+        expect { |m| walker.visit_subtract_expression(expression, &m) }
+          .to yield_with_args(expression)
+      end
+    end
+  end
+
   describe "#visit_multiplicate_expression" do
     subject(:visit_multiplicate_expression) do
       walker.visit_multiplicate_expression(expression, &method_to_yield)

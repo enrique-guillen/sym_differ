@@ -42,6 +42,14 @@ module SymDiffer
       end
     end
 
+    def visit_subtract_expression(expression, &block)
+      yield(expression) if yield_at_list_includes?(:subtractions)
+
+      [expression.minuend, expression.subtrahend].each do |subexpression|
+        walk_to_nested_expression(subexpression, &block)
+      end
+    end
+
     def visit_multiplicate_expression(expression, &block)
       yield(expression) if yield_at_list_includes?(:multiplications)
 
