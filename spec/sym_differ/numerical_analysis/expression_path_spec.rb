@@ -213,4 +213,24 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
       )
     end
   end
+
+  describe "#empty?" do
+    subject(:empty?) do
+      evaluation_path.empty?
+    end
+
+    let(:evaluation_path) { described_class.new(evaluation_points) }
+
+    context "when one evaluation point is present" do
+      let(:evaluation_points) { [create_evaluation_point(1, 2)] }
+
+      it { is_expected.to be(false) }
+    end
+
+    context "when no evaluation point is present" do
+      let(:evaluation_points) { [] }
+
+      it { is_expected.to be(true) }
+    end
+  end
 end

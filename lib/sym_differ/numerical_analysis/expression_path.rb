@@ -15,7 +15,7 @@ module SymDiffer
 
       attr_reader :evaluation_points
 
-      def_delegator :@evaluation_points, :each
+      def_delegators :@evaluation_points, :each, :empty?
 
       def add_evaluation_point(point)
         ExpressionPath.new(@evaluation_points + [point])
