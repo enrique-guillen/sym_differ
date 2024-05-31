@@ -9,7 +9,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
   describe "#generate" do
     subject(:generate) do
       described_class
-        .new(step_size, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_detector)
+        .new(step_size, expression_evaluator, numerical_analysis_item_factory, discontinuities_detector)
         .generate(expression, variable_name, step_range)
     end
 
@@ -18,26 +18,18 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
-    let(:expression_evaluator_builder) { double(:expression_evaluator_builder) }
+    let(:expression_evaluator) { double(:expression_evaluator) }
     let(:discontinuities_detector) { double(:discontinuities_detector) }
     let(:step_size) { 1 }
 
     let(:expression) { double(:expression) }
     let(:variable_name) { "x" }
 
-    [1, 2, 3].each do |i|
-      let(:"expression_evaluator_#{i}") { double(:"expression_evaluator_#{i}") }
-    end
-
     context "when expression evaluator returns (-1, 10), (0, 20), (10, 30)" do
       before do
-        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_1, "x" => -1)
-        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_2, "x" => 0)
-        add_evaluator_to_builder(expression_evaluator_builder, expression_evaluator_3, "x" => 1)
-
-        map_evaluator_response(expression_evaluator_1, from: expression, to: 10)
-        map_evaluator_response(expression_evaluator_2, from: expression, to: 20)
-        map_evaluator_response(expression_evaluator_3, from: expression, to: 30)
+        map_evaluator_response(expression_evaluator, from: [expression, { "x" => -1 }], to: 10)
+        map_evaluator_response(expression_evaluator, from: [expression, { "x" => 0 }], to: 20)
+        map_evaluator_response(expression_evaluator, from: [expression, { "x" => 1 }], to: 30)
       end
 
       context "when step range == 2..1" do
@@ -102,7 +94,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
     end
 
     define_method(:map_evaluator_response) do |expression_evaluator, from:, to:, input: from, output: to|
-      allow(expression_evaluator).to receive(:evaluate).with(input).and_return(output)
+      allow(expression_evaluator).to receive(:evaluate).with(*input).and_return(output)
     end
   end
 end

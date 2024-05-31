@@ -8,9 +8,9 @@ module SymDiffer
     class ExpressionPathGenerator
       extend Forwardable
 
-      def initialize(step_size, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_detector)
+      def initialize(step_size, expression_evaluator, numerical_analysis_item_factory, discontinuities_detector)
         @step_size = step_size
-        @expression_evaluator_builder = expression_evaluator_builder
+        @expression_evaluator = expression_evaluator
         @numerical_analysis_item_factory = numerical_analysis_item_factory
         @discontinuities_detector = discontinuities_detector
       end
@@ -67,7 +67,7 @@ module SymDiffer
       end
 
       def evaluate_expression(step)
-        @expression_evaluator_builder.build(variable_name => step).evaluate(expression)
+        @expression_evaluator.evaluate(expression, variable_name => step)
       end
 
       def first_element_of_range(step_range)

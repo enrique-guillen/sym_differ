@@ -71,7 +71,7 @@ module SymDiffer
 
     def expression_path_generator
       SymDiffer::DifferentiationGraph::ExpressionPathGenerator
-        .new(0.125, expression_evaluator_builder, numerical_analysis_item_factory, discontinuities_finder)
+        .new(0.125, expression_evaluator_adapter, numerical_analysis_item_factory, discontinuities_finder)
     end
 
     def build_step_range(range)
@@ -113,14 +113,6 @@ module SymDiffer
 
     def fixed_point_finder_creator
       FixedPointFinderCreator.new
-    end
-
-    # Builds an instance of an ExpressionEvaluator that will evaluate the expression with the variables set at the
-    # specified values.
-    class ExpressionEvaluatorBuilder
-      def build(variable_values)
-        ExpressionEvaluatorVisitor.new(variable_values)
-      end
     end
 
     # Adapts the ExpressionEvaluatorVisitor interface to match what's expected by NewtonMethodRootFinder.
