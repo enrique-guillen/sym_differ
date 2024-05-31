@@ -3,19 +3,22 @@
 require "sym_differ/expression_and_derivative_expression_visualizer"
 require "sym_differ/expression_text_language_compiler/parser"
 
-require "sym_differ/expression_factory"
-
 require "sym_differ/differentiation/differentiation_visitor"
 
 require "sym_differ/expression_reducer"
 require "sym_differ/stringifier_visitor"
 require "sym_differ/expression_evaluator_visitor"
+require "sym_differ/expression_walker_visitor"
 
+require "sym_differ/expression_factory"
+require "sym_differ/numerical_analysis/step_range"
+require "sym_differ/numerical_analysis_item_factory"
+
+require "sym_differ/discontinuities_detector"
+require "sym_differ/newton_method_root_finder"
+require "sym_differ/fixed_point_approximator"
 require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
-require "sym_differ/numerical_analysis/step_range"
-
-require "sym_differ/numerical_analysis_item_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
@@ -75,22 +78,41 @@ module SymDiffer
       NumericalAnalysis::StepRange.new(range)
     end
 
+    def expression_factory
+      @expression_factory ||= ExpressionFactory.new
+    end
+
     def expression_evaluator_builder
       ExpressionEvaluatorBuilder.new
     end
 
-    def expression_factory
-      @expression_factory ||= ExpressionFactory.new
+    def discontinuities_finder
+      DiscontinuitiesDetector.new(
+        newton_method_root_finder,
+        expression_walker_visitor,
+        numerical_analysis_item_factory
+      )
+    end
+
+    def newton_method_root_finder
+      NewtonMethodRootFinder
+        .new(0.00001, expression_evaluator_adapter, fixed_point_finder_creator)
+    end
+
+    def expression_walker_visitor
+      ExpressionWalkerVisitor.new({})
     end
 
     def numerical_analysis_item_factory
       @numerical_analysis_item_factory ||= NumericalAnalysisItemFactory.new
     end
 
-    def discontinuities_finder
-      @discontinuities_finder ||= Class.new do
-        def find(*); end
-      end.new
+    def expression_evaluator_adapter
+      ExpressionEvaluatorAdapter.new
+    end
+
+    def fixed_point_finder_creator
+      FixedPointFinderCreator.new
     end
 
     # Builds an instance of an ExpressionEvaluator that will evaluate the expression with the variables set at the
@@ -98,6 +120,20 @@ module SymDiffer
     class ExpressionEvaluatorBuilder
       def build(variable_values)
         ExpressionEvaluatorVisitor.new(variable_values)
+      end
+    end
+
+    # Adapts the ExpressionEvaluatorVisitor interface to match what's expected by NewtonMethodRootFinder.
+    class ExpressionEvaluatorAdapter
+      def evaluate(expression, variable_values)
+        ExpressionEvaluatorVisitor.new(variable_values).evaluate(expression)
+      end
+    end
+
+    # Allows dynamic creation of the FixedPointApproximator.
+    class FixedPointFinderCreator
+      def create(expression_evaluator)
+        FixedPointApproximator.new(0.00001, 100, expression_evaluator)
       end
     end
   end
