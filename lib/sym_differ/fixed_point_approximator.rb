@@ -16,6 +16,8 @@ module SymDiffer
       reset_current_evaluation_amount
 
       new_guess = evaluate_average_damp(first_guess)
+      return if new_guess == :undefined
+
       distance = calculate_distance_between_guesses(first_guess, new_guess)
       evaluate_expression_until_output_distance_low(first_guess, new_guess, distance)
     end
@@ -28,6 +30,7 @@ module SymDiffer
 
         bump_current_evaluation_amount
         new_guess = evaluate_average_damp(current_guess)
+        return if new_guess == :undefined
 
         distance_between_guesses = calculate_distance_between_guesses(current_guess, new_guess)
         current_guess = new_guess
@@ -46,6 +49,7 @@ module SymDiffer
 
     def evaluate_average_damp(value)
       next_value = evaluate_expression(value)
+      return :undefined if next_value == :undefined
 
       (value + next_value) / 2
     end
