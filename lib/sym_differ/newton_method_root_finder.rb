@@ -6,9 +6,8 @@ module SymDiffer
   # Finds a variable value for which the given expression yields a value close to 0.0, by implementing the Newton
   # Method's steps.
   class NewtonMethodRootFinder
-    def initialize(derivative_slope_width, tolerance, expression_evaluator, fixed_point_finder_creator)
+    def initialize(derivative_slope_width, expression_evaluator, fixed_point_finder_creator)
       @derivative_slope_width = derivative_slope_width
-      @tolerance = tolerance
       @expression_evaluator = expression_evaluator
       @fixed_point_finder_creator = fixed_point_finder_creator
     end
@@ -31,7 +30,7 @@ module SymDiffer
     end
 
     def create_fixed_point_finder(expression_evaluator)
-      @fixed_point_finder_creator.create(@tolerance, expression_evaluator)
+      @fixed_point_finder_creator.create(expression_evaluator)
     end
 
     # Wraps the provided ExpressionEvaluator into an evaluator that returns a NewtonTransformed-method whose fixed
@@ -48,6 +47,7 @@ module SymDiffer
 
         expression_at_variable_value = evaluate_expression(expression, variable_values)
         return :undefined if undefined_value?(expression_at_variable_value)
+
         derivative_at_variable_value = numerically_approximate_derivative(expression, variable_value, variable_values)
         return :undefined if undefined_value?(derivative_at_variable_value)
 
@@ -70,6 +70,7 @@ module SymDiffer
 
         value = slope_height / @derivative_slope_width
         return :undefined if undefined_value?(value)
+
         value
       end
 
