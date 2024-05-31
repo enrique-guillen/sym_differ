@@ -50,9 +50,9 @@ module SymDiffer
       end
 
       def calculate_new_curves
-        original_view.curves.each_with_index.map do |expression_graph_view, index|
+        curves.each_with_index.map do |expression_graph_view, index|
           path = scale_path_to_target_sized_square(expression_graph_view.path)
-          paths = convert_path_into_svg_paths(path)
+          paths = convert_path_into_svg_paths(path).reject(&:empty?)
           new_expression_graph_view(expression_graph_view.text, access_style_for_curve(index), paths)
         end
       end
@@ -147,7 +147,7 @@ module SymDiffer
           Graphing::ExpressionPathScaler.new(100, @numerical_analysis_item_factory)
       end
 
-      def_delegators :original_view, :abscissa_axis, :ordinate_axis, :expression_graph_parameters
+      def_delegators :original_view, :abscissa_axis, :ordinate_axis, :curves, :expression_graph_parameters
       def_delegators :@numerical_analysis_item_factory, :create_expression_path
 
       attr_reader :original_view, :curve_stylings
