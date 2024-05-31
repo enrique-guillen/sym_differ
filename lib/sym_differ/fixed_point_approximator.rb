@@ -10,6 +10,8 @@ module SymDiffer
     end
 
     def approximate(expression, variable, first_guess)
+      return if first_guess == :undefined
+
       @expression = expression
       @variable = variable
 
