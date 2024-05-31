@@ -14,8 +14,8 @@ module SymDiffer
 
       attr_reader :expression_a, :expression_b
 
-      def accept(visitor)
-        visitor.visit_sum_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_sum_expression(self, *, &)
       end
 
       def same_as?(other_expression)

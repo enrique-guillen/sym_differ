@@ -13,8 +13,8 @@ module SymDiffer
 
       attr_reader :negated_expression
 
-      def accept(visitor)
-        visitor.visit_negate_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_negate_expression(self, *, &)
       end
 
       def same_as?(other_expression)

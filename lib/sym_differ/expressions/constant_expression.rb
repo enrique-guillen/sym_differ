@@ -13,8 +13,8 @@ module SymDiffer
 
       attr_reader :value
 
-      def accept(visitor)
-        visitor.visit_constant_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_constant_expression(self, *, &)
       end
 
       def same_as?(other_expression)

@@ -14,8 +14,8 @@ module SymDiffer
 
       attr_reader :multiplicand, :multiplier
 
-      def accept(visitor)
-        visitor.visit_multiplicate_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_multiplicate_expression(self, *, &)
       end
 
       def same_as?(other_expression)

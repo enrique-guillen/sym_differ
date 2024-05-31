@@ -13,8 +13,8 @@ module SymDiffer
 
       attr_reader :angle_expression
 
-      def accept(visitor)
-        visitor.visit_sine_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_sine_expression(self, *, &)
       end
 
       def same_as?(other_expression)

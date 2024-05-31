@@ -17,8 +17,8 @@ module SymDiffer
           other_expression.variable.same_as?(variable)
       end
 
-      def accept(visitor)
-        visitor.visit_derivative_expression(self)
+      def accept(visitor, *, &)
+        visitor.visit_derivative_expression(self, *, &)
       end
     end
   end
