@@ -8,7 +8,6 @@ RSpec.describe SymDiffer::NewtonMethodRootFinder do
     subject(:find) do
       described_class
         .new(derivative_approximation_dx,
-             tolerance,
              expression_evaluator,
              fixed_point_finder_creator)
         .find(expression, variable, first_guess)
@@ -28,8 +27,7 @@ RSpec.describe SymDiffer::NewtonMethodRootFinder do
 
       allow(fixed_point_finder_creator)
         .to receive(:create)
-        .with(tolerance,
-              expected_evaluator_matcher)
+        .with(expected_evaluator_matcher)
         .and_return(fixed_point_finder)
 
       allow(fixed_point_finder)
@@ -39,7 +37,6 @@ RSpec.describe SymDiffer::NewtonMethodRootFinder do
     end
 
     let(:derivative_approximation_dx) { 0.00000001 }
-    let(:tolerance) { 0.00000001 }
     let(:expression_evaluator) { double(:expression_evaluator) }
 
     let(:fixed_point_finder_creator) do
