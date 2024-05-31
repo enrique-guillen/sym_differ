@@ -28,11 +28,16 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
           .and_yield(division_sub_expression)
       end
 
-      let(:division_sub_expression) { double(:division_sub_expression) }
+      let(:division_sub_expression) do
+        double(:division_sub_expression,
+               denominator: denominator_sub_expression)
+      end
+
+      let(:denominator_sub_expression) { double(:denominator_sub_expression) }
 
       context "when the answer for the mid-point first guess falls within the provided range" do
         before do
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0625],
                                     to: 0.0625)
         end
 
@@ -41,10 +46,10 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
 
       context "when the answer for the start-point first guess falls within the provided range" do
         before do
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0625],
                                     to: 300.0)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0],
                                     to: 0.001)
         end
 
@@ -53,13 +58,13 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
 
       context "when the answer for the end-point first guess falls within the provided range" do
         before do
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0625],
                                     to: 300.0)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0],
                                     to: -30.0)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.125],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.125],
                                     to: 0.124)
         end
 
@@ -68,13 +73,13 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
 
       context "when none of the answers fall within the provided range" do
         before do
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0625],
                                     to: 300.0)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0],
                                     to: -30.0)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.125],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.125],
                                     to: 0.127)
         end
 
@@ -83,10 +88,10 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
 
       context "when the first answer is nil and the second one is within the range (clarification)" do
         before do
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0625],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0625],
                                     to: nil)
 
-          map_root_finder_responses(from: [division_sub_expression, variable_name, 0.0],
+          map_root_finder_responses(from: [denominator_sub_expression, variable_name, 0.0],
                                     to: 0.001)
         end
 
@@ -102,15 +107,30 @@ RSpec.describe SymDiffer::DiscontinuitiesDetector do
           .and_yield(division_sub_expression_1)
           .and_yield(division_sub_expression_2)
 
-        map_root_finder_responses(from: [division_sub_expression_1, variable_name, 0.0625],
+        map_root_finder_responses(from: [denominator_sub_expression_1, variable_name, 0.0625],
                                   to: 0.0625)
 
-        map_root_finder_responses(from: [division_sub_expression_2, variable_name, 0.0625],
+        map_root_finder_responses(from: [denominator_sub_expression_2, variable_name, 0.0625],
                                   to: 0.0626)
       end
 
-      let(:division_sub_expression_1) { double(:division_sub_expression_1) }
-      let(:division_sub_expression_2) { double(:division_sub_expression_2) }
+      let(:division_sub_expression_1) do
+        double(:division_sub_expression_1,
+               denominator: denominator_sub_expression_1)
+      end
+
+      let(:division_sub_expression_2) do
+        double(:division_sub_expression_2,
+               denominator: denominator_sub_expression_2)
+      end
+
+      let(:denominator_sub_expression_1) do
+        double(:denominator_sub_expression_1)
+      end
+
+      let(:denominator_sub_expression_2) do
+        double(:denominator_sub_expression_2)
+      end
 
       it { is_expected.to be_same_as(create_evaluation_point(0.0625, :undefined)) }
     end

@@ -26,7 +26,7 @@ module SymDiffer
 
       walk_expression(expression, yield_at: %i[divisions]) do |division_expression|
         first_guesses = generate_first_guesses(range)
-        root = try_guesses_for_roots(first_guesses, division_expression, variable_name, range)
+        root = try_guesses_for_roots(first_guesses, division_expression.denominator, variable_name, range)
 
         break unless root.nil?
       end
