@@ -78,7 +78,7 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
         before do
           allow(discontinuities_detector)
             .to receive(:find)
-            .with(expression, -1..0)
+            .with(expression, variable_name, -1..0)
             .and_return(create_evaluation_point(-0.5, :undefined))
         end
 

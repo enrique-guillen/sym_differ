@@ -45,7 +45,7 @@ module SymDiffer
 
       def discontinuity_points_for_current_range(step_range)
         step_sized_range = build_step_sized_range(step_range)
-        find_discontinuity(expression, step_sized_range)
+        find_discontinuity(expression, variable_name, step_sized_range)
       end
 
       def build_next_step_range(step_range)
