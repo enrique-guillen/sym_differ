@@ -407,7 +407,7 @@ RSpec.describe SymDiffer::ExpressionWalkerVisitor do
 
   describe "#walk" do
     subject(:walk) do
-      walker.walk(expression, %i[sines cosines], &method_to_yield)
+      walker.walk(expression, yield_at: %i[sines cosines], &method_to_yield)
     end
 
     before { allow(expression).to receive(:accept) }

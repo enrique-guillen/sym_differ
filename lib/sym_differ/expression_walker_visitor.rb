@@ -9,8 +9,8 @@ module SymDiffer
 
     attr_reader :yield_at_list
 
-    def walk(expression, yield_at_list, &)
-      @yield_at_list = yield_at_list.to_set
+    def walk(expression, yield_at:, &)
+      @yield_at_list = yield_at.to_set
       expression.accept(self, &)
     end
 
