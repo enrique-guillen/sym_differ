@@ -55,6 +55,8 @@ module SymDiffer
         return :undefined if undefined_value?(expression_to_derivative_ratio)
 
         variable_value - expression_to_derivative_ratio
+      rescue FloatDomainError
+        :undefined
       end
 
       private
@@ -64,7 +66,10 @@ module SymDiffer
         parameter_2 = merge_variable(variable_values, variable_value)
 
         value_1 = evaluate_expression(expression, parameter_1)
+        return :undefined if undefined_value?(value_1)
+
         value_2 = evaluate_expression(expression, parameter_2)
+        return :undefined if undefined_value?(value_2)
 
         slope_height = value_1 - value_2
 
@@ -79,7 +84,7 @@ module SymDiffer
       end
 
       def undefined_value?(value)
-        [Float::INFINITY, Float::NAN].include?(value)
+        [Float::INFINITY, Float::NAN, :undefined].include?(value)
       end
 
       def evaluate_expression(expression, variable_values)
