@@ -20,6 +20,8 @@ require "sym_differ/fixed_point_approximator"
 require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
 
+require "sym_differ/differentiation_visualization/expression_evaluator_adapter"
+
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
   class VisualizeExpressionAndDerivativeExpressionInteractor
@@ -108,18 +110,11 @@ module SymDiffer
     end
 
     def expression_evaluator_adapter
-      ExpressionEvaluatorAdapter.new
+      DifferentiationVisualization::ExpressionEvaluatorAdapter.new
     end
 
     def fixed_point_finder_creator
       FixedPointFinderCreator.new
-    end
-
-    # Adapts the ExpressionEvaluatorVisitor interface to match what's expected by NewtonMethodRootFinder.
-    class ExpressionEvaluatorAdapter
-      def evaluate(expression, variable_values)
-        ExpressionEvaluatorVisitor.new(variable_values).evaluate(expression)
-      end
     end
 
     # Allows dynamic creation of the FixedPointApproximator.
