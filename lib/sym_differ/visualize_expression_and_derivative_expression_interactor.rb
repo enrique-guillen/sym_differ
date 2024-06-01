@@ -21,6 +21,7 @@ require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
 
 require "sym_differ/differentiation_visualization/expression_evaluator_adapter"
+require "sym_differ/differentiation_visualization/fixed_point_finder_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
@@ -28,9 +29,7 @@ module SymDiffer
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 
-    def initialize(
-      view_renderer = SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer.new(numerical_analysis_item_factory)
-    )
+    def initialize(view_renderer = default_svg_view_renderer)
       @view_renderer = view_renderer
     end
 
@@ -114,14 +113,12 @@ module SymDiffer
     end
 
     def fixed_point_finder_creator
-      FixedPointFinderCreator.new
+      DifferentiationVisualization::FixedPointFinderFactory.new
     end
 
-    # Allows dynamic creation of the FixedPointApproximator.
-    class FixedPointFinderCreator
-      def create(expression_evaluator)
-        FixedPointApproximator.new(0.00001, 100, expression_evaluator)
-      end
+    def default_svg_view_renderer
+      SymDiffer::SvgGraphing::DifferentiationGraphViewRenderer
+        .new(numerical_analysis_item_factory)
     end
   end
 end
