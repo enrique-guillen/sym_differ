@@ -15,7 +15,7 @@ require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis_item_factory"
 
 require "sym_differ/discontinuities_detector"
-require "sym_differ/newton_method_root_finder"
+require "sym_differ/newton_method/root_finder"
 require "sym_differ/fixed_point_approximator"
 require "sym_differ/differentiation_graph/expression_path_generator"
 require "sym_differ/svg_graphing/differentiation_graph_view_renderer"
@@ -95,7 +95,7 @@ module SymDiffer
     end
 
     def newton_method_root_finder
-      NewtonMethodRootFinder
+      NewtonMethod::RootFinder
         .new(0.00001, expression_evaluator_adapter, fixed_point_finder_creator)
     end
 

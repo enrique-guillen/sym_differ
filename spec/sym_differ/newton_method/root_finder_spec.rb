@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/newton_method_root_finder"
+require "sym_differ/newton_method/root_finder"
 
-RSpec.describe SymDiffer::NewtonMethodRootFinder do
+RSpec.describe SymDiffer::NewtonMethod::RootFinder do
   describe "#find" do
     subject(:find) do
       described_class
