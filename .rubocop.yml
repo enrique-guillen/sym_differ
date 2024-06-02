@@ -90,6 +90,15 @@ Metrics/MethodLength:
   # each entry in the Hash is in a key: method_name form; it's not necessary to refactor this right away.
   - "lib/sym_differ/expression_text_language_compiler/application_language_definer.rb"
 
+RSpec/VariableName:
+  AllowedPatterns:
+  - ^\+$
+  - ^\-$
+  - ^\*$
+  - ^\/$
+  - ^\*\*$
+  - ^\^$
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
