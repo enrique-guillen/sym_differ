@@ -198,6 +198,26 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      visitor.visit_natural_logarithm_expression(expression)
+    end
+
+    let(:expression) { natural_logarithm_expression(power_expression) }
+    let(:variable) { "x" }
+
+    let(:power_expression) { variable_expression("x") }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_natural_logarithm_expression).to be_same_as(
+        divide_expression(
+          constant_expression(1),
+          variable_expression("x")
+        )
+      )
+    end
+  end
+
   describe "#visit_abstract_expression" do
     subject(:visit_abstract_expression) do
       visitor.visit_abstract_expression(expression)
