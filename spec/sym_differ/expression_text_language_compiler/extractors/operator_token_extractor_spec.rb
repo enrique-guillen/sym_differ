@@ -76,6 +76,18 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTo
       end
     end
 
+    context "when the expression text is ^" do
+      let(:expression_text) { create_expression_text("^") }
+
+      it "extracts an OperatorToken(/) and returns an empty string" do
+        expect(extract).to include(
+          handled: true,
+          token: an_object_having_attributes(symbol: "^"),
+          next_expression_text: an_object_having_attributes(text: "")
+        )
+      end
+    end
+
     define_method(:create_expression_text) do |text|
       SymDiffer::ExpressionTextLanguageCompiler::ExpressionText.new(text)
     end

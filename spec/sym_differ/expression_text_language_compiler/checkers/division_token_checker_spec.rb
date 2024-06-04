@@ -16,7 +16,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::DivisionToke
 
     let(:expression_factory) { double(:expression_factory) }
 
-    context "when the provided token is *" do
+    context "when the provided token is /" do
       let(:token) { operator_token("/") }
 
       it "returns an expression and indicates the follow up token type" do
