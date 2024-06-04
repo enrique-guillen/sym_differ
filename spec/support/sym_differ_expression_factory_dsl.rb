@@ -57,5 +57,9 @@ module Support
     def exponentiate_expression(*)
       expression_factory.create_exponentiate_expression(*)
     end
+
+    def natural_logarithm_expression(*)
+      expression_factory.create_natural_logarithm_expression(*)
+    end
   end
 end
