@@ -130,14 +130,15 @@ Feature: Numerical approximation of first order differential equation solution.
       And the y-variable name of the approximation is set to y
       And the t-variable name of the approximation is set to x
 
-      When (@wip) the approximation is requested
+      When the approximation is requested
 
       Then some of the values of the approximation are:
       """
-      1.0,   0.0
-      1.125, 0.1053606237816764
-      1.5,   0.3677250226678144
-      2.0,   0.6359890570578819
-      6.0,   1.6945960356436387
-      11.0,  2.2914121075932474
+      -10.0,  2.3,
+      -9.875, 2.2872609742197745
+      -9.5,   2.2480402610569348
+      -9.0,   2.193232024545803
+      -5.0,   1.5941137928159246
+      -0.125, :undefined
+      0.0,    :undefined
       """

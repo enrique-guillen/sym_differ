@@ -101,3 +101,13 @@ Feature: Illustrate Differential Equation Approximation as SVG
       When the illustration is requested
 
       Then the image is stored with filename: dy_equals_1_over_x_iv_1__0.svg
+
+    Scenario: The user requests the approximation of y' = 1/x, y(-10.0) = 2.3, y-var="y", t-var="x"
+      Given the approximation illustration is requested of the equation y' = 1/x
+      And the approximation illustration's initial (t-var, y-var) coordinate of the approximation is (-10.0, 2.3)
+      And the approximation illustration's y-variable name of the approximation is set to y
+      And the approximation illustration's t-variable name of the approximation is set to x
+
+      When the illustration is requested
+
+      Then the image is stored with filename: dy_equals_1_over_x_iv_-10__2_3.svg
