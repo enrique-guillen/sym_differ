@@ -54,10 +54,16 @@ end
 
 Then("some of the values of the approximation are:") do |docstring|
   expected_evaluation_points =
-    docstring.split("\n").map { |pointstring| pointstring.split(",").map(&:to_f) }
+    docstring.split("\n").map do |pointstring|
+      pointstring.split(",").map do |ordinate|
+        ordinate.include?(":undefined") ? :undefined : ordinate.to_f
+      end
+    end
 
   expected_evaluation_point_matchers =
-    expected_evaluation_points.map { |point| an_object_having_attributes(abscissa: point[0], ordinate: point[1]) }
+    expected_evaluation_points.map do |point|
+      an_object_having_attributes(abscissa: point[0], ordinate: point[1])
+    end
 
   expect(@response).to have_attributes(
     approximated_solution: an_object_having_attributes(
