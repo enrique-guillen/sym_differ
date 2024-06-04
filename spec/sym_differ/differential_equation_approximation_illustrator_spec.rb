@@ -62,7 +62,19 @@ RSpec.describe SymDiffer::DifferentialEquationApproximationIllustrator do
       let(:variable_name) { "t" }
       let(:initial_value_coordinates) { coordinates(0.0, 1.0) }
 
-      let(:solution_approximation) { [create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)] }
+      let(:solution_approximation) do
+        create_expression_path(
+          [create_evaluation_point(0.0, 1.0),
+           create_evaluation_point(1.0, 2.6)]
+        )
+      end
+
+      let(:expected_evaluation_path) do
+        an_object_having_attributes(
+          evaluation_points: [same_evaluation_point_as(create_evaluation_point(-0.0, 1.0)),
+                              same_evaluation_point_as(create_evaluation_point(1.0, 2.6))]
+        )
+      end
 
       it { expect(illustrate_approximation).to eq(rendered_view) }
 
@@ -102,8 +114,7 @@ RSpec.describe SymDiffer::DifferentialEquationApproximationIllustrator do
             curves: a_collection_containing_exactly(
               an_object_having_attributes(
                 text: "Expression: y",
-                path: [same_evaluation_point_as(create_evaluation_point(-0.0, 1.0)),
-                       same_evaluation_point_as(create_evaluation_point(1.0, 2.6))]
+                path: expected_evaluation_path
               )
             )
           )
@@ -184,7 +195,12 @@ RSpec.describe SymDiffer::DifferentialEquationApproximationIllustrator do
       let(:variable_name) { "" }
       let(:initial_value_coordinates) { coordinates(0, 1) }
 
-      let(:solution_approximation) { [create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)] }
+      let(:solution_approximation) do
+        create_expression_path(
+          [create_evaluation_point(0.0, 1.0),
+           create_evaluation_point(1.0, 2.6)]
+        )
+      end
 
       it { is_expected.to eq(rendered_view) }
     end

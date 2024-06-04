@@ -14,29 +14,19 @@ module SymDiffer
       private
 
       def extract_ordinate_parameters(approximation_expression_path)
-        ordinates = extract_ordinates(approximation_expression_path)
-        max_ordinate_value = ordinates.max
-        min_ordinate_value = ordinates.min
+        max_ordinate_value = approximation_expression_path.max_ordinate_value
+        min_ordinate_value = approximation_expression_path.min_ordinate_value
         ordinate_distance = max_ordinate_value - min_ordinate_value
 
         { max_ordinate_value:, min_ordinate_value:, ordinate_distance: }
       end
 
       def extract_abscissas_parameters(approximation_expression_path)
-        abscissas = extract_abscissas(approximation_expression_path)
-        max_abscissa_value = abscissas.max
-        min_abscissa_value = abscissas.min
+        max_abscissa_value = approximation_expression_path.max_abscissa_value
+        min_abscissa_value = approximation_expression_path.min_abscissa_value
         abscissa_distance = max_abscissa_value - min_abscissa_value
 
         { max_abscissa_value:, min_abscissa_value:, abscissa_distance: }
-      end
-
-      def extract_ordinates(expression_path)
-        expression_path.each.map(&:ordinate)
-      end
-
-      def extract_abscissas(expression_path)
-        expression_path.each.map(&:abscissa)
       end
     end
   end
