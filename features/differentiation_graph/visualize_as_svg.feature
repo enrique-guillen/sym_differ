@@ -123,3 +123,35 @@ Feature: Visualize expression and derivative expression as SVG
       When the image is requested
 
       Then the image is stored with filename: visualize_1_over_x_minus_38_thirds_expression_and_derivative.svg
+
+    Scenario: Visualizing the image of 1 / sine(x) and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of 1 / sine(x)
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_1_over_sinex_expression_and_derivative.svg
+
+    Scenario: Visualizing the image of sine(x) / x and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of sine(x) / x
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_sinex_over_x_expression_and_derivative.svg
+
+    Scenario: Visualizing the image of (sine(x) + cosine(x)) / x and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of (sine(x) + cosine(x)) / x
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_sinex_p_cosine_x_over_x_expression_and_derivative.svg
+
+    Scenario: Visualizing the image of (sine(x) * cosine(x)) / x and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of (sine(x) * cosine(x)) / x
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_sinex_t_cosine_x_over_x_expression_and_derivative.svg
