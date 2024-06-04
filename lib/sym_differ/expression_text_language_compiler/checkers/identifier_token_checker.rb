@@ -16,7 +16,7 @@ module SymDiffer
           return not_handled_response unless variable_token?(token)
 
           identifier_command = build_identifier_command(token)
-          command_stack_item = build_command_type_stack_item(4, 0, 1, identifier_command)
+          command_stack_item = build_command_type_stack_item(6, 0, 1, identifier_command)
 
           handled_response(:post_identifier_token_checkers, command_stack_item)
         end

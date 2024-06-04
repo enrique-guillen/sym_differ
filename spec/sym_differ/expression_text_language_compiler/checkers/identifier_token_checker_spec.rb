@@ -20,7 +20,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTo
           successfully_handled_response(
             :post_identifier_token_checkers,
             command_stack_item(
-              4,
+              6,
               (0..1),
               a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildIdentifierExpressionCommand)
                 .and(having_attributes(identifier_name: "x"))
