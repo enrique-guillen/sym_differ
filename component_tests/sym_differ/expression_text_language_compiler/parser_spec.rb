@@ -296,6 +296,31 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is 'x^2'" do
+      let(:expression_text) { "x^2" }
+
+      it "returns a structure representing x ^ 2" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          exponentiate_expression(
+            variable_expression("x"),
+            constant_expression(2)
+          )
+        )
+      end
+    end
+
+    context "when the expression text to parse is 'x^'" do
+      let(:expression_text) { "x^" }
+
+      it "raises InvalidSyntaxError" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do

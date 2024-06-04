@@ -43,6 +43,7 @@ module SymDiffer
           post_sum_token_checkers: sub_expression_starters,
           post_subtraction_token_checkers: sub_expression_starters,
           post_division_token_checkers: sub_expression_starters,
+          post_exponentiation_token_checkers: sub_expression_starters,
           post_opening_parenthesis: sub_expression_starters,
           post_closing_parenthesis: possible_infix_operators
         }.freeze
@@ -51,7 +52,7 @@ module SymDiffer
       def invalid_expected_token_type_end_states
         %i[
           post_sum_token_checkers post_subtraction_token_checkers post_opening_parenthesis
-          post_multiplication_token_checkers post_division_token_checkers
+          post_multiplication_token_checkers post_division_token_checkers post_exponentiation_token_checkers
         ]
       end
 
@@ -67,7 +68,7 @@ module SymDiffer
       def possible_infix_operators
         [
           multiplication_token_checker, parens_token_checker, subtraction_token_checker, sum_token_checker,
-          division_token_checker
+          division_token_checker, exponentiation_token_checker
         ]
       end
 
@@ -117,6 +118,10 @@ module SymDiffer
 
       def division_token_checker
         @division_token_checker ||= Checkers::DivisionTokenChecker.new(@expression_factory)
+      end
+
+      def exponentiation_token_checker
+        @exponentiation_token_checker ||= Checkers::ExponentiationTokenChecker.new(@expression_factory)
       end
     end
   end
