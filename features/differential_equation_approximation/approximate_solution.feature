@@ -26,12 +26,12 @@ Feature: Numerical approximation of first order differential equation solution.
 
       Then some of the values of the approximation are:
       """
-      0.0, 0.0
+      0.0,   0.0
       0.125, 0.023437499999999997
-      0.5, 0.18750000000000003
-      1.0, 0.6250000000000002
-      5.0, 13.125
-      10.0, 51.250000000000014
+      0.5,   0.18750000000000003
+      1.0,   0.6250000000000002
+      5.0,   13.125
+      10.0,  51.250000000000014
       """
 
     Scenario: The user requests the approximation of y' = y, y(0.0) = 1, y-var="y", t-var="x"
@@ -44,12 +44,12 @@ Feature: Numerical approximation of first order differential equation solution.
 
       Then some of the values of the approximation are:
       """
-      0.0, 1.0
+      0.0,   1.0
       0.125, 1.1271974540051117
-      0.5, 1.6143585443928121
-      1.0, 2.6061535098540802
-      5.0, 120.22643420198703
-      10.0, 14454.395480924717
+      0.5,   1.6143585443928121
+      1.0,   2.6061535098540802
+      5.0,   120.22643420198703
+      10.0,  14454.395480924717
       """
 
     Scenario: The user requests the approximation of y' = x - y, y(0.0) = 1, y-var="y", t-var="x"
@@ -62,12 +62,12 @@ Feature: Numerical approximation of first order differential equation solution.
 
       Then some of the values of the approximation are:
       """
-      0.0, 1.0
+      0.0,   1.0
       0.125, 0.9002054238025052
-      0.5, 0.7533717903344526
-      1.0, 0.8114082952744177
-      5.0, 4.179936698450573
-      10.0, 9.170322644855332
+      0.5,   0.7533717903344526
+      1.0,   0.8114082952744177
+      5.0,   4.179936698450573
+      10.0,  9.170322644855332
       """
 
     Scenario: The user requests the approximation of y' = x + 1, y(0.0) = 0.0, y-var="y", t-var="x"
@@ -80,12 +80,12 @@ Feature: Numerical approximation of first order differential equation solution.
 
       Then some of the values of the approximation are:
       """
-      0.0, 0.0
+      0.0,   0.0
       0.125, 0.14843749999999997
-      0.5, 0.6874999999999998
-      1.0, 1.625
-      5.0, 18.124999999999996
-      10.0, 61.25
+      0.5,   0.6874999999999998
+      1.0,   1.625
+      5.0,   18.124999999999996
+      10.0,  61.25
       """
 
     Scenario: The user requests the approximation of y' = x * x + 1, y(0.0) = 1.0, y-var="y", t-var="x"
@@ -98,10 +98,46 @@ Feature: Numerical approximation of first order differential equation solution.
 
       Then some of the values of the approximation are:
       """
-      0.0, 1.0
+      0.0,   1.0
       0.125, 1.129557291666667
-      0.5, 1.580729166666667
-      1.0, 2.473958333333333
-      5.0, 50.86979166666666
-      10.0, 356.98958333333337
+      0.5,   1.580729166666667
+      1.0,   2.473958333333333
+      5.0,   50.86979166666666
+      10.0,  356.98958333333337
+      """
+
+    Scenario: The user requests the approximation of y' = 1/x, y(1.0) = 0.0, y-var="y", t-var="x"
+      Given the approximation is requested of the equation y' = 1 / x
+      And the initial (t-var, y-var) coordinate of the approximation is (1.0, 0.0)
+      And the y-variable name of the approximation is set to y
+      And the t-variable name of the approximation is set to x
+
+      When the approximation is requested
+
+      Then some of the values of the approximation are:
+      """
+      1.0,   0.0
+      1.125, 0.1053606237816764
+      1.5,   0.3677250226678144
+      2.0,   0.6359890570578819
+      6.0,   1.6945960356436387
+      11.0,  2.2914121075932474
+      """
+
+    Scenario: The user requests the approximation of y' = 1/x, y(-10.0) = 2.3, y-var="y", t-var="x"
+      Given the approximation is requested of the equation y' = 1 / x
+      And the initial (t-var, y-var) coordinate of the approximation is (-10.0, 2.3)
+      And the y-variable name of the approximation is set to y
+      And the t-variable name of the approximation is set to x
+
+      When (@wip) the approximation is requested
+
+      Then some of the values of the approximation are:
+      """
+      1.0,   0.0
+      1.125, 0.1053606237816764
+      1.5,   0.3677250226678144
+      2.0,   0.6359890570578819
+      6.0,   1.6945960356436387
+      11.0,  2.2914121075932474
       """
