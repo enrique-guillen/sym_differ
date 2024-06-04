@@ -13,12 +13,6 @@ RSpec.describe SymDiffer::ExpressionEvaluatorVisitor do
         .evaluate(expression)
     end
 
-    context "when the expression is 1/0" do
-      let(:expression) { divide_expression(constant_expression(1), constant_expression(0)) }
-
-      it { is_expected.to eq(:undefined) }
-    end
-
     context "when the expression is 1/1" do
       let(:expression) { divide_expression(constant_expression(1), constant_expression(1)) }
 

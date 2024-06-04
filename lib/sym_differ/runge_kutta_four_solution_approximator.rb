@@ -3,6 +3,9 @@
 require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis/evaluation_point"
 require "sym_differ/numerical_analysis/expression_path"
+
+require "sym_differ/expression_value_homogenizer"
+
 require "forwardable"
 
 module SymDiffer
@@ -30,7 +33,7 @@ module SymDiffer
     def approximate_solution_for_step_range(step_range, evaluation_path)
       return evaluation_path if no_remaining_items_in_range?(step_range)
 
-      current_abscissa = step_range_minimum(step_range)
+      current_abscissa = step_range.minimum
       next_value = calculate_next_value(evaluation_path, current_abscissa)
       next_evaluation_point = create_evaluation_point(current_abscissa, next_value)
 
@@ -41,10 +44,31 @@ module SymDiffer
     end
 
     def no_remaining_items_in_range?(step_range)
-      step_range_first_element(step_range) > step_range_last_element(step_range)
+      step_range.first_element > step_range.last_element
     end
 
-    def calculate_next_value(evaluation_path, current_abscissa)
+    def calculate_next_value(evaluation_path, current_step)
+      homogenized_base_y_function_value = homogenize_expression_value { extract_base_y_function_value(evaluation_path) }
+
+      homogenized_expression_value = homogenize_expression_value { evaluate_next_value(evaluation_path, current_step) }
+
+      return :undefined if homogenized_base_y_function_value == :undefined
+
+      homogenized_expression_value
+    end
+
+    def cut_front_of_step_range(step_range)
+      new_minimum_value = step_range.minimum + @step_size
+      maximum_value = step_range.maximum
+      create_step_range(new_minimum_value..maximum_value)
+    end
+
+    def extract_base_y_function_value(evaluation_path)
+      previously_calculated_evaluation_point = last_point_of_evaluation_path(evaluation_path)
+      access_ordinate_of_evaluation_point(previously_calculated_evaluation_point)
+    end
+
+    def evaluate_next_value(evaluation_path, current_abscissa)
       previously_calculated_evaluation_point = last_point_of_evaluation_path(evaluation_path)
       base_y_function_value = access_ordinate_of_evaluation_point(previously_calculated_evaluation_point)
 
@@ -54,12 +78,6 @@ module SymDiffer
       sum_component_k_4 = k4_sum_component(base_y_function_value, sum_component_k_3, current_abscissa) / 6.0
 
       base_y_function_value + sum_component_k_1 + sum_component_k_2 + sum_component_k_3 + sum_component_k_4
-    end
-
-    def cut_front_of_step_range(step_range)
-      new_minimum_value = step_range_minimum(step_range) + @step_size
-      maximum_value = step_range_maximum(step_range)
-      create_step_range(new_minimum_value..maximum_value)
     end
 
     def k1_sum_component(base_y_function_value, current_abscissa)
@@ -114,27 +132,17 @@ module SymDiffer
       point.ordinate
     end
 
-    def step_range_minimum(step_range)
-      step_range.minimum
-    end
-
-    def step_range_maximum(step_range)
-      step_range.maximum
-    end
-
-    def step_range_first_element(step_range)
-      step_range.first_element
-    end
-
-    def step_range_last_element(step_range)
-      step_range.last_element
-    end
-
     def_delegators :@numerical_analysis_item_factory,
                    :create_evaluation_point, :create_step_range, :create_expression_path
 
     %w[expression variable_name undetermined_function_name initial_coordinates]
       .each { |method_name| def_delegator :equation_parameters, method_name, "equation_#{method_name}" }
+
+    def_delegator :expression_value_homogenizer, :homogenize, :homogenize_expression_value
+
+    def expression_value_homogenizer
+      @expression_value_homogenizer ||= ExpressionValueHomogenizer.new
+    end
 
     attr_reader :equation_parameters
   end

@@ -10,8 +10,6 @@ module SymDiffer
 
     def evaluate(expression)
       evaluate_expression(expression)
-    rescue ZeroDivisionError
-      :undefined
     end
 
     def visit_constant_expression(expression)

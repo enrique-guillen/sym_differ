@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_value_homogenizer"
+
 require "forwardable"
 
 module SymDiffer
@@ -39,8 +41,16 @@ module SymDiffer
 
       def evaluation_point_for_current_step(step_range)
         step = step_range_minimum(step_range)
-        value = evaluate_expression(step)
+
+        value = ordinate_value_for_current_step(step)
+
         create_evaluation_point(step, value)
+      end
+
+      def ordinate_value_for_current_step(variable_value)
+        return :undefined if homogenize_expression_value { variable_value } == :undefined
+
+        homogenize_expression_value { evaluate_expression(variable_value) }
       end
 
       def discontinuity_points_for_current_range(step_range)
@@ -90,6 +100,12 @@ module SymDiffer
 
       def_delegators :@numerical_analysis_item_factory,
                      :create_step_range, :create_evaluation_point, :create_expression_path
+
+      def_delegator :expression_value_homogenizer, :homogenize, :homogenize_expression_value
+
+      def expression_value_homogenizer
+        @expression_value_homogenizer ||= ExpressionValueHomogenizer.new
+      end
 
       attr_reader :expression, :variable_name
     end
