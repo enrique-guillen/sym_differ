@@ -164,10 +164,24 @@ RSpec.describe SymDiffer::ExpressionFactory do
     let(:base) { double(:base) }
     let(:power) { double(:power) }
 
-    it "returns a DerivativeExpression" do
+    it "returns an ExponentiateExpression" do
       expect(create_exponentiate_expression)
         .to be_a_kind_of(SymDiffer::Expressions::ExponentiateExpression)
         .and have_attributes(base:, power:)
+    end
+  end
+
+  describe "#create_natural_logarithm_expression" do
+    subject(:create_natural_logarithm_expression) do
+      described_class.new.create_natural_logarithm_expression(power)
+    end
+
+    let(:power) { double(:power) }
+
+    it "returns a NaturalLogarithmExpression" do
+      expect(create_natural_logarithm_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::NaturalLogarithmExpression)
+        .and have_attributes(power:)
     end
   end
 end

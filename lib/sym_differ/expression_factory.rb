@@ -64,5 +64,9 @@ module SymDiffer
     def create_exponentiate_expression(*)
       Expressions::ExponentiateExpression.new(*)
     end
+
+    def create_natural_logarithm_expression(*)
+      Expressions::NaturalLogarithmExpression.new(*)
+    end
   end
 end
