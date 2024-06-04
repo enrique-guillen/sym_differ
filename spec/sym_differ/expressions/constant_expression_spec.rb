@@ -21,7 +21,7 @@ RSpec.describe SymDiffer::Expressions::ConstantExpression do
 
     it "emits the visit_constant_expression call on the provided visitor" do
       accept
-      expect(visitor).to have_received(:visit_constant_expression)
+      expect(visitor).to have_received(:visit_constant_expression).with(expression)
     end
   end
 
