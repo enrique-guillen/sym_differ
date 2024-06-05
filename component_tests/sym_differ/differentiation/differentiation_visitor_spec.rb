@@ -218,6 +218,30 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_exponentiate_expression" do
+    subject(:visit_exponentiate_expression) do
+      visitor.visit_exponentiate_expression(expression)
+    end
+
+    let(:expression) { exponentiate_expression(variable_expression("x"), constant_expression(2)) }
+    let(:variable) { "x" }
+
+    it "returns the result of deriving the expression" do
+      expect(visit_exponentiate_expression).to be_same_as(
+        multiplicate_expression(
+          multiplicate_expression(
+            constant_expression(2),
+            exponentiate_expression(
+              variable_expression("x"),
+              subtract_expression(constant_expression(2), constant_expression(1))
+            )
+          ),
+          constant_expression(1)
+        )
+      )
+    end
+  end
+
   describe "#visit_abstract_expression" do
     subject(:visit_abstract_expression) do
       visitor.visit_abstract_expression(expression)

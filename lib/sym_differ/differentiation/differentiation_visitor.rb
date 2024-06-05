@@ -11,6 +11,9 @@ require "sym_differ/differentiation/sine_expression_deriver"
 require "sym_differ/differentiation/cosine_expression_deriver"
 require "sym_differ/differentiation/divide_expression_deriver"
 require "sym_differ/differentiation/natural_logarithm_expression_deriver"
+require "sym_differ/differentiation/exponentiate_expression_deriver"
+
+require "sym_differ/expression_walker_visitor"
 
 module SymDiffer
   module Differentiation
@@ -69,6 +72,10 @@ module SymDiffer
         natural_logarithm_expression_deriver.derive(expression)
       end
 
+      def visit_exponentiate_expression(expression)
+        exponentiate_expression_deriver.derive(expression, @variable)
+      end
+
       def visit_abstract_expression(expression)
         create_derivative_expression(expression, create_variable_expression(@variable))
       end
@@ -117,6 +124,15 @@ module SymDiffer
 
       def natural_logarithm_expression_deriver
         @natural_logarithm_expression_deriver ||= NaturalLogarithmExpressionDeriver.new(@expression_factory, self)
+      end
+
+      def exponentiate_expression_deriver
+        @exponentiate_expression_deriver ||=
+          ExponentiateExpressionDeriver.new(self, expression_walker, @expression_factory)
+      end
+
+      def expression_walker
+        @expression_walker ||= ExpressionWalkerVisitor.new
       end
 
       def create_derivative_expression(expression, variable)
