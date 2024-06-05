@@ -3,7 +3,7 @@
 module SymDiffer
   # Invokes the provided block for each node in the abstract expression tree.
   class ExpressionWalkerVisitor
-    def initialize(yield_at_list)
+    def initialize(yield_at_list = {})
       @yield_at_list = yield_at_list.to_set
     end
 
