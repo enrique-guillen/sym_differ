@@ -16,6 +16,7 @@ require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker
 require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/parens_token_checker"
 require "sym_differ/expression_text_language_compiler/checkers/division_token_checker"
+require "sym_differ/expression_text_language_compiler/checkers/exponentiation_token_checker"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
