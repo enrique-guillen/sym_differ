@@ -184,4 +184,15 @@ RSpec.describe SymDiffer::ExpressionFactory do
         .and have_attributes(power:)
     end
   end
+
+  describe "#create_euler_number_expression" do
+    subject(:create_euler_number_expression) do
+      described_class.new.create_euler_number_expression
+    end
+
+    it "returns an EulerNumberExpression" do
+      expect(create_euler_number_expression)
+        .to be_a_kind_of(SymDiffer::Expressions::EulerNumberExpression)
+    end
+  end
 end
