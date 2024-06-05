@@ -61,5 +61,9 @@ module Support
     def natural_logarithm_expression(*)
       expression_factory.create_natural_logarithm_expression(*)
     end
+
+    def euler_number_expression(*)
+      expression_factory.create_euler_number_expression(*)
+    end
   end
 end
