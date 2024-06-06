@@ -99,6 +99,18 @@ RSpec/VariableName:
   - ^\*\*$
   - ^\^$
 
+Naming/BlockForwarding:
+  Enabled: true
+  Exclude:
+  # Rubocop gives invalid or conflicting suggestions:
+  - "lib/sym_differ/expression_walker_visitor.rb"
+
+Style/ArgumentsForwarding:
+  Enabled: true
+  Exclude:
+  # Rubocop gives invalid or conflicting suggestions:
+  - "lib/sym_differ/expression_walker_visitor.rb"
+
 # Cops not enabled by default are all enabled here.
 Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
@@ -182,13 +194,9 @@ Lint/UselessRuby2Keywords:
   Enabled: true
 Metrics/CollectionLiteralLength:
   Enabled: true
-Naming/BlockForwarding:
-  Enabled: true
 Security/CompoundHash:
   Enabled: true
 Security/IoMethods:
-  Enabled: true
-Style/ArgumentsForwarding:
   Enabled: true
 Style/ArrayIntersect:
   Enabled: true
