@@ -345,4 +345,32 @@ RSpec.describe SymDiffer::StringifierVisitor do
       it { is_expected.to eq("+subexp") }
     end
   end
+
+  describe "#visit_euler_number_expression" do
+    subject(:visit_euler_number_expression) do
+      described_class.new.visit_euler_number_expression(expression)
+    end
+
+    let(:expression) { euler_number_expression }
+
+    it { is_expected.to eq("~e") }
+  end
+
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      described_class.new.visit_natural_logarithm_expression(expression)
+    end
+
+    before do
+      allow(power)
+        .to receive(:accept)
+        .with(an_object_having_attributes(parenthesize_infix_expressions: false))
+        .and_return("subexp")
+    end
+
+    let(:expression) { natural_logarithm_expression(power) }
+    let(:power) { double(:power) }
+
+    it { is_expected.to eq("ln(subexp)") }
+  end
 end

@@ -122,6 +122,16 @@ module SymDiffer
       result
     end
 
+    def visit_euler_number_expression(_expression)
+      "~e"
+    end
+
+    def visit_natural_logarithm_expression(expression)
+      nested_visitor = build_visitor(parenthesize_infix_expressions: false)
+      stringified_power_expression = stringify_expression(expression.power, visitor: nested_visitor)
+      join_with_ln_as_function_name(stringified_power_expression)
+    end
+
     private
 
     def prefix_with_dash(expression)
@@ -158,6 +168,10 @@ module SymDiffer
 
     def join_with_cosine_as_function_name(arguments)
       join_function_name_and_arguments("cosine", arguments)
+    end
+
+    def join_with_ln_as_function_name(arguments)
+      join_function_name_and_arguments("ln", arguments)
     end
 
     def join_function_name_and_arguments(function_name, arguments)
