@@ -224,3 +224,12 @@ Feature: Compute the symbolic derivative of a given expression.
       When the expression is computed
 
       Then the derivative expression is ((cosine(x) * x) - sine(x)) / (x ^ 2)
+
+  Rule: The derivative of f(x) = a(x) ^ b(x) is ln(e^(a(x)^b(x))).
+    Scenario: The derivative of x ^ 3, with respect to x, is requested.
+      Given the expression to differentiate is x ^ 3
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 3 * (x ^ 2)
