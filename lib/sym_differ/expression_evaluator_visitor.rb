@@ -64,6 +64,14 @@ module SymDiffer
       evaluate_expression(expression.base)**evaluate_expression(expression.power)
     end
 
+    def visit_euler_number_expression(_expression)
+      Math::E
+    end
+
+    def visit_natural_logarithm_expression(expression)
+      Math.log(evaluate_expression(expression.power))
+    end
+
     private
 
     def evaluate_expression(expression)

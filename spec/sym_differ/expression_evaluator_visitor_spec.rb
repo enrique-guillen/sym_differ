@@ -269,6 +269,29 @@ RSpec.describe SymDiffer::ExpressionEvaluatorVisitor do
     let(:base) { double(:base) }
     let(:power) { double(:power) }
 
-    it { is_expected }
+    it { is_expected.to eq(8) }
+  end
+
+  describe "#visit_euler_number_expression" do
+    subject(:visit_euler_number_expression) do
+      visitor.visit_euler_number_expression(expression)
+    end
+
+    let(:visitor) { described_class.new({}) }
+    let(:expression) { euler_number_expression }
+
+    it { is_expected.to eq(Math::E) }
+  end
+
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      visitor.visit_natural_logarithm_expression(expression)
+    end
+
+    let(:visitor) { described_class.new({}) }
+    let(:expression) { natural_logarithm_expression(power_expression) }
+    let(:power_expression) { euler_number_expression }
+
+    it { is_expected.to eq(1.0) }
   end
 end
