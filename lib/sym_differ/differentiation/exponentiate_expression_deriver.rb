@@ -60,9 +60,10 @@ module SymDiffer
 
       def derivative_of_arbitrary_exponentiation(expression)
         derive_expression(
-          create_natural_logarithm_expression(
-            create_exponentiate_expression(
-              create_euler_number_expression, expression
+          create_exponentiate_expression(
+            create_euler_number_expression,
+            create_multiplicate_expression(
+              expression.power, create_natural_logarithm_expression(expression.base)
             )
           )
         )

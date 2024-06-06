@@ -85,9 +85,11 @@ RSpec.describe SymDiffer::Differentiation::ExponentiateExpressionDeriver do
           .to receive(:derive)
           .with(
             same_expression_as(
-              natural_logarithm_expression(
-                exponentiate_expression(
-                  euler_number_expression, exponentiate_expression(base, power)
+              exponentiate_expression(
+                euler_number_expression,
+                multiplicate_expression(
+                  power,
+                  natural_logarithm_expression(base)
                 )
               )
             )
