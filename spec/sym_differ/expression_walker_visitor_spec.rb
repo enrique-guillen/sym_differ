@@ -405,6 +405,40 @@ RSpec.describe SymDiffer::ExpressionWalkerVisitor do
     end
   end
 
+  describe "#visit_euler_number_expression" do
+    let(:expression) { euler_number_expression }
+
+    let(:yield_at_list) { %i[euler_numbers] }
+
+    it "invokes the provided block with the provided expression" do
+      expect { |m| walker.visit_euler_number_expression(expression, &m) }
+        .to yield_with_args(expression)
+    end
+  end
+
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      walker.visit_natural_logarithm_expression(expression, &method_to_yield)
+    end
+
+    before { allow(power_expression).to receive(:accept) }
+
+    let(:expression) { natural_logarithm_expression(power_expression) }
+    let(:power_expression) { double(:power_expression) }
+
+    let(:yield_at_list) { %i[natural_logarithms] }
+
+    it "invokes the provided block with the provided expression" do
+      expect { |m| walker.visit_natural_logarithm_expression(expression, &m) }
+        .to yield_with_args(expression)
+    end
+
+    it "walks power_expression with the provided block" do
+      visit_natural_logarithm_expression
+      expect(power_expression).to have_received(:accept).with(walker, &method_to_yield)
+    end
+  end
+
   describe "#walk" do
     subject(:walk) do
       walker.walk(expression, yield_at: %i[sines cosines], &method_to_yield)
