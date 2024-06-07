@@ -13,6 +13,7 @@ module SymDiffer
 
     def reduce(expression)
       assign_expression_reducer_of_sum_partitioner_visitor(reducer_visitor)
+      assign_expression_reducer_of_factor_partitioner_visitor(reducer_visitor)
       assign_factor_partitioner_of_sum_partitioner_visitor(factor_partitioner_visitor)
 
       reducer_visitor.reduce(expression)
@@ -22,6 +23,10 @@ module SymDiffer
 
     def assign_expression_reducer_of_sum_partitioner_visitor(reducer)
       sum_partitioner_visitor.expression_reducer = reducer
+    end
+
+    def assign_expression_reducer_of_factor_partitioner_visitor(reducer)
+      factor_partitioner_visitor.expression_reducer = reducer
     end
 
     def assign_factor_partitioner_of_sum_partitioner_visitor(partitioner)

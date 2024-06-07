@@ -26,66 +26,47 @@ module SymDiffer
       end
 
       def visit_constant_expression(expression)
-        make_sum_partition(
-          constant_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(constant_expression_reduction_analyzer, expression)
       end
 
       def visit_variable_expression(expression)
-        make_sum_partition(
-          variable_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(variable_expression_reduction_analyzer, expression)
       end
 
       def visit_positive_expression(expression)
-        make_sum_partition(
-          positive_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(positive_expression_reduction_analyzer, expression)
       end
 
       def visit_negate_expression(expression)
-        make_sum_partition(
-          negative_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(negative_expression_reduction_analyzer, expression)
       end
 
       def visit_sum_expression(expression)
-        make_sum_partition(
-          sum_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(sum_expression_reduction_analyzer, expression)
       end
 
       def visit_subtract_expression(expression)
-        make_sum_partition(
-          subtract_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(subtract_expression_reduction_analyzer, expression)
       end
 
       def visit_multiplicate_expression(expression)
-        make_sum_partition(
-          multiplicate_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(multiplicate_expression_reduction_analyzer, expression)
       end
 
       def visit_divide_expression(expression)
-        make_sum_partition(
-          divide_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(divide_expression_reduction_analyzer, expression)
       end
 
       def visit_exponentiate_expression(expression)
-        make_sum_partition(
-          exponentiate_expression_reduction_analyzer,
-          expression
-        )
+        make_sum_partition(exponentiate_expression_reduction_analyzer, expression)
+      end
+
+      def default_visit_result(expression)
+        [0, expression]
+      end
+
+      %i[sine cosine derivative euler_number natural_logarithm].each do |expression_type|
+        alias_method :"visit_#{expression_type}_expression", :default_visit_result
       end
 
       private

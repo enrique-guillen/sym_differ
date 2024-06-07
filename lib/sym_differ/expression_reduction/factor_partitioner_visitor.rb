@@ -62,6 +62,14 @@ module SymDiffer
         make_factor_partition(exponentiate_expression_reduction_analyzer, expression)
       end
 
+      def default_visit_result(expression)
+        [1, expression]
+      end
+
+      %i[sine cosine derivative euler_number natural_logarithm].each do |expression_type|
+        alias_method :"visit_#{expression_type}_expression", :default_visit_result
+      end
+
       private
 
       def constant_expression_reduction_analyzer
