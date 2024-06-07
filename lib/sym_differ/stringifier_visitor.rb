@@ -146,10 +146,6 @@ module SymDiffer
       "#{function_name}(#{arguments})"
     end
 
-    def join_with_caret(expression_a, expression_b)
-      join_expressions_with_infix_operator("^", expression_a, expression_b)
-    end
-
     def join_expressions_with_infix_operator(operator, expression_a, expression_b)
       "#{expression_a} #{operator} #{expression_b}"
     end
