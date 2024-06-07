@@ -15,10 +15,14 @@ RSpec.describe SymDiffer::ExpressionReduction::ReducerVisitor do
     )
   end
 
-  let(:expression_factory) { sym_differ_expression_factory }
+  let(:sum_partitioner_visitor) do
+    SymDiffer::ExpressionReduction::SumPartitionerVisitor
+      .new(expression_factory, factor_partitioner_visitor)
+  end
 
-  let(:sum_partitioner_visitor) { SymDiffer::ExpressionReduction::SumPartitionerVisitor.new }
   let(:factor_partitioner_visitor) { SymDiffer::ExpressionReduction::FactorPartitionerVisitor.new }
+
+  let(:expression_factory) { sym_differ_expression_factory }
 
   describe "#reduce" do
     subject(:reduce) do

@@ -3,10 +3,19 @@
 require "spec_helper"
 require "sym_differ/expression_reduction/sum_partitioner_visitor"
 
+require "sym_differ/expression_reduction/factor_partitioner_visitor"
+
 RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
-  let(:visitor) { described_class.new }
+  before { visitor.expression_reducer = expression_reducer }
+
+  let(:visitor) { described_class.new(expression_factory, factor_partitioner) }
+
+  let(:expression_reducer) do
+    SymDiffer::ExpressionReduction::ReducerVisitor.new(expression_factory, visitor, factor_partitioner)
+  end
 
   let(:expression_factory) { sym_differ_expression_factory }
+  let(:factor_partitioner) { SymDiffer::ExpressionReduction::FactorPartitionerVisitor.new }
 
   describe "#partition" do
     subject(:partition) do
@@ -44,6 +53,125 @@ RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
     let(:expression) { variable_expression("x") }
 
     it { is_expected.to match(sum_partition(0, same_expression_as(variable_expression("x")))) }
+  end
+
+  describe "#visit_positive_expression" do
+    subject(:visit_positive_expression) do
+      visitor.visit_positive_expression(expression)
+    end
+
+    let(:expression) { positive_expression(variable_expression("x")) }
+
+    it { is_expected.to match(sum_partition(0, same_expression_as(variable_expression("x")))) }
+  end
+
+  describe "#visit_negate_expression" do
+    subject(:visit_negate_expression) do
+      visitor.visit_negate_expression(expression)
+    end
+
+    let(:expression) { negate_expression(variable_expression("x")) }
+
+    it { is_expected.to match(sum_partition(0, same_expression_as(negate_expression(variable_expression("x"))))) }
+  end
+
+  describe "#visit_sum_expression" do
+    subject(:visit_sum_expression) do
+      visitor.visit_sum_expression(expression)
+    end
+
+    let(:expression) { sum_expression(variable_expression("x"), variable_expression("x")) }
+
+    it "returns the expected sum partition" do
+      expect(visit_sum_expression).to match(
+        sum_partition(
+          0,
+          same_expression_as(
+            sum_expression(variable_expression("x"), variable_expression("x"))
+          )
+        )
+      )
+    end
+  end
+
+  describe "#visit_subtract_expression" do
+    subject(:visit_subtract_expression) do
+      visitor.visit_subtract_expression(expression)
+    end
+
+    let(:expression) { subtract_expression(variable_expression("x"), variable_expression("x")) }
+
+    it "returns the expected subtract partition" do
+      expect(visit_subtract_expression).to match(
+        sum_partition(
+          0,
+          same_expression_as(
+            subtract_expression(variable_expression("x"), variable_expression("x"))
+          )
+        )
+      )
+    end
+  end
+
+  describe "#visit_multiplicate_expression" do
+    subject(:visit_multiplicate_expression) do
+      visitor.visit_multiplicate_expression(expression)
+    end
+
+    let(:expression) { multiplicate_expression(variable_expression("x"), variable_expression("x")) }
+
+    it "returns the expected multiplicate partition" do
+      expect(visit_multiplicate_expression).to match(
+        sum_partition(
+          0,
+          same_expression_as(
+            multiplicate_expression(variable_expression("x"), variable_expression("x"))
+          )
+        )
+      )
+    end
+  end
+
+  describe "#visit_divide_expression" do
+    subject(:visit_divide_expression) do
+      visitor.visit_divide_expression(expression)
+    end
+
+    let(:expression) do
+      divide_expression(variable_expression("x"), variable_expression("x"))
+    end
+
+    it "returns the expected multiplicate partition" do
+      expect(visit_divide_expression).to match(
+        sum_partition(
+          0,
+          same_expression_as(
+            divide_expression(variable_expression("x"), variable_expression("x"))
+          )
+        )
+      )
+    end
+  end
+
+  describe "#visit_exponentiate_expression" do
+    subject(:visit_exponentiate_expression) do
+      visitor.visit_exponentiate_expression(expression)
+    end
+
+    let(:expression) do
+      exponentiate_expression(variable_expression("x"), variable_expression("x"))
+    end
+
+    it "returns the expected multiplicate partition" do
+      expect(visit_exponentiate_expression).to match(
+        sum_partition(
+          0,
+          same_expression_as(
+            exponentiate_expression(variable_expression("x"), variable_expression("x"))
+          )
+        )
+      )
+    end
   end
 
   define_method(:sum_partition) do |constant, subexpression|
