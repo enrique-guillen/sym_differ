@@ -174,13 +174,6 @@ RSpec.describe SymDiffer::ExpressionReduction::MultiplicateExpressionReductionAn
         )
       end
     end
-
-    define_method(:map_reduction_analysis) do |from:, to:, input: from, output: to|
-      allow(expression)
-        .to receive(:accept)
-        .with(input)
-        .and_return(output)
-    end
   end
 
   describe "#make_factor_partition" do
