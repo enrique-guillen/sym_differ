@@ -6,16 +6,24 @@ require "sym_differ/expression_reduction/sum_partitioner_visitor"
 require "sym_differ/expression_reduction/factor_partitioner_visitor"
 
 RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
-  before { visitor.expression_reducer = expression_reducer }
+  before do
+    visitor.expression_reducer = expression_reducer
+    visitor.factor_partitioner = factor_partitioner
+  end
 
-  let(:visitor) { described_class.new(expression_factory, factor_partitioner) }
+  let(:visitor) { described_class.new(expression_factory) }
 
   let(:expression_reducer) do
-    SymDiffer::ExpressionReduction::ReducerVisitor.new(expression_factory, visitor, factor_partitioner)
+    SymDiffer::ExpressionReduction::ReducerVisitor
+      .new(expression_factory, visitor, factor_partitioner)
+  end
+
+  let(:factor_partitioner) do
+    SymDiffer::ExpressionReduction::FactorPartitionerVisitor
+      .new(expression_factory, visitor)
   end
 
   let(:expression_factory) { sym_differ_expression_factory }
-  let(:factor_partitioner) { SymDiffer::ExpressionReduction::FactorPartitionerVisitor.new }
 
   describe "#partition" do
     subject(:partition) do

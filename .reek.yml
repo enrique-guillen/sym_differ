@@ -67,6 +67,11 @@ detectors:
       # imply unnecessary object allocations. #text= is offered as an alternative that doesn't involve additional
       # allocations.
       - "SymDiffer::ExpressionTextLanguageCompiler::ExpressionText#text"
+        # The expression_reducer and other attributes has to be provided dynamically, these dynamic attributes are the
+        # best option for now:
+      - "SymDiffer::ExpressionReduction::SumPartitionerVisitor#expression_reducer"
+      - "SymDiffer::ExpressionReduction::SumPartitionerVisitor#factor_partitioner"
+      - "SymDiffer::ExpressionReduction::FactorPartitionerVisitor#expression_reducer"
 
   BooleanParameter:
     exclude:

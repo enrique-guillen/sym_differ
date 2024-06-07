@@ -15,12 +15,11 @@ module SymDiffer
     # Provides a way to split the given expression into a sum of terms, and exposes methods for each expression tree
     # type of expression as well.
     class SumPartitionerVisitor
-      def initialize(expression_factory, factor_partitioner)
+      def initialize(expression_factory)
         @expression_factory = expression_factory
-        @factor_partitioner = factor_partitioner
       end
 
-      attr_writer :expression_reducer
+      attr_writer :expression_reducer, :factor_partitioner
 
       def partition(expression)
         expression.accept(self)
