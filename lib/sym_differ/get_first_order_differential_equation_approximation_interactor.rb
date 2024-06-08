@@ -6,6 +6,7 @@ require "sym_differ/expression_factory"
 require "sym_differ/runge_kutta_four_solution_approximator"
 require "sym_differ/expression_evaluator_visitor"
 require "sym_differ/numerical_analysis/step_range"
+require "sym_differ/numerical_analysis_item_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the approximation of the solutiuon to a first-order differential
