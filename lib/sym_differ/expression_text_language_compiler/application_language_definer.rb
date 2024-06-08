@@ -8,6 +8,7 @@ require "sym_differ/expression_text_language_compiler/extractors/operator_token_
 require "sym_differ/expression_text_language_compiler/extractors/constant_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/parens_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
+require "sym_differ/expression_text_language_compiler/extractors/special_named_constant_token_extractor"
 
 require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/constant_token_itemifier"
 require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/identifier_token_itemifier"
@@ -17,6 +18,7 @@ require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifier
 require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/parens_token_itemifier"
 require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/division_token_itemifier"
 require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/exponentiation_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/special_constant_itemifier"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -31,7 +33,7 @@ module SymDiffer
       def token_type_specific_extractors
         @token_type_specific_extractors ||= [
           nil_token_extractor, operator_token_extractor, identifier_token_extractor, constant_token_extractor,
-          parens_token_extractor
+          parens_token_extractor, special_named_constant_token_extractor
         ].freeze
       end
 
@@ -61,8 +63,8 @@ module SymDiffer
 
       def sub_expression_starters
         [
-          constant_token_itemifier, identifier_token_itemifier, subtraction_token_itemifier, sum_token_itemifier,
-          parens_token_itemifier
+          constant_token_itemifier, special_constant_itemifier, identifier_token_itemifier, subtraction_token_itemifier,
+          sum_token_itemifier, parens_token_itemifier
         ]
       end
 
@@ -74,23 +76,27 @@ module SymDiffer
       end
 
       def parens_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::ParensTokenExtractor.new
+        Extractors::ParensTokenExtractor.new
       end
 
       def nil_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::NilTokenExtractor.new
+        Extractors::NilTokenExtractor.new
       end
 
       def operator_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::OperatorTokenExtractor.new
+        Extractors::OperatorTokenExtractor.new
       end
 
       def identifier_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::IdentifierTokenExtractor.new
+        Extractors::IdentifierTokenExtractor.new
       end
 
       def constant_token_extractor
-        SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
+        Extractors::ConstantTokenExtractor.new
+      end
+
+      def special_named_constant_token_extractor
+        Extractors::SpecialNamedConstantTokenExtractor.new
       end
 
       def parens_token_itemifier
@@ -99,6 +105,10 @@ module SymDiffer
 
       def constant_token_itemifier
         @constant_token_itemifier ||= EvaluationStackItemifiers::ConstantTokenItemifier.new(@expression_factory)
+      end
+
+      def special_constant_itemifier
+        @special_constant_itemifier ||= EvaluationStackItemifiers::SpecialConstantItemifier.new(@expression_factory)
       end
 
       def identifier_token_itemifier

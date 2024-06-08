@@ -333,6 +333,31 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is '~e'" do
+      let(:expression_text) { "~e" }
+
+      it "returns a structure representing euler_number_expression" do
+        expression = parse
+
+        expect(expression).to be_same_as(euler_number_expression)
+      end
+    end
+
+    context "when the expression text to parse is 'ln(~e) + ~e' (clarification)" do
+      let(:expression_text) { "ln(~e) + ~e" }
+
+      it "returns a structure representing euler_number_expression" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          sum_expression(
+            natural_logarithm_expression(euler_number_expression),
+            euler_number_expression
+          )
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do
