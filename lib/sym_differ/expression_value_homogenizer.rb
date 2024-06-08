@@ -9,14 +9,14 @@ module SymDiffer
       return :undefined if undefined_value?(value)
 
       value
-    rescue FloatDomainError, ZeroDivisionError
+    rescue FloatDomainError, ZeroDivisionError, Math::DomainError
       :undefined
     end
 
     private
 
     def undefined_value?(value)
-      UNDEFINED_CONSTANTS.include?(value)
+      UNDEFINED_CONSTANTS.include?(value) || value.is_a?(Complex)
     end
 
     UNDEFINED_CONSTANTS = [:undefined, Float::NAN, Float::INFINITY].freeze

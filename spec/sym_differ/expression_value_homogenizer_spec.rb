@@ -58,5 +58,25 @@ RSpec.describe SymDiffer::ExpressionValueHomogenizer do
 
       it { is_expected.to eq(:undefined) }
     end
+
+    context "when the evaluation raises Math::DomainError" do
+      let(:method_to_yield) do
+        proc { raise Math::DomainError }
+      end
+
+      let(:variable_values) { {} }
+
+      it { is_expected.to eq(:undefined) }
+    end
+
+    context "when the variable_values are empty, evaluation returns instance of Complex" do
+      let(:method_to_yield) do
+        proc { Complex(1, 2) }
+      end
+
+      let(:variable_values) { {} }
+
+      it { is_expected.to eq(:undefined) }
+    end
   end
 end
