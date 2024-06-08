@@ -16,10 +16,29 @@ module SymDiffer
     private
 
     def undefined_value?(value)
-      UNDEFINED_CONSTANTS.include?(value) || value.is_a?(Complex)
+      value_is_an_undefined_constant?(value) ||
+        value_is_complex?(value) ||
+        value_is_not_a_number?(value) ||
+        value_is_not_finite?(value)
     end
 
-    UNDEFINED_CONSTANTS = [:undefined, Float::NAN, Float::INFINITY].freeze
+    def value_is_an_undefined_constant?(value)
+      UNDEFINED_CONSTANTS.include?(value)
+    end
+
+    def value_is_complex?(value)
+      value.is_a?(Complex)
+    end
+
+    def value_is_not_a_number?(value)
+      value.is_a?(Float) && value.nan?
+    end
+
+    def value_is_not_finite?(value)
+      value.is_a?(Float) && !value.infinite?.nil?
+    end
+
+    UNDEFINED_CONSTANTS = [:undefined].freeze
     private_constant :UNDEFINED_CONSTANTS
   end
 end

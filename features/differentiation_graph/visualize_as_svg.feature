@@ -179,3 +179,11 @@ Feature: Visualize expression and derivative expression as SVG
       When the image is requested
 
       Then the image is stored with filename: visualize_x_raisedto_x_expression_and_derivative.svg
+
+    Scenario: Visualizing the image of ln(x) and its derivative, with respect to x.
+      Given the image is requested of the expression and derivative of ln(x)
+      And the image is of the graphs with respect to, and of the derivative of the expression with respect to x
+
+      When the image is requested
+
+      Then the image is stored with filename: visualize_ln_x_expression_and_derivative.svg

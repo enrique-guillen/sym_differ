@@ -49,7 +49,7 @@ RSpec.describe SymDiffer::ExpressionValueHomogenizer do
       it { is_expected.to eq(:undefined) }
     end
 
-    context "when the variable_values are empty, evaluation returns Float::INFINITY (clarification)" do
+    context "when the variable_values are empty, evaluation returns Float::INFINITY" do
       let(:method_to_yield) do
         proc { Float::INFINITY }
       end
@@ -72,6 +72,26 @@ RSpec.describe SymDiffer::ExpressionValueHomogenizer do
     context "when the variable_values are empty, evaluation returns instance of Complex" do
       let(:method_to_yield) do
         proc { Complex(1, 2) }
+      end
+
+      let(:variable_values) { {} }
+
+      it { is_expected.to eq(:undefined) }
+    end
+
+    context "when the variable_values are empty, evaluation returns -Float::INFINITY" do
+      let(:method_to_yield) do
+        proc { -Float::INFINITY }
+      end
+
+      let(:variable_values) { {} }
+
+      it { is_expected.to eq(:undefined) }
+    end
+
+    context "when the variable_values are empty, evaluation returns -Float::NAN" do
+      let(:method_to_yield) do
+        proc { -Float::NAN }
       end
 
       let(:variable_values) { {} }
