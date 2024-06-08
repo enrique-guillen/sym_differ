@@ -50,9 +50,10 @@ module SymDiffer
     def calculate_next_value(evaluation_path, current_step)
       homogenized_base_y_function_value = homogenize_expression_value { extract_base_y_function_value(evaluation_path) }
 
-      homogenized_expression_value = homogenize_expression_value { evaluate_next_value(evaluation_path, current_step) }
-
       return :undefined if homogenized_base_y_function_value == :undefined
+
+      homogenized_expression_value =
+        homogenize_expression_value { evaluate_next_value(evaluation_path, current_step) }
 
       homogenized_expression_value
     end

@@ -140,5 +140,41 @@ Feature: Numerical approximation of first order differential equation solution.
       -9.0,   2.193232024545803
       -5.0,   1.5941137928159246
       -0.125, :undefined
-      0.0,    :undefined
+       0.0,   :undefined
+      """
+
+    Scenario: The user requests the approximation of y' = ln(x), y(-9.0) = 0.0, y-var="x", t-var="t"
+      Given the approximation is requested of the equation y' = ln(x)
+      And the initial (t-var, y-var) coordinate of the approximation is (-9.0, 0.0)
+      And the y-variable name of the approximation is set to x
+      And the t-variable name of the approximation is set to t
+
+      When the approximation is requested
+
+      Then some of the values of the approximation are:
+      """
+      -9.0,   0.0
+      -8.875, :undefined
+      -8.5,   :undefined
+      -8.0,   :undefined
+      -4.0,   :undefined
+       1.0,   :undefined
+      """
+
+    Scenario: The user requests the approximation of y' = 1/x, y(-9.0) = 2.3, y-var="y", t-var="x"
+      Given the approximation is requested of the equation y' = 1/x
+      And the initial (t-var, y-var) coordinate of the approximation is (-9.0, 2.3)
+      And the y-variable name of the approximation is set to y
+      And the t-variable name of the approximation is set to x
+
+      When the approximation is requested
+
+      Then some of the values of the approximation are:
+      """
+      -9.0,   2.3
+      -8.875, 2.2858153650032587
+      -8.5,   2.2420127423282525
+      -8.0,   2.1804548492999603
+      -4.0,   1.4713073252713422
+       1.0,   :undefined
       """
