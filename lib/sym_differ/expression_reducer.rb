@@ -16,7 +16,7 @@ module SymDiffer
       assign_expression_reducer_of_factor_partitioner_visitor(reducer_visitor)
       assign_factor_partitioner_of_sum_partitioner_visitor(factor_partitioner_visitor)
 
-      reducer_visitor.reduce(expression)
+      reduce_expression(expression)
     end
 
     private
