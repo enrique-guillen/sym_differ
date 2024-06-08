@@ -32,6 +32,8 @@ module SymDiffer
         constant_expression_deriver.derive(expression, @variable)
       end
 
+      alias visit_euler_number_expression visit_constant_expression
+
       def visit_variable_expression(expression)
         variable_expression_deriver.derive(expression, @variable)
       end

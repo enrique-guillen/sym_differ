@@ -23,6 +23,19 @@ RSpec.describe SymDiffer::Differentiation::DifferentiationVisitor do
     end
   end
 
+  describe "#visit_euler_number_expression" do
+    subject(:visit_euler_number_expression) do
+      visitor.visit_euler_number_expression(expression)
+    end
+
+    let(:expression) { euler_number_expression }
+    let(:variable) { "x" }
+
+    it "returns the result of deriving the constant (euler_number_expression) expression" do
+      expect(visit_euler_number_expression).to be_same_as(constant_expression(0))
+    end
+  end
+
   describe "#visit_variable_expression" do
     subject(:visit_variable_expression) do
       visitor.visit_variable_expression(expression)

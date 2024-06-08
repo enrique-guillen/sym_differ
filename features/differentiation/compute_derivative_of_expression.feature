@@ -251,6 +251,30 @@ Feature: Compute the symbolic derivative of a given expression.
 
       Then the derivative expression is (~e ^ (x * ln(x))) * (ln(x) + (x * (1 / x)))
 
+    Scenario: The derivative of ~e ^ x, with respect to x, is requested.
+      Given the expression to differentiate is ~e ^ x
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is ~e ^ x
+
+    Scenario: The derivative of ~e ^ (2 * x), with respect to x, is requested.
+      Given the expression to differentiate is ~e ^ (2 * x)
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 2 * (~e ^ (2 * x))
+
+    Scenario: The derivative of ~e, with respect to x, is requested.
+      Given the expression to differentiate is ~e
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 0
+
   Rule: The derivative of f(x) = ln(x) is 1 / x, and the chain rule is applied as well.
     Scenario: The derivative of ln(x), with respect to x, is requested.
       Given the expression to differentiate is ln(x)
