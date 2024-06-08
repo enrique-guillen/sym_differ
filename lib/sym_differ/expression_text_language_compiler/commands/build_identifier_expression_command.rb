@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module SymDiffer
   module ExpressionTextLanguageCompiler
     module Commands
       # Builds a VariableExpression for FunctionCallExpression out of the provided arguments.
       class BuildIdentifierExpressionCommand
+        extend Forwardable
+
         def initialize(expression_factory, identifier_name)
           @expression_factory = expression_factory
           @identifier_name = identifier_name
@@ -13,31 +17,29 @@ module SymDiffer
         def execute(arguments)
           return create_variable_expression(@identifier_name) if arguments.empty?
 
-          nested_expression = arguments[0]
-
-          case @identifier_name
-          when "sine"
-            create_sine_expression(nested_expression)
-          when "cosine"
-            create_cosine_expression(nested_expression)
-          end
+          build_arity_one_function_expression(arguments.first)
         end
 
         attr_reader :identifier_name
 
         private
 
-        def create_variable_expression(name)
-          @expression_factory.create_variable_expression(name)
+        def build_arity_one_function_expression(nested_expression)
+          case @identifier_name
+          when "sine"
+            create_sine_expression(nested_expression)
+          when "cosine"
+            create_cosine_expression(nested_expression)
+          when "ln"
+            create_natural_logarithm_expression(nested_expression)
+          end
         end
 
-        def create_sine_expression(angle_expression)
-          @expression_factory.create_sine_expression(angle_expression)
-        end
-
-        def create_cosine_expression(angle_expression)
-          @expression_factory.create_cosine_expression(angle_expression)
-        end
+        def_delegators :@expression_factory,
+                       :create_variable_expression,
+                       :create_sine_expression,
+                       :create_cosine_expression,
+                       :create_natural_logarithm_expression
       end
     end
   end

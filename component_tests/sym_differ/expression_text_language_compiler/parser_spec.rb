@@ -321,6 +321,18 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
         )
       end
     end
+
+    context "when the expression text to parse is 'ln(x)'" do
+      let(:expression_text) { "ln(x)" }
+
+      it "returns a structure representing natural_logarithm(x)" do
+        expression = parse
+
+        expect(expression).to be_same_as(
+          natural_logarithm_expression(variable_expression("x"))
+        )
+      end
+    end
   end
 
   describe "#validate_variable" do
