@@ -250,3 +250,12 @@ Feature: Compute the symbolic derivative of a given expression.
       When the expression is computed
 
       Then the derivative expression is (~e ^ (x * ln(x))) * (ln(x) + (x * (1 / x)))
+
+  Rule: The derivative of f(x) = ln(x) is 1 / x, and the chain rule is applied as well.
+    Scenario: The derivative of ln(x), with respect to x, is requested.
+      Given the expression to differentiate is ln(x)
+      And the variable of the expression to differentiate with is x
+
+      When the expression is computed
+
+      Then the derivative expression is 1 / x
