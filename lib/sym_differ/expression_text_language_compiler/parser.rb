@@ -50,20 +50,20 @@ module SymDiffer
       end
 
       def expression_tree_builder
-        checkers = application_token_type_specific_checkers
+        itemifiers = application_token_type_specific_itemifiers
 
         invalid_expected_token_type_end_states = application_invalid_expected_token_type_end_states
 
         ExpressionTreeBuilder
-          .new(command_and_expression_stack_reducer, checkers, invalid_expected_token_type_end_states)
+          .new(command_and_expression_stack_reducer, itemifiers, invalid_expected_token_type_end_states)
       end
 
       def application_token_type_specific_extractors
         application_language_definer.token_type_specific_extractors
       end
 
-      def application_token_type_specific_checkers
-        application_language_definer.token_type_specific_checkers
+      def application_token_type_specific_itemifiers
+        application_language_definer.token_type_specific_itemifiers
       end
 
       def application_invalid_expected_token_type_end_states

@@ -5,9 +5,9 @@ require "sym_differ/expression_text_language_compiler/commands/build_identifier_
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
-    module Checkers
+    module EvaluationStackItemifiers
       # Checks the provided token and pushes a BuildVariableExpressionCommand into the commands stack if applicable.
-      class IdentifierTokenChecker
+      class IdentifierTokenItemifier
         def initialize(expression_factory)
           @expression_factory = expression_factory
         end

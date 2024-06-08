@@ -9,14 +9,14 @@ require "sym_differ/expression_text_language_compiler/extractors/constant_token_
 require "sym_differ/expression_text_language_compiler/extractors/parens_token_extractor"
 require "sym_differ/expression_text_language_compiler/extractors/identifier_token_extractor"
 
-require "sym_differ/expression_text_language_compiler/checkers/constant_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/sum_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/parens_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/division_token_checker"
-require "sym_differ/expression_text_language_compiler/checkers/exponentiation_token_checker"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/constant_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/identifier_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/subtraction_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/sum_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/multiplication_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/parens_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/division_token_itemifier"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/exponentiation_token_itemifier"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
@@ -35,8 +35,8 @@ module SymDiffer
         ].freeze
       end
 
-      def token_type_specific_checkers
-        @token_type_specific_checkers = {
+      def token_type_specific_itemifiers
+        @token_type_specific_itemifier = {
           initial_token_checkers: sub_expression_starters,
           post_constant_token_checkers: possible_infix_operators,
           post_identifier_token_checkers: possible_infix_operators,
@@ -61,15 +61,15 @@ module SymDiffer
 
       def sub_expression_starters
         [
-          constant_token_checker, identifier_token_checker, subtraction_token_checker, sum_token_checker,
-          parens_token_checker
+          constant_token_itemifier, identifier_token_itemifier, subtraction_token_itemifier, sum_token_itemifier,
+          parens_token_itemifier
         ]
       end
 
       def possible_infix_operators
         [
-          multiplication_token_checker, parens_token_checker, subtraction_token_checker, sum_token_checker,
-          division_token_checker, exponentiation_token_checker
+          multiplication_token_itemifier, parens_token_itemifier, subtraction_token_itemifier, sum_token_itemifier,
+          division_token_itemifier, exponentiation_token_itemifier
         ]
       end
 
@@ -93,36 +93,38 @@ module SymDiffer
         SymDiffer::ExpressionTextLanguageCompiler::Extractors::ConstantTokenExtractor.new
       end
 
-      def parens_token_checker
-        @parens_token_checker ||= SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker.new
+      def parens_token_itemifier
+        @parens_token_itemifier ||= EvaluationStackItemifiers::ParensTokenItemifier.new
       end
 
-      def constant_token_checker
-        @constant_token_checker ||= Checkers::ConstantTokenChecker.new(@expression_factory)
+      def constant_token_itemifier
+        @constant_token_itemifier ||= EvaluationStackItemifiers::ConstantTokenItemifier.new(@expression_factory)
       end
 
-      def identifier_token_checker
-        @identifier_token_checker ||= Checkers::IdentifierTokenChecker.new(@expression_factory)
+      def identifier_token_itemifier
+        @identifier_token_itemifier ||= EvaluationStackItemifiers::IdentifierTokenItemifier.new(@expression_factory)
       end
 
-      def subtraction_token_checker
-        @subtraction_token_checker ||= Checkers::SubtractionTokenChecker.new(@expression_factory)
+      def subtraction_token_itemifier
+        @subtraction_token_itemifier ||= EvaluationStackItemifiers::SubtractionTokenItemifier.new(@expression_factory)
       end
 
-      def sum_token_checker
-        @sum_token_checker ||= Checkers::SumTokenChecker.new(@expression_factory)
+      def sum_token_itemifier
+        @sum_token_itemifier ||= EvaluationStackItemifiers::SumTokenItemifier.new(@expression_factory)
       end
 
-      def multiplication_token_checker
-        @multiplication_token_checker ||= Checkers::MultiplicationTokenChecker.new(@expression_factory)
+      def multiplication_token_itemifier
+        @multiplication_token_itemifier ||=
+          EvaluationStackItemifiers::MultiplicationTokenItemifier.new(@expression_factory)
       end
 
-      def division_token_checker
-        @division_token_checker ||= Checkers::DivisionTokenChecker.new(@expression_factory)
+      def division_token_itemifier
+        @division_token_itemifier ||= EvaluationStackItemifiers::DivisionTokenItemifier.new(@expression_factory)
       end
 
-      def exponentiation_token_checker
-        @exponentiation_token_checker ||= Checkers::ExponentiationTokenChecker.new(@expression_factory)
+      def exponentiation_token_itemifier
+        @exponentiation_token_itemifier ||=
+          EvaluationStackItemifiers::ExponentiationTokenItemifier.new(@expression_factory)
       end
     end
   end

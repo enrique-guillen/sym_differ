@@ -4,9 +4,9 @@ require "sym_differ/expression_text_language_compiler/tokens/parens_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
-    module Checkers
+    module EvaluationStackItemifiers
       # Checks the provided token and pushes a precedence change into the commands stack if applicable.
-      class ParensTokenChecker
+      class ParensTokenItemifier
         def check(token)
           return build_not_handled_response unless token.is_a?(Tokens::ParensToken)
 

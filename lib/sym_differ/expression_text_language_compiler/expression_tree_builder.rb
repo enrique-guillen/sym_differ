@@ -8,9 +8,9 @@ module SymDiffer
     # Takes a list of tokens appearing the expression in text form, and converts them into the corresponding Expression,
     # and returns a single Expression combining all of them.
     class ExpressionTreeBuilder
-      def initialize(evaluation_stack_reducer, checkers_by_role, invalid_expected_token_type_end_states)
+      def initialize(evaluation_stack_reducer, itemifiers_by_role, invalid_expected_token_type_end_states)
         @evaluation_stack_reducer = evaluation_stack_reducer
-        @checkers_by_role = checkers_by_role
+        @itemifiers_by_role = itemifiers_by_role
         @invalid_expected_token_type_end_states = invalid_expected_token_type_end_states
       end
 
@@ -87,13 +87,13 @@ module SymDiffer
       end
 
       def check_token_stack_item(token, currently_expected_token_type)
-        token_checkers_for_currently_expected_token_type =
-          get_checkers_for_currently_expected_token_type(currently_expected_token_type)
+        token_itemifiers_for_currently_expected_token_type =
+          get_itemifiers_for_currently_expected_token_type(currently_expected_token_type)
 
         result_of_checking_stack_item_type = nil
 
-        token_checkers_for_currently_expected_token_type.each do |checker|
-          result_of_checking_stack_item_type = checker.check(token)
+        token_itemifiers_for_currently_expected_token_type.each do |itemifier|
+          result_of_checking_stack_item_type = itemifier.check(token)
 
           break if result_of_checking_stack_item_type[:handled]
         end
@@ -107,8 +107,8 @@ module SymDiffer
         @evaluation_stack_reducer.reduce(current_stack)
       end
 
-      def get_checkers_for_currently_expected_token_type(currently_expected_token_type)
-        @checkers_by_role[currently_expected_token_type]
+      def get_itemifiers_for_currently_expected_token_type(currently_expected_token_type)
+        @itemifiers_by_role[currently_expected_token_type]
       end
 
       def raise_invalid_syntax_error

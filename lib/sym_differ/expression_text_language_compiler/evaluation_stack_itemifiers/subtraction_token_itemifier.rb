@@ -5,9 +5,9 @@ require "sym_differ/expression_text_language_compiler/tokens/operator_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
-    module Checkers
+    module EvaluationStackItemifiers
       # Checks the provided token and pushes a BuildSubtractExpressionCommand into the commands stack if applicable.
-      class SubtractionTokenChecker
+      class SubtractionTokenItemifier
         def initialize(expression_factory)
           @expression_factory = expression_factory
         end

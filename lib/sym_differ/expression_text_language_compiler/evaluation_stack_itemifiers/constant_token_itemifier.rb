@@ -4,9 +4,9 @@ require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
-    module Checkers
+    module EvaluationStackItemifiers
       # Checks the provided token and pushes a BuildConstantExpressionCommand into the commands stack if applicable.
-      class ConstantTokenChecker
+      class ConstantTokenItemifier
         def initialize(expression_factory)
           @expression_factory = expression_factory
         end

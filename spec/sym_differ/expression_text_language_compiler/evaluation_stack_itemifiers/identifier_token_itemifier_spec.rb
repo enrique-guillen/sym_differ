@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/checkers/identifier_token_checker"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/identifier_token_itemifier"
 
 require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 require "sym_differ/expression_text_language_compiler/tokens/constant_token"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::IdentifierTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifiers::IdentifierTokenItemifier do
   describe "#check" do
     subject(:check) { described_class.new(expression_factory).check(token) }
 

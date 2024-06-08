@@ -4,9 +4,9 @@ require "sym_differ/expression_text_language_compiler/commands/build_divide_expr
 
 module SymDiffer
   module ExpressionTextLanguageCompiler
-    module Checkers
+    module EvaluationStackItemifiers
       # Checks the provided token and pushes a BuildDivideExpressionCommand into the commands stack if applicable.
-      class DivisionTokenChecker
+      class DivisionTokenItemifier
         def initialize(expression_factory)
           @expression_factory = expression_factory
         end

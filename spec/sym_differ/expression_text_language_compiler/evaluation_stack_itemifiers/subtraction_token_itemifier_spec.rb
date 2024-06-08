@@ -1,36 +1,35 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/checkers/multiplication_token_checker"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/subtraction_token_itemifier"
 
-require "sym_differ/expression_text_language_compiler/commands/build_multiplicate_expression_command"
-require "sym_differ/expression_text_language_compiler/tokens/operator_token"
+require "sym_differ/expression_text_language_compiler/commands/build_subtract_expression_command"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::MultiplicationTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifiers::SubtractionTokenItemifier do
   describe "#check" do
-    subject(:check) { described_class.new(expression_factory).check(token) }
+    subject(:check) do
+      described_class.new(expression_factory).check(token)
+    end
 
     let(:expression_factory) { double(:expression_factory) }
 
-    context "when the provided token is *" do
-      let(:token) { operator_token("*") }
+    context "when the token being checked is -" do
+      let(:token) { operator_token("-") }
 
-      it "returns an expression and sets expression location as infix" do
+      it "returns an expression and sets expression location as leftmost_or_infix" do
         expect(check).to include(
           successfully_handled_response(
-            :post_multiplication_token_checkers,
+            :post_subtraction_token_checkers,
             command_stack_item(
-              3,
-              (2..2),
-              a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildMultiplicateExpressionCommand)
+              2, (1..2), a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSubtractExpressionCommand)
             )
           )
         )
       end
     end
 
-    context "when the provided token is -" do
-      let(:token) { operator_token("-") }
+    context "when the token being checked is +" do
+      let(:token) { operator_token("+") }
 
       it { is_expected.to eq(handled: false) }
     end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/checkers/parens_token_checker"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/parens_token_itemifier"
 
 require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::ParensTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifiers::ParensTokenItemifier do
   describe "#check" do
     subject(:check) { described_class.new.check(token) }
 

@@ -1,34 +1,37 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_text_language_compiler/checkers/subtraction_token_checker"
-require "sym_differ/expression_text_language_compiler/commands/build_subtract_expression_command"
+require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifiers/exponentiation_token_itemifier"
 
-RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Checkers::SubtractionTokenChecker do
+RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifiers::ExponentiationTokenItemifier do
   describe "#check" do
     subject(:check) do
-      described_class.new(expression_factory).check(token)
+      described_class
+        .new(expression_factory)
+        .check(token)
     end
 
     let(:expression_factory) { double(:expression_factory) }
 
-    context "when the token being checked is -" do
-      let(:token) { operator_token("-") }
+    context "when the provided token is ^" do
+      let(:token) { operator_token("^") }
 
-      it "returns an expression and sets expression location as leftmost_or_infix" do
+      it "returns an expression and indicates the follow up token type" do
         expect(check).to include(
           successfully_handled_response(
-            :post_subtraction_token_checkers,
+            :post_exponentiation_token_checkers,
             command_stack_item(
-              2, (1..2), a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildSubtractExpressionCommand)
+              5,
+              (2..2),
+              a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::Commands::BuildExponentiateExpressionCommand)
             )
           )
         )
       end
     end
 
-    context "when the token being checked is +" do
-      let(:token) { operator_token("+") }
+    context "when the provided token is ~" do
+      let(:token) { operator_token("~") }
 
       it { is_expected.to eq(handled: false) }
     end
