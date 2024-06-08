@@ -35,7 +35,7 @@ module SymDiffer
     end
 
     def value_is_not_finite?(value)
-      value.is_a?(Float) && !value.infinite?.nil?
+      value.is_a?(Float) && !value.finite?
     end
 
     UNDEFINED_CONSTANTS = [:undefined].freeze
