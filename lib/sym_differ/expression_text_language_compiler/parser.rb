@@ -8,7 +8,6 @@ require "sym_differ/expression_text_language_compiler/command_and_expression_sta
 require "sym_differ/expression_text_language_compiler/invalid_variable_given_to_expression_parser_error"
 require "sym_differ/expression_text_language_compiler/empty_expression_text_error"
 require "sym_differ/expression_text_language_compiler/unrecognized_token_error"
-require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 
 require "sym_differ/expression_text_language_compiler/application_language_definer"
 

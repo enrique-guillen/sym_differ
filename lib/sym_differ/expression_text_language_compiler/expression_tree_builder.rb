@@ -2,7 +2,6 @@
 
 require "sym_differ/expression_text_language_compiler/evaluation_stack"
 
-require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 require "sym_differ/expression_text_language_compiler/empty_tokens_list_error"
 require "sym_differ/expression_text_language_compiler/invalid_token_terminated_expression_error"
 require "sym_differ/expression_text_language_compiler/imbalanced_expression_error"
@@ -113,10 +112,6 @@ module SymDiffer
 
       def get_itemifiers_for_currently_expected_token_type(currently_expected_token_type)
         @itemifiers_by_role[currently_expected_token_type]
-      end
-
-      def raise_invalid_syntax_error
-        raise InvalidSyntaxError.new("")
       end
 
       def raise_invalid_token_termination_error

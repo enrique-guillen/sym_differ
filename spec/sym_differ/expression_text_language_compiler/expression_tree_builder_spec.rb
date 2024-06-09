@@ -3,7 +3,6 @@
 require "spec_helper"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
-require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
 require "sym_differ/expression_text_language_compiler/invalid_token_terminated_expression_error"
 require "sym_differ/expression_text_language_compiler/imbalanced_expression_error"
 require "sym_differ/expression_text_language_compiler/expected_token_type_not_found_error"
