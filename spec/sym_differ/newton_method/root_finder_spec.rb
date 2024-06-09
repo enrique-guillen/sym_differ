@@ -71,10 +71,6 @@ RSpec.describe SymDiffer::NewtonMethod::RootFinder do
           .and_raise(ZeroDivisionError)
       end
 
-      let(:fixed_point_finder_result) do
-        double(:fixed_point_finder_result)
-      end
-
       it "returns :undefined" do
         expect(find).to eq(:undefined)
       end
