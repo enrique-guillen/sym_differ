@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/expression_and_derivative_expression_visualizer"
+require "sym_differ/differentiation_visualizer"
 require "sym_differ/expression_text_language_compiler/parser"
 
 require "sym_differ/differentiation/differentiation_visitor"
@@ -45,13 +45,10 @@ module SymDiffer
       expression_differentiation_visitor = differentiation_visitor(variable)
       step_range = build_step_range(-10..10)
 
-      ExpressionAndDerivativeExpressionVisualizer.new(expression_parser,
-                                                      expression_differentiation_visitor,
-                                                      expression_reducer,
-                                                      expression_stringifier,
-                                                      expression_path_generator,
-                                                      @view_renderer,
-                                                      step_range)
+      DifferentiationVisualizer.new(
+        expression_parser, expression_differentiation_visitor, expression_reducer, expression_stringifier,
+        expression_path_generator, @view_renderer, step_range
+      )
     end
 
     def expression_parser

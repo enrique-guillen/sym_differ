@@ -72,7 +72,7 @@ Metrics/ParameterLists:
   Exclude:
   # There are many configurable behaviors and parameters to the visualization process and output of the graphs
   # produced by this class. The tech debt incurred here is not significantly high at the time of writing this.
-  - "lib/sym_differ/expression_and_derivative_expression_visualizer.rb"
+  - "lib/sym_differ/differentiation_visualizer.rb"
 
 Metrics/CyclomaticComplexity:
   Exclude:

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/expression_and_derivative_expression_visualizer"
+require "sym_differ/differentiation_visualizer"
 
 require "sym_differ/error"
 
-RSpec.describe SymDiffer::ExpressionAndDerivativeExpressionVisualizer do
+RSpec.describe SymDiffer::DifferentiationVisualizer do
   describe "#visualize" do
     subject(:visualize) do
       described_class

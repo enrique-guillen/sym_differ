@@ -4,7 +4,7 @@ require "sym_differ/differentiation_graph/builder"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of the given expression and its derivative.
-  class ExpressionAndDerivativeExpressionVisualizer
+  class DifferentiationVisualizer
     def initialize(expression_text_parser,
                    deriver,
                    expression_reducer,
