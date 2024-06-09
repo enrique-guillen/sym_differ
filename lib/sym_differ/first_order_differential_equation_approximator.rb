@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 
 module SymDiffer
   # Implements the use case for a user getting the approximation of the solutiuon to a first-order differential
@@ -52,7 +52,7 @@ module SymDiffer
     end
 
     def build_equation_parameters(*)
-      FirstOrderDifferentialEquationSolution::EquationParameters.new(*)
+      DifferentialEquationApproximation::EquationParameters.new(*)
     end
   end
 end

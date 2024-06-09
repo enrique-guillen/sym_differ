@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 
-RSpec.describe SymDiffer::FirstOrderDifferentialEquationSolution::EquationParameters do
+RSpec.describe SymDiffer::DifferentialEquationApproximation::EquationParameters do
   describe "#initialize" do
     subject(:equation_parameters) do
       described_class.new(expression, undetermined_function_name, variable_name, initial_coordinates)

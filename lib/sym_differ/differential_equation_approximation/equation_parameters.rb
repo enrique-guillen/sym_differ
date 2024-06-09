@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SymDiffer
-  module FirstOrderDifferentialEquationSolution
+  module DifferentialEquationApproximation
     # Parameters of a first-order differential equation to approximate or solve.
     class EquationParameters
       def initialize(expression, y_variable_name, t_variable_name, initial_coordinates)

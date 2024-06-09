@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 require "sym_differ/first_order_differential_equation_approximation_illustration/builder"
 
 module SymDiffer
@@ -66,7 +66,7 @@ module SymDiffer
     end
 
     def build_equation_parameters(*)
-      FirstOrderDifferentialEquationSolution::EquationParameters.new(*)
+      SymDiffer::DifferentialEquationApproximation::EquationParameters.new(*)
     end
 
     attr_reader :expression_text, :undetermined_function_name, :variable_name, :initial_value_coordinates, :step_range

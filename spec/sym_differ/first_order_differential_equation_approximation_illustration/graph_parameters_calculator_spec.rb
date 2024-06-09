@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/first_order_differential_equation_approximation_illustration/graph_parameters_calculator"
 
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 
 RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustration::GraphParametersCalculator do
   describe "#calculate" do

@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/first_order_differential_equation_approximation_illustration/graph_view_generator"
 
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 
 RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustration::GraphViewGenerator do
   describe "#generate" do
@@ -25,7 +25,7 @@ RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustratio
     let(:expression_stringifier) { double(:expression_stringifier) }
 
     let(:equation_parameters) do
-      SymDiffer::FirstOrderDifferentialEquationSolution::EquationParameters
+      SymDiffer::DifferentialEquationApproximation::EquationParameters
         .new(expression, "y", "t", [0.0, 0.1])
     end
 

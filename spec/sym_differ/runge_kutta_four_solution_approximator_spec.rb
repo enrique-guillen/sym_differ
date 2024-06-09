@@ -3,7 +3,7 @@
 require "spec_helper"
 require "sym_differ/runge_kutta_four_solution_approximator"
 
-require "sym_differ/first_order_differential_equation_solution/equation_parameters"
+require "sym_differ/differential_equation_approximation/equation_parameters"
 
 RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
@@ -16,7 +16,7 @@ RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
     let(:equation_parameters) do
-      SymDiffer::FirstOrderDifferentialEquationSolution::EquationParameters
+      SymDiffer::DifferentialEquationApproximation::EquationParameters
         .new(expression, "y", "x", initial_value_coordinates)
     end
 
