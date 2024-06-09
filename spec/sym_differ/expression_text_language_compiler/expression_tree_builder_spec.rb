@@ -4,6 +4,9 @@ require "spec_helper"
 require "sym_differ/expression_text_language_compiler/expression_tree_builder"
 
 require "sym_differ/expression_text_language_compiler/invalid_syntax_error"
+require "sym_differ/expression_text_language_compiler/invalid_token_terminated_expression_error"
+require "sym_differ/expression_text_language_compiler/imbalanced_expression_error"
+require "sym_differ/expression_text_language_compiler/expected_token_type_not_found_error"
 
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder do
   describe "#build" do
@@ -103,7 +106,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::EmptyTokensListError)
       end
     end
 
@@ -120,7 +123,8 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:operator_token) { double(:operator_token) }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        expect { build }
+          .to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
       end
     end
 
@@ -145,7 +149,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [foo_token, foo_token] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::ExpectedTokenTypeNotFoundError)
       end
     end
 
@@ -244,7 +248,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::ExpressionTreeBuilder 
       let(:tokens) { [frobulator_token, close_parens_token] }
 
       it "raises an invalid syntax error" do
-        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+        expect { build }.to raise_error(SymDiffer::ExpressionTextLanguageCompiler::ImbalancedExpressionError)
       end
     end
 

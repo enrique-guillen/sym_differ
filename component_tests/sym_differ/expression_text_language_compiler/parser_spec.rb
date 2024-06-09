@@ -57,7 +57,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
@@ -67,7 +67,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
@@ -96,7 +96,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::ImbalancedExpressionError)
         )
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises an error mentioning the syntax error" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::ImbalancedExpressionError)
         )
       end
     end
@@ -282,7 +282,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises InvalidSyntaxError" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
@@ -292,7 +292,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises InvalidSyntaxError" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
@@ -317,7 +317,7 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
 
       it "raises InvalidSyntaxError" do
         expect { parse }.to raise_error(
-          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidSyntaxError)
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::InvalidTokenTerminatedExpressionError)
         )
       end
     end
