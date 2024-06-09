@@ -49,61 +49,58 @@ module SymDiffer
       end
 
       def update_evaluation_stack_based_on_token(token, evaluation_stack, expected_token_type, base_precedence_value)
-        stack_item_for_token = check_token_stack_item(token, expected_token_type)
+        itemification = stack_itemify_token(token, expected_token_type)
 
         new_evaluation_stack =
-          calculate_new_evaluation_stack_from_stack_item(stack_item_for_token, evaluation_stack, base_precedence_value)
+          calculate_new_evaluation_stack_from_itemification(itemification, evaluation_stack, base_precedence_value)
 
-        new_expected_token_type = calculate_new_expected_token_type_from_stack_item(stack_item_for_token)
+        new_expected_token_type = access_stack_item_new_expected_token_type(itemification)
 
         new_base_precedence_value =
-          calculate_new_base_precedence_value_from_stack_item(stack_item_for_token, base_precedence_value)
+          calculate_new_base_precedence_value_from_itemification(itemification, base_precedence_value)
 
         [new_evaluation_stack, new_expected_token_type, new_base_precedence_value]
       end
 
-      def calculate_new_evaluation_stack_from_stack_item(stack_item, evaluation_stack, base_precedence_value)
-        return evaluation_stack if stack_item[:stack_item][:item_type] == :precedence_change
+      def calculate_new_evaluation_stack_from_itemification(itemification, evaluation_stack, base_precedence_value)
+        return evaluation_stack if precedence_change_stack_item?(itemification[:stack_item])
 
-        current_precedence_value = base_precedence_value + stack_item[:stack_item][:precedence]
+        precedence = access_stack_item_precedence(itemification[:stack_item])
+        current_precedence_value = base_precedence_value + precedence
 
         push_item_into_stack(
-          stack_item[:stack_item].merge(precedence: current_precedence_value),
+          reset_stack_item_precedence(itemification[:stack_item], current_precedence_value),
           evaluation_stack
         )
       end
 
-      def calculate_new_expected_token_type_from_stack_item(stack_item)
-        stack_item[:next_expected_token_type]
-      end
+      def calculate_new_base_precedence_value_from_itemification(itemification, base_precedence_value)
+        return base_precedence_value unless precedence_change_stack_item?(itemification[:stack_item])
 
-      def calculate_new_base_precedence_value_from_stack_item(stack_item, base_precedence_value)
-        if stack_item[:stack_item][:item_type] == :precedence_change
-          base_precedence_value + stack_item[:stack_item][:new_precedence_change]
-        else
-          base_precedence_value
-        end
+        new_precedence_change = acess_stack_item_new_precedence_change(itemification[:stack_item])
+
+        base_precedence_value + new_precedence_change
       end
 
       def value_of_last_stack_item(evaluation_stack)
         stack_item_value(last_item_in_stack(evaluation_stack))
       end
 
-      def check_token_stack_item(token, currently_expected_token_type)
+      def stack_itemify_token(token, currently_expected_token_type)
         token_itemifiers_for_currently_expected_token_type =
           get_itemifiers_for_currently_expected_token_type(currently_expected_token_type)
 
-        result_of_checking_stack_item_type = nil
+        itemification = nil
 
         token_itemifiers_for_currently_expected_token_type.each do |itemifier|
-          result_of_checking_stack_item_type = itemifier.check(token)
+          itemification = itemifier.check(token)
 
-          break if result_of_checking_stack_item_type[:handled]
+          break if itemification[:handled]
         end
 
-        raise_expected_token_type_not_found_error unless result_of_checking_stack_item_type[:handled]
+        raise_expected_token_type_not_found_error unless itemification[:handled]
 
-        result_of_checking_stack_item_type
+        itemification
       end
 
       def reduce_tail_end_of_stack_while_evaluatable(current_stack)
@@ -130,6 +127,10 @@ module SymDiffer
         raise ExpectedTokenTypeNotFoundError.new
       end
 
+      def precedence_change_stack_item?(stack_item)
+        access_stack_item_type(stack_item) == :precedence_change
+      end
+
       def push_item_into_stack(item, stack)
         stack.add_item(item)
       end
@@ -138,8 +139,28 @@ module SymDiffer
         stack.last_item
       end
 
+      def access_stack_item_type(stack_item)
+        stack_item[:item_type]
+      end
+
+      def access_stack_item_precedence(stack_item)
+        stack_item[:precedence]
+      end
+
+      def acess_stack_item_new_precedence_change(stack_item)
+        stack_item[:new_precedence_change]
+      end
+
+      def access_stack_item_new_expected_token_type(stack_item)
+        stack_item[:next_expected_token_type]
+      end
+
       def stack_item_value(stack_item)
         stack_item&.[](:value)
+      end
+
+      def reset_stack_item_precedence(stack_item, precedence_value)
+        stack_item.merge(precedence: precedence_value)
       end
     end
   end

@@ -64,7 +64,7 @@ Metrics/ClassLength:
   Exclude:
   # We don't see the need to split these files at the moment.
   - "lib/sym_differ/expression_text_language_compiler/command_and_expression_stack_reducer.rb"
-  - "lib/sym_differ/expression_reducer.rb"
+  - "lib/sym_differ/expression_text_language_compiler/expression_tree_builder.rb"
   - "lib/sym_differ/stringifier_visitor.rb"
 
 Metrics/ParameterLists:
