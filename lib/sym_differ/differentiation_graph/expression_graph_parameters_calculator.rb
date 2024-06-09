@@ -36,6 +36,10 @@ module SymDiffer
       def generate_ordinate_parameters(expression_path, derivative_expression_path)
         max_ordinate_value = max_value_from_expression_paths(expression_path, derivative_expression_path)
         min_ordinate_value = min_value_from_expression_paths(expression_path, derivative_expression_path)
+
+        min_ordinate_value ||= 0.0
+        max_ordinate_value ||= 0.0
+
         ordinate_distance = max_ordinate_value - min_ordinate_value
 
         { max_ordinate_value:, min_ordinate_value:, ordinate_distance: }

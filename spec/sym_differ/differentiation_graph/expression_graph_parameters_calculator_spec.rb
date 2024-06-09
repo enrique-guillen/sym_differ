@@ -142,5 +142,43 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionGraphParametersCalcula
         )
       end
     end
+
+    context "when path = (-10.0, :undefined),(10.0, :undefined), " \
+            "and derivative path = (-10.0, :undefined), (10.0, :undefined)" do
+      let(:path) do
+        [create_evaluation_point(-10.0, :undefined), create_evaluation_point(10.0, :undefined)]
+          .map { |p| same_evaluation_point_as(p) }
+      end
+
+      let(:derivative_path) do
+        [create_evaluation_point(-10.0, :undefined), create_evaluation_point(10.0, :undefined)]
+          .map { |p| same_evaluation_point_as(p) }
+      end
+
+      let(:generated_expression_path) do
+        expression_path_steps.map { |s| create_evaluation_point(s, :undefined) }
+      end
+
+      let(:generated_derivative_expression_path) do
+        expression_path_steps.map { |s| create_evaluation_point(s, :undefined) }
+      end
+
+      let(:expression_path_steps) { [-10.0, 10.0] }
+
+      it "has the expected attributes" do
+        expect(generate).to include(
+          expression_path:
+            an_object_having_attributes(evaluation_points: a_collection_containing_exactly(*path)),
+          derivative_expression_path:
+            an_object_having_attributes(evaluation_points: a_collection_containing_exactly(*derivative_path)),
+          min_abscissa_value: -10.0,
+          max_abscissa_value: 10.0,
+          abscissa_distance: 20.0,
+          max_ordinate_value: 0.0,
+          min_ordinate_value: 0.0,
+          ordinate_distance: 0.0
+        )
+      end
+    end
   end
 end
