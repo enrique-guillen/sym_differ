@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/get_first_order_differential_equation_approximation_interactor"
+require "sym_differ/get_differential_equation_approximation_interactor"
 
-RSpec.describe SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor do
+RSpec.describe SymDiffer::GetDifferentialEquationApproximationInteractor do
   describe "#approximate_solution" do
     subject(:approximate_solution) do
       described_class.new.approximate_solution(

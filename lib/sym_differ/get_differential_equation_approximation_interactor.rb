@@ -11,7 +11,7 @@ require "sym_differ/numerical_analysis_item_factory"
 module SymDiffer
   # Implements the use case for a user getting the approximation of the solutiuon to a first-order differential
   # equation.
-  class GetFirstOrderDifferentialEquationApproximationInteractor
+  class GetDifferentialEquationApproximationInteractor
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:approximated_solution)
 
