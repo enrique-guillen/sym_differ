@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SymDiffer
-  module FirstOrderDifferentialEquationApproximationIllustration
+  module DifferentialEquationApproximationIllustration
     # Outputs information about the expression graphs that must be honored regardless of view size.
     class GraphParametersCalculator
       def calculate(approximation_expression_path)

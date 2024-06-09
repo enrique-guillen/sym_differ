@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "sym_differ/first_order_differential_equation_approximation_illustration/graph_parameters_calculator"
-require "sym_differ/first_order_differential_equation_approximation_illustration/graph_view_generator"
+require "sym_differ/differential_equation_approximation_illustration/graph_parameters_calculator"
+require "sym_differ/differential_equation_approximation_illustration/graph_view_generator"
 
 module SymDiffer
-  module FirstOrderDifferentialEquationApproximationIllustration
+  module DifferentialEquationApproximationIllustration
     # Takes the provided approximation expression path; builds an image of the "expression path" representing the
     # provided approximation's curve.
     class Builder

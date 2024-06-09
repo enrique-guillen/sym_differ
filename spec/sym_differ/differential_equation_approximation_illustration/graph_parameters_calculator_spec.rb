@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/first_order_differential_equation_approximation_illustration/graph_parameters_calculator"
+require "sym_differ/differential_equation_approximation_illustration/graph_parameters_calculator"
 
 require "sym_differ/differential_equation_approximation/equation_parameters"
 
-RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustration::GraphParametersCalculator do
+RSpec.describe SymDiffer::DifferentialEquationApproximationIllustration::GraphParametersCalculator do
   describe "#calculate" do
     subject(:calculate) do
       described_class.new.calculate(approximation_expression_path)

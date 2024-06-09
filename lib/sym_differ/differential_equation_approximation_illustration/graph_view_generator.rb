@@ -7,7 +7,7 @@ require "sym_differ/graphing/expression_graph_view"
 require "forwardable"
 
 module SymDiffer
-  module FirstOrderDifferentialEquationApproximationIllustration
+  module DifferentialEquationApproximationIllustration
     # Generates the view of the graphs for the approximated solution to the differential equation given by the equation
     # parameters.
     class GraphViewGenerator

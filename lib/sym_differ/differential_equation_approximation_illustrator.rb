@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/differential_equation_approximation/equation_parameters"
-require "sym_differ/first_order_differential_equation_approximation_illustration/builder"
+require "sym_differ/differential_equation_approximation_illustration/builder"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of the approximation to a solution of a given first order
@@ -61,7 +61,7 @@ module SymDiffer
     end
 
     def graph_builder
-      SymDiffer::FirstOrderDifferentialEquationApproximationIllustration::Builder
+      SymDiffer::DifferentialEquationApproximationIllustration::Builder
         .new(@expression_stringifier, @view_renderer)
     end
 

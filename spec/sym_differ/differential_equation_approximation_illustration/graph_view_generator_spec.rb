@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/first_order_differential_equation_approximation_illustration/graph_view_generator"
+require "sym_differ/differential_equation_approximation_illustration/graph_view_generator"
 
 require "sym_differ/differential_equation_approximation/equation_parameters"
 
-RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximationIllustration::GraphViewGenerator do
+RSpec.describe SymDiffer::DifferentialEquationApproximationIllustration::GraphViewGenerator do
   describe "#generate" do
     subject(:generate) do
       described_class
