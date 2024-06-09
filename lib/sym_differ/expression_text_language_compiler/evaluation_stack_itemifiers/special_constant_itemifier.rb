@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_text_language_compiler/unrecognized_special_named_constant_error"
+
 module SymDiffer
   module ExpressionTextLanguageCompiler
     module EvaluationStackItemifiers
@@ -13,7 +15,7 @@ module SymDiffer
         def check(token)
           return not_handled_response unless special_named_constant_token?(token)
 
-          constant_expression = create_euler_number_expression
+          constant_expression = create_special_named_constant_expression(token)
           constant_expression_stack_item = build_expression_type_stack_item(constant_expression)
 
           handled_response(:post_constant_token_checkers, constant_expression_stack_item)
@@ -33,12 +35,25 @@ module SymDiffer
           { item_type: :expression, precedence: 1, value: expression }
         end
 
+        def create_special_named_constant_expression(token)
+          case token.text
+          when "e"
+            create_euler_number_expression
+          else
+            raise_unrecognized_special_constant_name_error
+          end
+        end
+
         def create_euler_number_expression
           @expression_factory.create_euler_number_expression
         end
 
+        def raise_unrecognized_special_constant_name_error
+          raise UnrecognizedSpecialNamedConstantError.new
+        end
+
         def special_named_constant_token?(token)
-          token.is_a?(Tokens::SpecialNamedConstantToken) && token.text == "e"
+          token.is_a?(Tokens::SpecialNamedConstantToken)
         end
       end
     end

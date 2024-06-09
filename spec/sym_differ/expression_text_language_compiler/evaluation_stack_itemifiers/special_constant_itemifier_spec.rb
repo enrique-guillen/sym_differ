@@ -6,6 +6,8 @@ require "sym_differ/expression_text_language_compiler/evaluation_stack_itemifier
 require "sym_differ/expression_text_language_compiler/tokens/special_named_constant_token"
 require "sym_differ/expression_text_language_compiler/tokens/identifier_token"
 
+require "sym_differ/expression_text_language_compiler/unrecognized_special_named_constant_error"
+
 RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifiers::SpecialConstantItemifier do
   describe "#check" do
     subject(:check) { described_class.new(expression_factory).check(token) }
@@ -26,7 +28,12 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::EvaluationStackItemifi
     end
 
     context "when the provided token is avar" do
-      pending "to define behavior when an unrecognized name is provided as a special named constant"
+      let(:token) { special_named_constant_token("avar") }
+
+      it "raises an invalid syntax error" do
+        expect { check }
+          .to raise_error(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedSpecialNamedConstantError)
+      end
     end
 
     context "when the provided token is x" do
