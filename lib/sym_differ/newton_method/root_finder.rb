@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/newton_method/expression_transform_evaluator"
+require "sym_differ/expression_value_homogenizer"
 
 require "forwardable"
 
