@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/first_order_differential_equation_approximator"
+require "sym_differ/differential_equation_approximator"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"
 require "sym_differ/runge_kutta_four_solution_approximator"
@@ -40,7 +40,7 @@ module SymDiffer
     end
 
     def first_order_differential_equation_approximator
-      FirstOrderDifferentialEquationApproximator.new(expression_parser, runge_kutta_four_solution_approximator)
+      DifferentialEquationApproximator.new(expression_parser, runge_kutta_four_solution_approximator)
     end
 
     def build_operation_response(*attributes)

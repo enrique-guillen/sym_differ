@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sym_differ/svg_graphing/first_order_differential_equation_approximation_illustration_view_renderer"
-require "sym_differ/first_order_differential_equation_approximator"
+require "sym_differ/differential_equation_approximator"
 require "sym_differ/runge_kutta_four_solution_approximator"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"

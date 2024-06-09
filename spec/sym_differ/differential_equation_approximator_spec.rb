@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/first_order_differential_equation_approximator"
+require "sym_differ/differential_equation_approximator"
 
 require "sym_differ/error"
 
-RSpec.describe SymDiffer::FirstOrderDifferentialEquationApproximator do
+RSpec.describe SymDiffer::DifferentialEquationApproximator do
   describe "#approximate_solution" do
     subject(:approximate_solution) do
       described_class

@@ -5,7 +5,7 @@ require "sym_differ/differential_equation_approximation/equation_parameters"
 module SymDiffer
   # Implements the use case for a user getting the approximation of the solutiuon to a first-order differential
   # equation.
-  class FirstOrderDifferentialEquationApproximator
+  class DifferentialEquationApproximator
     def initialize(expression_text_parser, solution_approximator)
       @expression_text_parser = expression_text_parser
       @solution_approximator = solution_approximator

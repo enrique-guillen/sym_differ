@@ -59,7 +59,7 @@ detectors:
       # Param objects representing request itself should be introduced to solve the following:
       - "SymDiffer::DifferentialEquationApproximationIllustrator#illustrate_approximation"
       - "SymDiffer::DifferentiationVisualizer#initialize"
-      - "SymDiffer::FirstOrderDifferentialEquationApproximator#approximate_solution"
+      - "SymDiffer::DifferentialEquationApproximator#approximate_solution"
 
   Attribute:
     exclude:
