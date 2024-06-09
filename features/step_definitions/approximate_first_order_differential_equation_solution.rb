@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/get_first_order_differential_equation_approximation_interactor"
+require "sym_differ/get_differential_equation_approximation_interactor"
 
 Before do
   @params = {
@@ -44,7 +44,7 @@ When("the approximation is requested") do
     [Float(@params.fetch(:initial_value_abscissa)), Float(@params.fetch(:initial_value_ordinate))]
 
   @response =
-    SymDiffer::GetFirstOrderDifferentialEquationApproximationInteractor.new.approximate_solution(
+    SymDiffer::GetDifferentialEquationApproximationInteractor.new.approximate_solution(
       expression_text,
       undetermined_function_name,
       variable_name,

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/visualize_expression_and_derivative_expression_interactor"
+require "sym_differ/visualize_differentiation_interactor"
 
 require "sym_differ/error"
 
@@ -25,7 +25,7 @@ end
 
 When("the user requests the image") do
   @result[:response] =
-    SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor
+    SymDiffer::VisualizeDifferentiationInteractor
     .new
     .visualize(@params[:expression], @params[:variable])
 rescue SymDiffer::Error => e

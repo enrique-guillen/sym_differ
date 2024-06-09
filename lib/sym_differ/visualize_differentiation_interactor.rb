@@ -25,7 +25,7 @@ require "sym_differ/differentiation_visualization/fixed_point_finder_factory"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of an expression and its derivative.
-  class VisualizeExpressionAndDerivativeExpressionInteractor
+  class VisualizeDifferentiationInteractor
     # Defines the high-level response of this use case.
     OperationResponse = Struct.new(:image)
 

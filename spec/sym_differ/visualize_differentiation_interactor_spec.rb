@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/visualize_expression_and_derivative_expression_interactor"
+require "sym_differ/visualize_differentiation_interactor"
 
-RSpec.describe SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor do
+RSpec.describe SymDiffer::VisualizeDifferentiationInteractor do
   describe "#visualize" do
     subject(:visualize) do
       described_class.new(view_renderer).visualize("2 * x", "x")

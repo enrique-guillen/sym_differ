@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/visualize_expression_and_derivative_expression_interactor"
+require "sym_differ/visualize_differentiation_interactor"
 
 Before do
   @params = { expression: nil, variable: nil }
@@ -23,7 +23,7 @@ end
 
 When("the image is requested") do
   @payload =
-    SymDiffer::VisualizeExpressionAndDerivativeExpressionInteractor
+    SymDiffer::VisualizeDifferentiationInteractor
     .new
     .visualize(@params[:expression], @params[:variable])
 end

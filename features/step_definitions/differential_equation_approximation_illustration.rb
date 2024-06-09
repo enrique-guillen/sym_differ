@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/visualize_expression_and_derivative_expression_interactor"
+require "sym_differ/illustrate_differential_equation_approximation_interactor"
 
 Before do
   @params = { expression: nil, variable: nil }
