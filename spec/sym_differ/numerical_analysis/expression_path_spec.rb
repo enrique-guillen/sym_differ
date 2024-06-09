@@ -63,15 +63,29 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
         .max_abscissa_value
     end
 
-    let(:evaluation_points) do
-      [
-        create_evaluation_point(1, 2),
-        create_evaluation_point(2, 3),
-        create_evaluation_point(10, 1)
-      ]
+    context "when evaluation_points=(1, 2), (2, 3), (10, 1)" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(10) }
     end
 
-    it { is_expected.to eq(10) }
+    context "when evaluation_points=(1, 2), (:undefined, 3), (10, 1)" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(:undefined, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(10) }
+    end
   end
 
   describe "#min_abscissa_value" do
@@ -81,15 +95,29 @@ RSpec.describe SymDiffer::NumericalAnalysis::ExpressionPath do
         .min_abscissa_value
     end
 
-    let(:evaluation_points) do
-      [
-        create_evaluation_point(1, 2),
-        create_evaluation_point(2, 3),
-        create_evaluation_point(10, 1)
-      ]
+    context "when evaluation_points=(1, 2), (2, 3), (10, 1)" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(2, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(1) }
     end
 
-    it { is_expected.to eq(1) }
+    context "when evaluation_points=(1, 2), (:undefined, 3), (10, 1)" do
+      let(:evaluation_points) do
+        [
+          create_evaluation_point(1, 2),
+          create_evaluation_point(:undefined, 3),
+          create_evaluation_point(10, 1)
+        ]
+      end
+
+      it { is_expected.to eq(1) }
+    end
   end
 
   describe "#max_ordinate_value" do

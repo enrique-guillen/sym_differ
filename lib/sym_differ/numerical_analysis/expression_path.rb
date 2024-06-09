@@ -26,11 +26,11 @@ module SymDiffer
       end
 
       def max_abscissa_value
-        @evaluation_points.map(&:abscissa).max
+        @evaluation_points.map(&:abscissa).reject { |o| o == :undefined }.max
       end
 
       def min_abscissa_value
-        @evaluation_points.map(&:abscissa).min
+        @evaluation_points.map(&:abscissa).reject { |o| o == :undefined }.min
       end
 
       def max_ordinate_value
