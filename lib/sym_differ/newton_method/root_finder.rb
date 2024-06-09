@@ -2,11 +2,15 @@
 
 require "sym_differ/newton_method/expression_transform_evaluator"
 
+require "forwardable"
+
 module SymDiffer
   module NewtonMethod
     # Finds a variable value for which the given expression yields a value close to 0.0, by implementing the Newton
     # Method's steps.
     class RootFinder
+      extend Forwardable
+
       def initialize(derivative_slope_width, expression_evaluator, fixed_point_finder_creator)
         @derivative_slope_width = derivative_slope_width
         @expression_evaluator = expression_evaluator
@@ -20,7 +24,7 @@ module SymDiffer
         fixed_point_finder =
           create_fixed_point_finder(expression_newton_transform_evaluator)
 
-        fixed_point_finder.approximate(expression, variable, first_guess)
+        homogenize_expression_value { fixed_point_finder.approximate(expression, variable, first_guess) }
       end
 
       private
@@ -32,6 +36,12 @@ module SymDiffer
 
       def create_fixed_point_finder(expression_evaluator)
         @fixed_point_finder_creator.create(expression_evaluator)
+      end
+
+      def_delegator :expression_value_homogenizer, :homogenize, :homogenize_expression_value
+
+      def expression_value_homogenizer
+        @expression_value_homogenizer ||= ExpressionValueHomogenizer.new
       end
     end
   end

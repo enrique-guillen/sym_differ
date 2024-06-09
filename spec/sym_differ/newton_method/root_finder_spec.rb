@@ -29,11 +29,6 @@ RSpec.describe SymDiffer::NewtonMethod::RootFinder do
         .to receive(:create)
         .with(expected_evaluator_matcher)
         .and_return(fixed_point_finder)
-
-      allow(fixed_point_finder)
-        .to receive(:approximate)
-        .with(expression, variable, first_guess)
-        .and_return(fixed_point_finder_result)
     end
 
     let(:derivative_approximation_dx) { 0.00000001 }
@@ -51,12 +46,38 @@ RSpec.describe SymDiffer::NewtonMethod::RootFinder do
     let(:variable) { "x" }
     let(:first_guess) { 1.0 }
 
-    let(:fixed_point_finder_result) do
-      double(:fixed_point_finder_result)
+    context "when the fixed_point_finder returns fixed_point_finder_result" do
+      before do
+        allow(fixed_point_finder)
+          .to receive(:approximate)
+          .with(expression, variable, first_guess)
+          .and_return(fixed_point_finder_result)
+      end
+
+      let(:fixed_point_finder_result) do
+        double(:fixed_point_finder_result)
+      end
+
+      it "calls the fixed-point finder with the newton-transform of the expression and more" do
+        expect(find).to eq(fixed_point_finder_result)
+      end
     end
 
-    it "calls the fixed-point finder with the newton-transform of the expression and more" do
-      expect(find).to eq(fixed_point_finder_result)
+    context "when the fixed_point_finder raises ZeroDivisionError" do
+      before do
+        allow(fixed_point_finder)
+          .to receive(:approximate)
+          .with(expression, variable, first_guess)
+          .and_raise(ZeroDivisionError)
+      end
+
+      let(:fixed_point_finder_result) do
+        double(:fixed_point_finder_result)
+      end
+
+      it "returns :undefined" do
+        expect(find).to eq(:undefined)
+      end
     end
   end
 end
