@@ -13,17 +13,34 @@ RSpec.describe SymDiffer::DifferentialEquationApproximationIllustration::GraphPa
 
     let(:numerical_analysis_item_factory) { sym_differ_numerical_analysis_item_factory }
 
-    let(:approximation_expression_path) do
-      create_expression_path(
-        [create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)]
-      )
+    context "when the path is (0.0, 1.0), (1.0, 2.6)" do
+      let(:approximation_expression_path) do
+        create_expression_path(
+          [create_evaluation_point(0.0, 1.0), create_evaluation_point(1.0, 2.6)]
+        )
+      end
+
+      it "returns the expected parameters" do
+        expect(calculate).to include(
+          max_ordinate_value: 2.6, min_ordinate_value: 1.0, ordinate_distance: 1.6,
+          max_abscissa_value: 1.0, min_abscissa_value: 0.0, abscissa_distance: 1.0
+        )
+      end
     end
 
-    it "returns the expected parameters" do
-      expect(calculate).to include(
-        max_ordinate_value: 2.6, min_ordinate_value: 1.0, ordinate_distance: 1.6,
-        max_abscissa_value: 1.0, min_abscissa_value: 0.0, abscissa_distance: 1.0
-      )
+    context "when the path is (0.0, :undefined), (1.0, :undefined)" do
+      let(:approximation_expression_path) do
+        create_expression_path(
+          [create_evaluation_point(0.0, :undefined), create_evaluation_point(1.0, :undefined)]
+        )
+      end
+
+      it "returns the expected parameters" do
+        expect(calculate).to include(
+          max_ordinate_value: 0.0, min_ordinate_value: 0.0, ordinate_distance: 0.0,
+          max_abscissa_value: 1.0, min_abscissa_value: 0.0, abscissa_distance: 1.0
+        )
+      end
     end
   end
 end
