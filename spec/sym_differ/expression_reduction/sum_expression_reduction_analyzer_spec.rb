@@ -75,13 +75,6 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReductionAnalyzer do
       let(:sum_partition_a) { [1, variable_expression("x")] }
       let(:sum_partition_b) { [1, variable_expression("x")] }
 
-      let(:expected_reduced_expression) do
-        sum_expression(
-          sum_expression(variable_expression("x"), variable_expression("x")),
-          constant_expression(2)
-        )
-      end
-
       it "returns the reduction results x + 2, [2, x]" do
         expect(reduce_expression).to be_same_as(
           sum_expression(
@@ -202,10 +195,6 @@ RSpec.describe SymDiffer::ExpressionReduction::SumExpressionReductionAnalyzer do
         )
       end
     end
-  end
-
-  define_method(:reduction_results) do |reduced_expression, sum_partition, factor_partition|
-    { reduced_expression:, sum_partition:, factor_partition: }
   end
 
   define_method(:sum_partition) do |constant, subexpression|

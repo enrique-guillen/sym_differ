@@ -364,8 +364,4 @@ RSpec.describe SymDiffer::ExpressionReduction::SubtractExpressionReductionAnalyz
       end
     end
   end
-
-  define_method(:sum_partition) do |constant, subexpression|
-    [constant, subexpression]
-  end
 end

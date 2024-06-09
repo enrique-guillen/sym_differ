@@ -89,10 +89,6 @@ RSpec.describe SymDiffer::DifferentiationGraph::ExpressionPathGenerator do
       end
     end
 
-    define_method(:add_evaluator_to_builder) do |builder, instance_to_return, expected_parameters|
-      allow(builder).to receive(:build).with(expected_parameters).and_return(instance_to_return)
-    end
-
     define_method(:map_evaluator_response) do |expression_evaluator, from:, to:, input: from, output: to|
       allow(expression_evaluator).to receive(:evaluate).with(*input).and_return(output)
     end

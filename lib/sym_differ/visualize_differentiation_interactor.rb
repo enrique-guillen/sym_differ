@@ -80,10 +80,6 @@ module SymDiffer
       @expression_factory ||= ExpressionFactory.new
     end
 
-    def expression_evaluator_builder
-      ExpressionEvaluatorBuilder.new
-    end
-
     def discontinuities_finder
       DiscontinuitiesDetector.new(
         newton_method_root_finder,

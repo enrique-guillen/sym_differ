@@ -81,10 +81,6 @@ module SymDiffer
         @sum_partitioner.partition(expression)
       end
 
-      def build_reduction_results(reduced_expression, sum_partition, factor_partition)
-        { reduced_expression:, sum_partition:, factor_partition: }
-      end
-
       def build_sum_partition(constant, subexpression)
         [constant, subexpression]
       end
