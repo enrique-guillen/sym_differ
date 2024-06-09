@@ -3,7 +3,7 @@
 require "sym_differ/differential_equation_approximator"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"
-require "sym_differ/runge_kutta_four_solution_approximator"
+require "sym_differ/differential_equation_approximation/runge_kutta_four_solution_approximator"
 require "sym_differ/expression_evaluator_visitor"
 require "sym_differ/numerical_analysis/step_range"
 require "sym_differ/numerical_analysis_item_factory"
@@ -52,7 +52,7 @@ module SymDiffer
     end
 
     def runge_kutta_four_solution_approximator
-      RungeKuttaFourSolutionApproximator
+      DifferentialEquationApproximation::RungeKuttaFourSolutionApproximator
         .new(expression_evaluator_adapter, 0.125, numerical_analysis_item_factory)
     end
 

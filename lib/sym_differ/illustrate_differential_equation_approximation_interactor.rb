@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "sym_differ/svg_graphing/first_order_differential_equation_approximation_illustration_view_renderer"
 require "sym_differ/differential_equation_approximator"
-require "sym_differ/runge_kutta_four_solution_approximator"
 require "sym_differ/expression_text_language_compiler/parser"
 require "sym_differ/expression_factory"
 require "sym_differ/differential_equation_approximation_illustrator"
@@ -10,6 +8,9 @@ require "sym_differ/expression_evaluator_visitor"
 require "sym_differ/stringifier_visitor"
 
 require "sym_differ/numerical_analysis_item_factory"
+require "sym_differ/differential_equation_approximation/runge_kutta_four_solution_approximator"
+
+require "sym_differ/svg_graphing/first_order_differential_equation_approximation_illustration_view_renderer"
 
 module SymDiffer
   # Implements the use case for a user getting the graph image of the approximation to a solution for the given
@@ -56,7 +57,8 @@ module SymDiffer
     end
 
     def runge_kutta_four_solution_approximator
-      RungeKuttaFourSolutionApproximator.new(expression_evaluator_adapter, 0.125, numerical_analysis_item_factory)
+      DifferentialEquationApproximation::RungeKuttaFourSolutionApproximator
+        .new(expression_evaluator_adapter, 0.125, numerical_analysis_item_factory)
     end
 
     def expression_factory

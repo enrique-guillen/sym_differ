@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "sym_differ/runge_kutta_four_solution_approximator"
+require "sym_differ/differential_equation_approximation/runge_kutta_four_solution_approximator"
 
 require "sym_differ/differential_equation_approximation/equation_parameters"
 
-RSpec.describe SymDiffer::RungeKuttaFourSolutionApproximator do
+RSpec.describe SymDiffer::DifferentialEquationApproximation::RungeKuttaFourSolutionApproximator do
   describe "#approximate_solution" do
     subject(:approximate_solution) do
       described_class
