@@ -88,7 +88,13 @@ RSpec.describe SymDiffer::ExpressionTextLanguageCompiler::Parser do
     end
 
     context "when the expression text to parse is '1 + unrecognized(x)'" do
-      pending "no support for doing something to unrecognized functions yet"
+      let(:expression_text) { "1 + unrecognized(x)" }
+
+      it "raises an error mentioning the syntax error" do
+        expect { parse }.to raise_error(
+          a_kind_of(SymDiffer::ExpressionTextLanguageCompiler::UnrecognizedFunctionNameError)
+        )
+      end
     end
 
     context "when the expression text to parse is '('" do

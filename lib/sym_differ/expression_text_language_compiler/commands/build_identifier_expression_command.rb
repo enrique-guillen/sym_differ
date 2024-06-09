@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sym_differ/expression_text_language_compiler/unrecognized_function_name_error"
+
 require "forwardable"
 
 module SymDiffer
@@ -32,6 +34,8 @@ module SymDiffer
             create_cosine_expression(nested_expression)
           when "ln"
             create_natural_logarithm_expression(nested_expression)
+          else
+            raise_unrecognized_function_name_error
           end
         end
 
@@ -40,6 +44,10 @@ module SymDiffer
                        :create_sine_expression,
                        :create_cosine_expression,
                        :create_natural_logarithm_expression
+
+        def raise_unrecognized_function_name_error
+          raise UnrecognizedFunctionNameError
+        end
       end
     end
   end
