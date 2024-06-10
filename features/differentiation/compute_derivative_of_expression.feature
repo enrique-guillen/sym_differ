@@ -214,8 +214,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is (2 * cosine(x)) / (2 ^ 2)
-      Then (@wip) the derivative expression is cosine(x) / 2
+      Then the derivative expression is (2 * cosine(x)) / 4
 
     Scenario: The derivative of sine(x) / x, with respect to x, is requested.
       Given the expression to differentiate is sine(x) / x

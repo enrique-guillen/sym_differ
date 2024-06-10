@@ -457,6 +457,6 @@ RSpec.describe SymDiffer::ExpressionReduction::ReducerVisitor do
 
     let(:expression) { exponentiate_expression(constant_expression(4), constant_expression(2)) }
 
-    it { is_expected.to be_same_as(exponentiate_expression(constant_expression(4), constant_expression(2))) }
+    it { is_expected.to be_same_as(constant_expression(16)) }
   end
 end
