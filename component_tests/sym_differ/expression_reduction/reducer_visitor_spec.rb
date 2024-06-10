@@ -459,4 +459,14 @@ RSpec.describe SymDiffer::ExpressionReduction::ReducerVisitor do
 
     it { is_expected.to be_same_as(constant_expression(16)) }
   end
+
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      visitor.visit_natural_logarithm_expression(expression)
+    end
+
+    let(:expression) { natural_logarithm_expression(euler_number_expression) }
+
+    it { is_expected.to be_same_as(constant_expression(1)) }
+  end
 end

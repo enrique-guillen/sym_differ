@@ -175,6 +175,20 @@ RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
     end
   end
 
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      visitor.visit_natural_logarithm_expression(expression)
+    end
+
+    let(:expression) do
+      natural_logarithm_expression(euler_number_expression)
+    end
+
+    it "returns the expected multiplicate partition" do
+      expect(visit_natural_logarithm_expression).to match(sum_partition(1, nil))
+    end
+  end
+
   define_method(:sum_partition) do |constant, subexpression|
     [constant, subexpression]
   end

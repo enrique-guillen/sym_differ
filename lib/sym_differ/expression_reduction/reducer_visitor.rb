@@ -9,6 +9,7 @@ require "sym_differ/expression_reduction/subtract_expression_reduction_analyzer"
 require "sym_differ/expression_reduction/multiplicate_expression_reduction_analyzer"
 require "sym_differ/expression_reduction/divide_expression_reduction_analyzer"
 require "sym_differ/expression_reduction/exponentiate_expression_reduction_analyzer"
+require "sym_differ/expression_reduction/natural_logarithm_expression_reduction_analyzer"
 
 module SymDiffer
   module ExpressionReduction
@@ -61,11 +62,15 @@ module SymDiffer
         perform_reduction(exponentiate_expression_reduction_analyzer, expression)
       end
 
+      def visit_natural_logarithm_expression(expression)
+        perform_reduction(natural_logarithm_expression_reduction_analyzer, expression)
+      end
+
       def default_visit_result(expression)
         expression
       end
 
-      %i[sine cosine derivative euler_number natural_logarithm].each do |expression_type|
+      %i[sine cosine derivative euler_number].each do |expression_type|
         alias_method :"visit_#{expression_type}_expression", :default_visit_result
       end
 
@@ -122,6 +127,11 @@ module SymDiffer
       def exponentiate_expression_reduction_analyzer
         @exponentiate_expression_reduction_analyzer ||=
           ExponentiateExpressionReductionAnalyzer.new(@expression_factory, self)
+      end
+
+      def natural_logarithm_expression_reduction_analyzer
+        @natural_logarithm_expression_reduction_analyzer ||=
+          NaturalLogarithmExpressionReductionAnalyzer.new(@expression_factory, self)
       end
     end
   end

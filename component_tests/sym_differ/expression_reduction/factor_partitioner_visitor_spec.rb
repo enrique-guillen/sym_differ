@@ -166,6 +166,18 @@ RSpec.describe SymDiffer::ExpressionReduction::FactorPartitionerVisitor do
     end
   end
 
+  describe "#visit_natural_logarithm_expression" do
+    subject(:visit_natural_logarithm_expression) do
+      visitor.visit_natural_logarithm_expression(expression)
+    end
+
+    let(:expression) { natural_logarithm_expression(euler_number_expression) }
+
+    it "returns the expected factor partition" do
+      expect(visit_natural_logarithm_expression).to match(factor_partition(1, nil))
+    end
+  end
+
   define_method(:factor_partition) do |constant, subexpression|
     [constant, subexpression]
   end
