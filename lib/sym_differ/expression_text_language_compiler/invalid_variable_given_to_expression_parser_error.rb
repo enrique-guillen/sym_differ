@@ -12,6 +12,10 @@ module SymDiffer
       end
 
       attr_reader :invalid_variable_name
+
+      def accept(visitor)
+        visitor.visit_invalid_variable_given_to_expression_parser_error(self)
+      end
     end
   end
 end
