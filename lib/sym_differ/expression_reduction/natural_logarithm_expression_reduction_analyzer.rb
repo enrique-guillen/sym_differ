@@ -31,6 +31,16 @@ module SymDiffer
         create_natural_logarithm_expression(reduced_power_expression)
       end
 
+      def make_factor_partition(expression)
+        reduced_expression = reduce_expression(expression)
+
+        if constant_expression?(reduced_expression)
+          build_factor_partition(reduced_expression.value, nil)
+        else
+          build_factor_partition(1, reduced_expression)
+        end
+      end
+
       private
 
       def same_as_constant_one?(expression)
@@ -75,8 +85,13 @@ module SymDiffer
                      :create_multiplicate_expression,
                      :create_euler_number_expression,
                      :create_natural_logarithm_expression,
+                     :constant_expression?,
                      :multiplicate_expression?,
                      :exponentiate_expression?
+
+      def build_factor_partition(constant, subexpression)
+        [constant, subexpression]
+      end
     end
   end
 end
