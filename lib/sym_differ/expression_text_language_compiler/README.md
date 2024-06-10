@@ -1,4 +1,3 @@
-# Definition
 This is the compiler for the SymDiffer Expression Text Language. For the time being, the language is a copy of most
 other languages of strings of mathematical expressions.
 
