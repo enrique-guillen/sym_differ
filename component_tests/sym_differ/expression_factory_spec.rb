@@ -245,4 +245,28 @@ RSpec.describe SymDiffer::ExpressionFactory do
       it { is_expected.to be(true) }
     end
   end
+
+  describe "#natural_logarithm_expression?" do
+    subject(:natural_logarithm_expression?) do
+      factory.natural_logarithm_expression?(expression)
+    end
+
+    let(:factory) { described_class.new }
+
+    context "when the expression is 1" do
+      let(:expression) { factory.create_constant_expression(1) }
+
+      it { is_expected.to be(false) }
+    end
+
+    context "when the expression is ln(x)" do
+      let(:expression) do
+        factory.create_natural_logarithm_expression(
+          factory.create_variable_expression("x")
+        )
+      end
+
+      it { is_expected.to be(true) }
+    end
+  end
 end

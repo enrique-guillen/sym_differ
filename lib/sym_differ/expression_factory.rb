@@ -83,5 +83,9 @@ module SymDiffer
     def exponentiate_expression?(expression)
       expression.is_a?(Expressions::ExponentiateExpression)
     end
+
+    def natural_logarithm_expression?(expression)
+      expression.is_a?(Expressions::NaturalLogarithmExpression)
+    end
   end
 end
