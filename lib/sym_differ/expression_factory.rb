@@ -76,6 +76,10 @@ module SymDiffer
         Expressions::EulerNumberExpression.new
     end
 
+    def constant_expression?(expression)
+      expression.is_a?(Expressions::ConstantExpression)
+    end
+
     def multiplicate_expression?(expression)
       expression.is_a?(Expressions::MultiplicateExpression)
     end
