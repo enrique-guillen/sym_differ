@@ -153,9 +153,7 @@ RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
       expect(visit_divide_expression).to match(
         sum_partition(
           0,
-          same_expression_as(
-            divide_expression(variable_expression("x"), variable_expression("x"))
-          )
+          same_expression_as(constant_expression(1))
         )
       )
     end

@@ -144,9 +144,7 @@ RSpec.describe SymDiffer::ExpressionReduction::FactorPartitionerVisitor do
       expect(visit_divide_expression).to match(
         factor_partition(
           1,
-          same_expression_as(
-            divide_expression(variable_expression("x"), variable_expression("x"))
-          )
+          same_expression_as(constant_expression(1))
         )
       )
     end

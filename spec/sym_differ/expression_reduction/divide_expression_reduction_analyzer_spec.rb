@@ -75,6 +75,15 @@ RSpec.describe SymDiffer::ExpressionReduction::DivideExpressionReductionAnalyzer
         expect(reduce_expression).to be_same_as(variable_expression("x"))
       end
     end
+
+    context "when reduced_numerator = x, reduced_denominator = x" do
+      let(:reduced_numerator) { variable_expression("x") }
+      let(:reduced_denominator) { variable_expression("x") }
+
+      it "returns the reductions of the division expression" do
+        expect(reduce_expression).to be_same_as(constant_expression(1))
+      end
+    end
   end
 
   describe "#make_sum_partition" do

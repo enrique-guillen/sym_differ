@@ -239,7 +239,7 @@ Feature: Compute the symbolic derivative of a given expression.
 
       When the expression is computed
 
-      Then the derivative expression is (~e ^ (x * ln(2))) * (ln(2) + (x * (0 / 2)))
+      Then the derivative expression is (~e ^ (x * ln(2))) * (ln(2) + (x * 0))
       Then (@wip) the derivative expression is (~e ^ (x * ln(2))) * ln(2)
 
     Scenario: The derivative of x ^ x, with respect to x, is requested.

@@ -20,8 +20,10 @@ module SymDiffer
 
         return reduced_numerator if reduced_denominator.same_as?(create_constant_one)
 
-        return create_constant_zero if reduced_numerator.same_as?(create_constant_zero) &&
-                                       !reduced_denominator.same_as?(create_constant_zero)
+        unless reduced_denominator.same_as?(create_constant_zero)
+          return create_constant_zero if reduced_numerator.same_as?(create_constant_zero)
+          return create_constant_one if reduced_numerator.same_as?(reduced_denominator)
+        end
 
         create_divide_expression(reduced_numerator, reduced_denominator)
       end
