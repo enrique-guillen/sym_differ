@@ -75,5 +75,13 @@ module SymDiffer
       @create_euler_number_expression ||=
         Expressions::EulerNumberExpression.new
     end
+
+    def multiplicate_expression?(expression)
+      expression.is_a?(Expressions::MultiplicateExpression)
+    end
+
+    def exponentiate_expression?(expression)
+      expression.is_a?(Expressions::ExponentiateExpression)
+    end
   end
 end

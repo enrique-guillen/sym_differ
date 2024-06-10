@@ -195,4 +195,54 @@ RSpec.describe SymDiffer::ExpressionFactory do
         .to be_a_kind_of(SymDiffer::Expressions::EulerNumberExpression)
     end
   end
+
+  describe "#multiplicate_expression?" do
+    subject(:multiplicate_expression?) do
+      factory.multiplicate_expression?(expression)
+    end
+
+    let(:factory) { described_class.new }
+
+    context "when the expression is 1" do
+      let(:expression) { factory.create_constant_expression(1) }
+
+      it { is_expected.to be(false) }
+    end
+
+    context "when the expression is x * y" do
+      let(:expression) do
+        factory.create_multiplicate_expression(
+          factory.create_variable_expression("x"),
+          factory.create_variable_expression("y")
+        )
+      end
+
+      it { is_expected.to be(true) }
+    end
+  end
+
+  describe "#exponentiate_expression?" do
+    subject(:exponentiate_expression?) do
+      factory.exponentiate_expression?(expression)
+    end
+
+    let(:factory) { described_class.new }
+
+    context "when the expression is 1" do
+      let(:expression) { factory.create_constant_expression(1) }
+
+      it { is_expected.to be(false) }
+    end
+
+    context "when the expression is x ^ y" do
+      let(:expression) do
+        factory.create_exponentiate_expression(
+          factory.create_variable_expression("x"),
+          factory.create_variable_expression("y")
+        )
+      end
+
+      it { is_expected.to be(true) }
+    end
+  end
 end
