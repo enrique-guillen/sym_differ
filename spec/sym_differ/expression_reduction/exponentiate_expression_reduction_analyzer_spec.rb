@@ -93,12 +93,12 @@ RSpec.describe SymDiffer::ExpressionReduction::ExponentiateExpressionReductionAn
       allow(reduction_analysis_visitor)
         .to receive(:reduce)
         .with(base)
-        .and_return(constant_expression(2))
+        .and_return(reduced_base)
 
       allow(reduction_analysis_visitor)
         .to receive(:reduce)
         .with(power)
-        .and_return(constant_expression(4))
+        .and_return(reduced_power)
     end
 
     let(:expression) { exponentiate_expression(base, power) }
@@ -106,11 +106,27 @@ RSpec.describe SymDiffer::ExpressionReduction::ExponentiateExpressionReductionAn
     let(:base) { double(:base) }
     let(:power) { double(:power) }
 
-    let(:expected_reduced_expression) do
-      constant_expression(16)
+    context "when reduced_base=x, reduced_power=4" do
+      let(:reduced_base) { variable_expression("x") }
+      let(:reduced_power) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        exponentiate_expression(reduced_base, reduced_power)
+      end
+
+      it { is_expected.to match(sum_partition(0, same_expression_as(expected_reduced_expression))) }
     end
 
-    it { is_expected.to match(sum_partition(0, same_expression_as(expected_reduced_expression))) }
+    context "when reduced_base=2, reduced_power=4" do
+      let(:reduced_base) { constant_expression(2) }
+      let(:reduced_power) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        constant_expression(16)
+      end
+
+      it { is_expected.to match(sum_partition(16, nil)) }
+    end
 
     define_method(:sum_partition) do |constant, subexpression|
       [constant, subexpression]
@@ -126,12 +142,12 @@ RSpec.describe SymDiffer::ExpressionReduction::ExponentiateExpressionReductionAn
       allow(reduction_analysis_visitor)
         .to receive(:reduce)
         .with(base)
-        .and_return(constant_expression(2))
+        .and_return(reduced_base)
 
       allow(reduction_analysis_visitor)
         .to receive(:reduce)
         .with(power)
-        .and_return(constant_expression(4))
+        .and_return(reduced_power)
     end
 
     let(:expression) { exponentiate_expression(base, power) }
@@ -139,11 +155,27 @@ RSpec.describe SymDiffer::ExpressionReduction::ExponentiateExpressionReductionAn
     let(:base) { double(:base) }
     let(:power) { double(:power) }
 
-    let(:expected_reduced_expression) do
-      constant_expression(16)
+    context "when reduced_base = x, reduced_power = 4" do
+      let(:reduced_base) { variable_expression("x") }
+      let(:reduced_power) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        exponentiate_expression(reduced_base, reduced_power)
+      end
+
+      it { is_expected.to match(factor_partition(1, same_expression_as(expected_reduced_expression))) }
     end
 
-    it { is_expected.to match(factor_partition(1, same_expression_as(expected_reduced_expression))) }
+    context "when reduced_base = 2, reduced_power = 4" do
+      let(:reduced_base) { constant_expression(2) }
+      let(:reduced_power) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        constant_expression(16)
+      end
+
+      it { is_expected.to match(factor_partition(16, nil)) }
+    end
 
     define_method(:factor_partition) do |constant, subexpression|
       [constant, subexpression]

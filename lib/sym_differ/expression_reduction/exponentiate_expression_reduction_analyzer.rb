@@ -32,13 +32,21 @@ module SymDiffer
       def make_sum_partition(expression)
         reduced_expression = reduce_expression(expression)
 
-        build_sum_partition(0, reduced_expression)
+        if constant_expression?(reduced_expression)
+          build_sum_partition(reduced_expression.value, nil)
+        else
+          build_sum_partition(0, reduced_expression)
+        end
       end
 
       def make_factor_partition(expression)
         reduced_expression = reduce_expression(expression)
 
-        build_factor_partition(1, reduced_expression)
+        if constant_expression?(reduced_expression)
+          build_factor_partition(reduced_expression.value, nil)
+        else
+          build_factor_partition(1, reduced_expression)
+        end
       end
 
       private
