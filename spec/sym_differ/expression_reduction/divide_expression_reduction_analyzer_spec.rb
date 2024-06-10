@@ -95,12 +95,12 @@ RSpec.describe SymDiffer::ExpressionReduction::DivideExpressionReductionAnalyzer
       allow(numerator)
         .to receive(:accept)
         .with(reduction_analysis_visitor)
-        .and_return(constant_expression(2))
+        .and_return(reduced_numerator)
 
       allow(denominator)
         .to receive(:accept)
         .with(reduction_analysis_visitor)
-        .and_return(constant_expression(4))
+        .and_return(reduced_denominator)
     end
 
     let(:expression) do
@@ -110,13 +110,25 @@ RSpec.describe SymDiffer::ExpressionReduction::DivideExpressionReductionAnalyzer
     let(:numerator) { double(:numerator) }
     let(:denominator) { double(:denominator) }
 
-    let(:expected_reduced_expression) do
-      divide_expression(
-        constant_expression(2), constant_expression(4)
-      )
+    context "when the reduced expression is a division" do
+      let(:reduced_numerator) { constant_expression(2) }
+      let(:reduced_denominator) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        divide_expression(
+          constant_expression(2), constant_expression(4)
+        )
+      end
+
+      it { is_expected.to match(sum_partition(0, same_expression_as(expected_reduced_expression))) }
     end
 
-    it { is_expected.to match(sum_partition(0, same_expression_as(expected_reduced_expression))) }
+    context "when the reduced expression is a constant" do
+      let(:reduced_numerator) { constant_expression(4) }
+      let(:reduced_denominator) { constant_expression(1) }
+
+      it { is_expected.to match(sum_partition(4, nil)) }
+    end
 
     define_method(:sum_partition) do |constant, subexpression|
       [constant, subexpression]
@@ -132,12 +144,12 @@ RSpec.describe SymDiffer::ExpressionReduction::DivideExpressionReductionAnalyzer
       allow(numerator)
         .to receive(:accept)
         .with(reduction_analysis_visitor)
-        .and_return(constant_expression(2))
+        .and_return(reduced_numerator)
 
       allow(denominator)
         .to receive(:accept)
         .with(reduction_analysis_visitor)
-        .and_return(constant_expression(4))
+        .and_return(reduced_denominator)
     end
 
     let(:expression) do
@@ -147,13 +159,25 @@ RSpec.describe SymDiffer::ExpressionReduction::DivideExpressionReductionAnalyzer
     let(:numerator) { double(:numerator) }
     let(:denominator) { double(:denominator) }
 
-    let(:expected_reduced_expression) do
-      divide_expression(
-        constant_expression(2), constant_expression(4)
-      )
+    context "when the reduced expression is a division" do
+      let(:reduced_numerator) { constant_expression(2) }
+      let(:reduced_denominator) { constant_expression(4) }
+
+      let(:expected_reduced_expression) do
+        divide_expression(
+          constant_expression(2), constant_expression(4)
+        )
+      end
+
+      it { is_expected.to match(factor_partition(1, same_expression_as(expected_reduced_expression))) }
     end
 
-    it { is_expected.to match(factor_partition(1, same_expression_as(expected_reduced_expression))) }
+    context "when the reduced expression is a constant" do
+      let(:reduced_numerator) { constant_expression(4) }
+      let(:reduced_denominator) { constant_expression(1) }
+
+      it { is_expected.to match(factor_partition(4, nil)) }
+    end
 
     define_method(:factor_partition) do |constant, subexpression|
       [constant, subexpression]

@@ -150,12 +150,7 @@ RSpec.describe SymDiffer::ExpressionReduction::SumPartitionerVisitor do
     end
 
     it "returns the expected multiplicate partition" do
-      expect(visit_divide_expression).to match(
-        sum_partition(
-          0,
-          same_expression_as(constant_expression(1))
-        )
-      )
+      expect(visit_divide_expression).to match(sum_partition(1, nil))
     end
   end
 
