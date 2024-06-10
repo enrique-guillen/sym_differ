@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require "simplecov"
-SimpleCov.start
+
+SimpleCov.start do
+  enable_coverage :branch
+end
 
 require "support/sym_differ_expression_double_builder"
 require "support/sym_differ_expression_factory_dsl"
