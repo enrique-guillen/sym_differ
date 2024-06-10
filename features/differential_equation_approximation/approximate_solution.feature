@@ -1,18 +1,14 @@
 @differential_equation
 Feature: Numerical approximation of first order differential equation solution.
 
-  This feature file goes into detail about how the numerical approximation is calculated. Currently, the strategy for
-  calculating data is hardcoded to be the Runge-Kutta 4th order method.
+  This feature file goes into detail about how the numerical approximation is calculated. Currently, the strategy for calculating data is hardcoded to be the Runge-Kutta 4th order method.
 
-  The domain of the returned approximation will be an arbitrary number of steps separated by an arbitrary gap, which
-  currently is the range [initial_abscissa..initial_abscissa+10] divided into partitions of size 0.125.
+  The domain of the returned approximation will be an arbitrary number of steps separated by an arbitrary gap, which currently is the range [initial_abscissa..initial_abscissa+10] divided into partitions of size 0.125.
 
-  In this feature file we shouldn't be testing the entirety of the output, since it would make the file unwieldy to edit
-  and read. Instead, just include a few key values of interest.
+  In this feature file we shouldn't be testing the entirety of the output, since it would make the file unwieldy to edit and read. Instead, just include a few key values of interest.
 
   See also:
-  - `Get the first order approximation of a first order differential equation.` for the inputs provided to this
-    functionality.
+  - `Get the first order approximation of a first order differential equation.` for the inputs provided to this functionality.
 
   Rule: As long as the parameters are valid, the approximation can be calculated.
 

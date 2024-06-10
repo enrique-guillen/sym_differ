@@ -1,11 +1,9 @@
 @differential_equation
 Feature: Get the first order approximation of a first order differential equation.
 
-  This feature allows the user to obtain an approximation of a solution to a given first order differential equation.
-  The expression that must be provided is the right hand side of the differential equation in "y'=f(y, t)" form.
+  This feature allows the user to obtain an approximation of a solution to a given first order differential equation. The expression that must be provided is the right hand side of the differential equation in "y'=f(y, t)" form.
 
-  The name of the functions and variables can be valid identifier names and not just "y" and "t". Parameters have to be
-  provided specifying the alternative names however.
+  The name of the functions and variables can be valid identifier names and not just "y" and "t". Parameters have to be provided specifying the alternative names however.
 
   See also:
   - `Numerical approximation of first order differential equation solution.` for more details on the approximation.
