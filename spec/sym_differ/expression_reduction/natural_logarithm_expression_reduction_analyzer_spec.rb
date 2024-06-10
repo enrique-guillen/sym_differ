@@ -145,4 +145,47 @@ RSpec.describe SymDiffer::ExpressionReduction::NaturalLogarithmExpressionReducti
       [constant, subexpression]
     end
   end
+
+  describe "#make_sum_partition" do
+    subject(:make_sum_partition) do
+      reduction_analyzer.make_sum_partition(expression)
+    end
+
+    before do
+      allow(expression_reducer)
+        .to receive(:reduce)
+        .with(power_expression)
+        .and_return(reduced_power_expression)
+    end
+
+    let(:expression) { natural_logarithm_expression(power_expression) }
+    let(:power_expression) { double(:power_expression) }
+
+    context "when the reduced expression equals ln(x)" do
+      let(:reduced_power_expression) { expression_test_double(:reduced_power_expression) }
+
+      it "returns the sum partition 0, x" do
+        expect(make_sum_partition).to match(
+          sum_partition(
+            0,
+            same_expression_as(
+              natural_logarithm_expression(reduced_power_expression)
+            )
+          )
+        )
+      end
+    end
+
+    context "when the reduced expression equals 1" do
+      let(:reduced_power_expression) { euler_number_expression }
+
+      it "returns the sum partition 1, x" do
+        expect(make_sum_partition).to match(sum_partition(1, nil))
+      end
+    end
+
+    define_method(:sum_partition) do |constant, subexpression|
+      [constant, subexpression]
+    end
+  end
 end

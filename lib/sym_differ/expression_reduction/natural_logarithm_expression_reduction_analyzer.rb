@@ -41,6 +41,16 @@ module SymDiffer
         end
       end
 
+      def make_sum_partition(expression)
+        reduced_expression = reduce_expression(expression)
+
+        if constant_expression?(reduced_expression)
+          build_sum_partition(reduced_expression.value, nil)
+        else
+          build_sum_partition(0, reduced_expression)
+        end
+      end
+
       private
 
       def same_as_constant_one?(expression)
@@ -90,6 +100,10 @@ module SymDiffer
                      :exponentiate_expression?
 
       def build_factor_partition(constant, subexpression)
+        [constant, subexpression]
+      end
+
+      def build_sum_partition(constant, subexpression)
         [constant, subexpression]
       end
     end
