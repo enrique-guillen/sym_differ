@@ -12,6 +12,10 @@ module SymDiffer
       end
 
       attr_reader :invalid_expression_text
+
+      def accept(visitor)
+        visitor.visit_unrecognized_token_error(self)
+      end
     end
   end
 end
