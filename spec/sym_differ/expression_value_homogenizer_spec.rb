@@ -98,5 +98,15 @@ RSpec.describe SymDiffer::ExpressionValueHomogenizer do
 
       it { is_expected.to eq(:undefined) }
     end
+
+    context "when the variable_values are empty, evaluation returns (-Infinity-Infinity*i) (clarification)" do
+      let(:method_to_yield) do
+        proc { (Complex(1, 2)**Complex(-1, -2)) / 0 }
+      end
+
+      let(:variable_values) { {} }
+
+      it { is_expected.to eq(:undefined) }
+    end
   end
 end
