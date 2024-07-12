@@ -78,10 +78,6 @@ module SymDiffer
         )
       end
 
-      def derive_expression(expression)
-        @differentiation_visitor.derive(expression)
-      end
-
       def walk_variable_expressions(expression, &)
         walk_expression(expression, yield_at: %i[variables], &)
       end
@@ -94,6 +90,7 @@ module SymDiffer
                      :create_euler_number_expression,
                      :create_natural_logarithm_expression
 
+      def_delegator :@differentiation_visitor, :derive, :derive_expression
       def_delegator :@expression_walker, :walk, :walk_expression
     end
   end
