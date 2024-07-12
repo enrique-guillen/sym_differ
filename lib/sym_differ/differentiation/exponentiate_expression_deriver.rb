@@ -43,20 +43,23 @@ module SymDiffer
       end
 
       def derivative_of_expression_raised_to_constant_power(expression)
+        power_minus_one =
+          create_subtract_expression(expression.power, create_constant_expression(1))
+
         base_raised_to_power_minus_one =
-          create_exponentiate_expression(
-            expression.base,
-            create_subtract_expression(expression.power, create_constant_expression(1))
-          )
+          create_exponentiate_expression(expression.base, power_minus_one)
 
-        derivative_function =
-          create_multiplicate_expression(expression.power, base_raised_to_power_minus_one)
+        derivative_function = create_multiplicate_expression(expression.power, base_raised_to_power_minus_one)
+        parameter_expression = expression.base
 
-        apply_chain_rule_to_expression(derivative_function, expression.base)
+        apply_chain_rule_to_expression(derivative_function, parameter_expression)
       end
 
       def derivative_of_euler_number_raised_to_expression_power(expression)
-        apply_chain_rule_to_expression(expression, expression.power)
+        derivative_function = expression
+        parameter_expression = expression.power
+
+        apply_chain_rule_to_expression(derivative_function, parameter_expression)
       end
 
       def derivative_of_arbitrary_exponentiation(expression)
