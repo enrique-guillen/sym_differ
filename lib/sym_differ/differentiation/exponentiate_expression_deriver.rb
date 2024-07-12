@@ -19,7 +19,7 @@ module SymDiffer
           return derivative_of_expression_raised_to_constant_power(expression)
         end
 
-        if expression.base.same_as?(create_euler_number_expression)
+        if expression_is_euler_constant?(expression.base)
           return derivative_of_euler_number_raised_to_expression_power(expression)
         end
 
@@ -38,34 +38,43 @@ module SymDiffer
         was_no_variable_detected
       end
 
-      def derivative_of_expression_raised_to_constant_power(expression)
-        base = expression.base
-        power = expression.power
+      def expression_is_euler_constant?(expression)
+        expression.same_as?(create_euler_number_expression)
+      end
 
-        create_multiplicate_expression(
-          create_multiplicate_expression(
-            power,
-            create_exponentiate_expression(base, create_subtract_expression(power, create_constant_expression(1)))
-          ),
-          derive_expression(base)
-        )
+      def derivative_of_expression_raised_to_constant_power(expression)
+        base_raised_to_power_minus_one =
+          create_exponentiate_expression(
+            expression.base,
+            create_subtract_expression(expression.power, create_constant_expression(1))
+          )
+
+        derivative_function =
+          create_multiplicate_expression(expression.power, base_raised_to_power_minus_one)
+
+        apply_chain_rule_to_expression(derivative_function, expression.base)
       end
 
       def derivative_of_euler_number_raised_to_expression_power(expression)
-        create_multiplicate_expression(
-          expression,
-          derive_expression(expression.power)
-        )
+        apply_chain_rule_to_expression(expression, expression.power)
       end
 
       def derivative_of_arbitrary_exponentiation(expression)
-        derive_expression(
-          create_exponentiate_expression(
-            create_euler_number_expression,
-            create_multiplicate_expression(
-              expression.power, create_natural_logarithm_expression(expression.base)
-            )
-          )
+        euler_number_expression = create_euler_number_expression
+
+        power_times_logarithm_of_base =
+          create_multiplicate_expression(expression.power, create_natural_logarithm_expression(expression.base))
+
+        equivalent_exponentiation_expression =
+          create_exponentiate_expression(euler_number_expression, power_times_logarithm_of_base)
+
+        derive_expression(equivalent_exponentiation_expression)
+      end
+
+      def apply_chain_rule_to_expression(derivative_function, parameter_expression)
+        create_multiplicate_expression(
+          derivative_function,
+          derive_expression(parameter_expression)
         )
       end
 
