@@ -86,12 +86,12 @@ module SymDiffer
       end
 
       def_delegators :@expression_factory,
+                     :create_constant_expression,
+                     :create_subtract_expression,
                      :create_multiplicate_expression,
                      :create_exponentiate_expression,
-                     :create_subtract_expression,
-                     :create_constant_expression,
-                     :create_euler_number_expression,
-                     :create_natural_logarithm_expression
+                     :create_natural_logarithm_expression,
+                     :create_euler_number_expression
 
       def_delegator :@differentiation_visitor, :derive, :derive_expression
       def_delegator :@expression_walker, :walk, :walk_expression
